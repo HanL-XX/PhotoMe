@@ -1,8 +1,8 @@
-import React, {PureComponent} from 'react';
-import {SocialIcon} from 'react-native-elements/dist/social/SocialIcon';
+import React from 'react'
+import Providers from './navigations'
 
-export default class App extends PureComponent {
-  render() {
-    return <SocialIcon type="facebook" />;
-  }
+export default function App() {
+  return (
+    <Providers />
+  )
 }

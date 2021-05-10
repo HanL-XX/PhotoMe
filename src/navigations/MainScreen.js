@@ -14,28 +14,6 @@ const Tab = createMaterialBottomTabNavigator();
 
 //window screen
 const Stack = createStackNavigator()
-// const HomeStackScreen = () => {
-//     return (
-//         <Stack.Navigator initialRouteName="Home">
-//             <Stack.Screen
-//                 name="Home"
-//                 component={HomeScreen}
-//                 options={{
-//                     headerShown: false
-//                 }} />
-//             <Stack.Screen
-//                 name="Message"
-//                 component={MessageScreen}
-//                 options={{
-//                     headerShown: false
-//                 }} />
-//             <Stack.Screen
-//                 name="Chat"
-//                 component={ChatScreen}
-//                 options={{ headerShown: false }} />
-//         </Stack.Navigator>
-//     )
-// }
 
 const MainStackScreen = () => {
     return (

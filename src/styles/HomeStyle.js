@@ -1,0 +1,129 @@
+import styled from 'styled-components/native'
+
+export const Container = styled.View`
+    flex:1;
+    align-items:center;
+    background-color:#fff;
+`
+
+export const Card = styled.View`
+    position: relative;
+    background-color:#f0f0f0;
+    width: 100%;
+    margin-bottom:15px;
+    /* border-radius:10px; */
+`
+
+export const HeaderBar = styled.View`
+    background-color: #fff;
+    padding: 5px 15px 0 15px;
+    margin-bottom:15px;
+
+`;
+
+export const StatusBar = styled.View`
+    width:100%;
+    flex-direction:row;
+    justify-content: space-around;
+    padding: 8px;
+    border:none;
+    border-radius:10px;
+    background-color: #ddd;
+`
+
+export const UserImgStatus = styled.Image`
+    width: 40px;
+    height: 40px;
+    border-radius:20px;
+`
+export const UserImg = styled.Image`
+    width: 50px;
+    height: 50px;
+    border-radius:25px;
+`
+
+export const InputForm = styled.TextInput`
+    margin: 3px;
+    padding-left: 5px;
+    border: none;
+    width: 80%;
+`
+
+export const TextSection = styled.View`
+    flex-direction:column;
+    justify-content:center;
+    padding:15px;
+    padding-left:0;
+    margin-left:10px;
+    width:300px;
+    border-bottom-width:1px;
+    border-bottom-color: #ccc;
+`
+
+export const UserInfo = styled.View`
+    flex-direction:row;
+    justify-content:flex-start;
+    padding:15px;
+`
+
+export const UserInfoText = styled.View`
+    flex-direction:column;
+    justify-content:center;
+    margin: 5px 8px;
+`
+export const UserName = styled.Text`
+    font-size: 15px;
+    font-weight: 600;
+    /* font-family:'Lato-Regular'; */
+`
+
+export const PostTime = styled.Text`
+    font-size: 13px;
+    color:#666;
+    /* font-family:'Lato-Regular'; */
+`
+
+export const PostText = styled.Text`
+    font-size: 14px;  
+    padding: 0 15px;
+`
+export const PostImgEffect = styled.TouchableOpacity`
+    position: relative;
+    margin-top:15px;
+`
+
+export const PostImg = styled.Image`
+position: relative;
+    margin-top:15px;
+    width:100%;
+    height:250px;
+`
+
+export const InteractionWrapper = styled.View`
+    flex-direction:row;
+    padding: 15px;
+`
+
+export const Interaction = styled.TouchableOpacity`
+    flex-direction:row;
+    justify-content:center;
+    border-radius:5px;
+    padding: 2px 5px;
+    margin-right:10px;
+`
+
+export const InteractionText = styled.Text`
+    font-size:12px;
+    /* font-family:'Lato-Regular'; */
+    font-weight:bold;
+    color: #333;
+    margin: 5px 0 0 5px;
+`
+
+export const Divide = styled.View`
+    border-bottom-width:1px;
+    border-bottom-color: #ddd;
+    align-self:center;
+    margin-top:15px;
+    width:90%;
+`

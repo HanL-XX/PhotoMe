@@ -20,7 +20,7 @@ export default function LoginScreen({ navigation }) {
                 keyboardType="email-address"
                 autoCorrect={false}
                 placeholderText="Email"
-                iconType="user" />
+                iconType="person" />
             <InputForm
                 labelValue={password}
                 onChangeText={(userPassword) => setPassword(userPassword)}

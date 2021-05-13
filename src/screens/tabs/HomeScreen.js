@@ -10,40 +10,51 @@ import {
     UserImgStatus,
     InputForm,
 
-} from '../../styles/HomeStyle'
+} from '../../styles/FeedStyle'
+
+const time = new Date().toISOString(); //get Date to post Status
 const Posts = [
     {
         id: '1',
-        userName: 'Phạm Vũ Lê Minh',
+        name: 'Phạm Vũ Lê Minh',
+        userName: 'phamvuleminh',
         userImg: require('../../assets/images/user1.jpg'),
-        postTime: '4 mins ago',
+        postTime: '2021-05-04T03:16:34.820Z',
         postText: `Hi, I'm a developer`,
         postImg: require('../../assets/images/postImg/post1.jpg'),
+        liked: 'true',
         likes: '1',
         comments: '5',
+        shares: '5',
     },
     {
         id: '2',
-        userName: 'Hà Nhật Linh',
+        name: 'Hà Nhật Linh',
+        userName: 'hnlinh',
         userImg: require('../../assets/images/user2.png'),
-        postTime: '1 hours ago',
+        postTime: time,
         postText: `Perfect Image for Bird!`,
         postImg: require('../../assets/images/postImg/post2.jpg'),
-        likes: '0',
+        liked: 'true',
+        likes: '1',
         comments: '14',
+        shares: '5',
     },
     {
         id: '3',
-        userName: 'Group',
+        name: 'Group',
+        userName: 'groupchat',
         userImg: require('../../assets/images/user3.jpg'),
-        postTime: 'Active',
+        postTime: time,
         postText: `This is a first comment in group!!`,
         postImg: 'none',
+        liked: 'false',
         likes: '48',
         comments: '2',
+        shares: '5',
     },
 ]
-
+//change HomeScreen in here!
 const HomeStackScreen = () => {
     return (
         <Container>

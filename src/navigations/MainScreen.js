@@ -1,14 +1,18 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
 import { createStackNavigator } from '@react-navigation/stack'
 
 import HomeScreen from '../screens/tabs/HomeScreen'
 import ProfileScreen from '../screens/tabs/ProfileScreen'
 import NotificationScreen from '../screens/tabs/NotificationScreen'
+import SearchScreen from '../screens/tabs/SearchScreen'
 import MessageScreen from '../screens/tabs/MessageScreen'
 import ChatScreen from '../screens/tabs/ChatScreen'
 import InfoChatScreen from '../screens/tabs/InfoChatScreen'
+import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -39,6 +43,16 @@ const MainStackScreen = () => {
                     tabBarLabel: 'Updates',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="bell" color={color} size={28} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Search"
+                component={SearchScreen}
+                options={{
+                    tabBarLabel: 'Search',
+                    tabBarIcon: ({ color }) => (
+                        <Icon name="search" color={color} size={24} />
                     ),
                 }}
             />
@@ -87,6 +101,14 @@ export default function MainScreen() {
 
                     headerShown: false
                 })} />
+            <Stack.Screen
+                name='EditPersonalProfile'
+                component={EditPersonalProfile}
+                options={({ route }) => ({
+
+                    headerShown: false
+                })} />
+
         </Stack.Navigator>
     )
 }

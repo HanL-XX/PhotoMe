@@ -5,6 +5,7 @@ import ButtonForm from "../components/ButtonForm"
 import SocialButton from "../components/SocialButton"
 
 export default function SignUpScreen({ navigation }) {
+    const [nameUser, setNameUser] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
@@ -12,24 +13,31 @@ export default function SignUpScreen({ navigation }) {
         <View style={styles.container}>
             <Text style={styles.text}>Create an account</Text>
             <InputForm
+                labelValue={nameUser}
+                onChangeText={(nameUser) => setNameUser(nameUser)}
+                autoCapitalize="none"
+                autoCorrect={false}
+                placeholderText="Name"
+                iconType="person" />
+            <InputForm
                 labelValue={email}
                 onChangeText={(userEmail) => setEmail(userEmail)}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoCorrect={false}
                 placeholderText="Email"
-                iconType="user" />
+                iconType="local-post-office" />
             <InputForm
                 labelValue={password}
                 onChangeText={(userPassword) => setPassword(userPassword)}
                 secureTextEntry={true}
-                placeholderText="Confirm Password"
+                placeholderText="Password"
                 iconType="lock" />
             <InputForm
                 labelValue={confirmPassword}
                 onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
                 secureTextEntry={true}
-                placeholderText="Password"
+                placeholderText="Confirm Password"
                 iconType="lock" />
             <ButtonForm
                 buttonTitle="Sign Up"

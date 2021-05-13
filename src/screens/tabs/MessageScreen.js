@@ -74,13 +74,6 @@ export default function MessageScreen({ navigation }) {
                 }
                 rightComponent={
                     <View style={styles.fontIcon}>
-                        {/* <TouchableOpacity>
-                            <FontAwesome
-                                style={styles.icon}
-                                name="video-camera"
-                                size={25}
-                                color="#000" />
-                        </TouchableOpacity> */}
                         <TouchableOpacity>
                             <FontAwesome
                                 style={styles.icon}
@@ -134,7 +127,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#fff",
         flex: 1,
-        alignItems: "center",
     },
     fontIcon: {
         flexDirection: 'row',

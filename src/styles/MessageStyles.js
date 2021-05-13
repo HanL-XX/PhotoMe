@@ -2,7 +2,7 @@ import styled from 'styled-components/native'
 
 export const Container = styled.View`
     flex:1;
-    padding:0 20px;
+    /* padding:0 20px; */
     align-items:center;
     background-color:#fff;
 `;
@@ -22,9 +22,9 @@ export const UserImgWrapper = styled.View`
 
 export const UserImg = styled.Image`
     position: relative;
-    width: 60px;
-    height: 60px;
-    border-radius:30px;
+    width: 50px;
+    height: 50px;
+    border-radius:25px;
 `
 
 export const UserActive = styled.View`

@@ -25,7 +25,7 @@ export const StatusBar = styled.View`
     width:100%;
     flex-direction:row;
     justify-content: space-around;
-    padding: 8px;
+    padding: 8px 3px;
     border:none;
     border-radius:10px;
     background-color: #ddd;
@@ -79,7 +79,7 @@ export const UserName = styled.Text`
 
 export const PostTime = styled.Text`
     font-size: 13px;
-    color:#666;
+    color:#f0f0f0;
     /* font-family:'Lato-Regular'; */
 `
 
@@ -93,7 +93,7 @@ export const PostImgEffect = styled.TouchableOpacity`
 `
 
 export const PostImg = styled.Image`
-position: relative;
+    position: relative;
     margin-top:15px;
     width:100%;
     height:250px;
@@ -101,21 +101,20 @@ position: relative;
 
 export const InteractionWrapper = styled.View`
     flex-direction:row;
-    padding: 15px;
+    justify-content: space-around;
+    padding: 15px 5px;
 `
 
 export const Interaction = styled.TouchableOpacity`
     flex-direction:row;
     justify-content:center;
-    border-radius:5px;
-    padding: 2px 5px;
-    margin-right:10px;
+    padding: 3px;
 `
 
 export const InteractionText = styled.Text`
     font-size:12px;
     /* font-family:'Lato-Regular'; */
-    font-weight:bold;
+    font-weight:500;
     color: #333;
     margin: 5px 0 0 5px;
 `

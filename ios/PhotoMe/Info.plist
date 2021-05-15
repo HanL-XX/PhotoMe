@@ -70,7 +70,10 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 	</array>
+<<<<<<< HEAD
 	<!-- <array/> -->
 	
+=======
+>>>>>>> backend
 </dict>
 </plist>

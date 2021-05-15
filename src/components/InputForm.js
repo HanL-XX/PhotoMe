@@ -1,15 +1,15 @@
 import React from "react"
 import { View, TextInput, StyleSheet } from "react-native"
-import AntDesign from "react-native-vector-icons/AntDesign"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import { windowWidth, windowHeight } from "../utils/Dimensions"
 
 export default function InputForm({ labelValue, placeholderText, iconType, ...rest }) {
     return (
         <View style={styles.inputContainer}>
             <View style={styles.iconStyle}>
-                <AntDesign
+                <MaterialIcons
                     name={iconType}
-                    size={25}
+                    size={26}
                     color="#666" />
             </View>
             <TextInput

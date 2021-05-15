@@ -13,10 +13,6 @@ target 'PhotoMe' do
   )
 
 
-<<<<<<< HEAD
-=======
-  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
->>>>>>> backend
 
   target 'PhotoMeTests' do
     inherit! :complete

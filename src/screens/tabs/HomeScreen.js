@@ -2,6 +2,9 @@ import * as React from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
+// import { State } from 'react-native-gesture-handler'
+// import { TapGestureHandler, PanGestureHandler } from 'react-native-gesture-handler'
+// 
 import PostCard from '../../components/PostCard'
 import {
     Container,
@@ -11,6 +14,7 @@ import {
     InputForm,
 
 } from '../../styles/FeedStyle'
+import AnimatedBottomSheet from '../AnimatedBottomSheet'
 
 const time = new Date().toISOString(); //get Date to post Status
 const Posts = [
@@ -22,7 +26,7 @@ const Posts = [
         postTime: '2021-05-04T03:16:34.820Z',
         postText: `Hi, I'm a developer`,
         postImg: require('../../assets/images/postImg/post1.jpg'),
-        liked: 'true',
+        liked: true,
         likes: '1',
         comments: '5',
         shares: '5',
@@ -35,7 +39,7 @@ const Posts = [
         postTime: time,
         postText: `Perfect Image for Bird!`,
         postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: 'true',
+        liked: false,
         likes: '1',
         comments: '14',
         shares: '5',
@@ -48,7 +52,7 @@ const Posts = [
         postTime: time,
         postText: `This is a first comment in group!!`,
         postImg: 'none',
-        liked: 'false',
+        liked: false,
         likes: '48',
         comments: '2',
         shares: '5',
@@ -56,6 +60,13 @@ const Posts = [
 ]
 //change HomeScreen in here!
 const HomeStackScreen = () => {
+    //Modal Sheet code here!
+    const modalizeRef = React.useRef(null);
+    const onOpenBottomSheet = () => {
+        modalizeRef.current?.open();
+    }
+
+    //
     return (
         <Container>
             <HeaderBar>
@@ -71,9 +82,19 @@ const HomeStackScreen = () => {
                 style={{ width: '100%' }}
                 showsVerticalScrollIndicator={false}
                 data={Posts}
-                renderItem={({ item }) => <PostCard item={item} />}
+                renderItem={({ item }) =>
+                    <PostCard
+                        onOpenBottomSheet={onOpenBottomSheet}
+                        modalizeRef={modalizeRef}
+                        item={item} />}
                 keyExtractor={item => item.id} />
-        </Container>
+
+            {/* //show bottom sheet */}
+            <AnimatedBottomSheet
+                modalizeRef={modalizeRef} >
+
+            </AnimatedBottomSheet>
+        </Container >
     )
 }
 

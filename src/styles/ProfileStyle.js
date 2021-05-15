@@ -45,6 +45,7 @@ export const Description = styled.Text`
     font-style:italic;
     letter-spacing:1.04px;
     text-align:center;
+    /* background-color: #333; */
 `
 
 export const StatsContainer = styled.View`

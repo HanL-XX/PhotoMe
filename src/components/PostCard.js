@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacity } from 'react-native'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+// import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 import TimeAgo from './Time'
 import {
@@ -11,6 +11,8 @@ import {
     UserImg,
     UserInfo,
     UserName,
+    Follow,
+    FollowText,
     UserInfoText,
     PostText,
     PostImg,
@@ -19,20 +21,23 @@ import {
     InteractionText,
     Divide
 } from '../styles/FeedStyle'
-export default function PostCard({ item }) {
-    const [liked, setLiked] = useState('') //false: none-color <--> true: red color
-    // useEffect(() => {
-    //     setLiked(item.liked);
-    //     return () => { setLiked(!liked) }
-    // }, [liked])
 
+export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
+    //Set up react heart
+    const [liked, setLiked] = useState('') //false: none-color <--> true: red color
+    const [followed, setFollowed] = useState('Following')
+
+    //return liked in Object
+    useEffect(() => {
+        setLiked(item.liked);
+    }, [])
+
+    //handle event to react
     _onPressReact = () => {
         if (!liked) {
             item.likes++;
             setLiked(!liked)
-            return;
         }
-
         else {
             (item.likes == 0) ? item.likes = 0 : item.likes--;
             setLiked(!liked)
@@ -42,11 +47,30 @@ export default function PostCard({ item }) {
     return (
         <Card>
             <UserInfo>
-                <UserImg source={item.userImg} />
-                <UserInfoText>
-                    <UserName>{item.userName}</UserName>
-                    <TimeAgo time={item.postTime} />
-                </UserInfoText>
+                <View style={{ flexDirection: 'row' }}>
+                    <UserImg source={item.userImg} />
+                    <UserInfoText>
+                        <View style={{ flexDirection: 'row' }}>
+                            <UserName>{item.userName}</UserName>
+                            {(followed === 'Following' && item.userName !== 'phamvuleminh' ? (
+                                <Follow>
+                                    <Text> • </Text>
+                                    <FollowText>{followed}</FollowText>
+                                </Follow>) : <></>)}
+
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <TimeAgo time={item.postTime} />
+                            {/* add icon Major */}
+                        </View>
+                    </UserInfoText>
+                </View>
+                <TouchableOpacity onPress={onOpenBottomSheet}>
+                    <Feather
+                        name="more-vertical"
+                        size={23}
+                        style={{ textAlign: 'right' }} />
+                </TouchableOpacity>
             </UserInfo>
             <PostText>{item.postText}</PostText>
             {/* check display img */}
@@ -82,30 +106,30 @@ export default function PostCard({ item }) {
                         </Interaction>
                     ) : <></>
                 }
-                {item.userName === "phamvuleminh" ?
-                    (
-                        <Interaction
-                            style={{
-                                borderRadius: 15,
-                                backgroundColor: '#f52b2b',
-                                width: 30,
-                                height: 30,
-                            }}
-                            onPress={() => alert('Do you want to delete this post?')}>
-                            <MaterialCommunityIcons style={{ color: '#fff' }}
-                                name="delete"
-                                size={22} />
-                        </Interaction>
-                    ) : <></>
-                }
             </InteractionWrapper>
-        </Card >
+            {/* //show bottom sheet */}
 
+        </Card >
     )
 }
 
 
 const styles = StyleSheet.create({
+    modalBackground: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        width: '100%',
+        height: '50%',
+        backgroundColor: '#fff',
+        paddingHorizontal: 20,
+        paddingVertical: 30,
+        borderRadius: 20,
+        elevation: 20,
+    },
     redColor: {
         color: '#e63333',
     },

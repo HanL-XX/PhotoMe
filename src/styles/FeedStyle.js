@@ -62,8 +62,9 @@ export const TextSection = styled.View`
 
 export const UserInfo = styled.View`
     flex-direction:row;
-    justify-content:flex-start;
+    justify-content:space-between;
     padding:15px;
+    /* background-color: #ccc; */
 `
 
 export const UserInfoText = styled.View`
@@ -71,10 +72,22 @@ export const UserInfoText = styled.View`
     justify-content:center;
     margin: 5px 8px;
 `
+
 export const UserName = styled.Text`
     font-size: 15px;
     font-weight: 600;
     /* font-family:'Lato-Regular'; */
+`
+
+export const Follow = styled.TouchableOpacity`
+    flex-direction:row;
+    justify-content:center;
+    text-align:center;
+`
+export const FollowText = styled.Text`
+    font-size: 15px;
+    font-weight: 600;
+    color: #095fff;
 `
 
 export const PostTime = styled.Text`

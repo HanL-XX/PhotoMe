@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native'
 import Feather from 'react-native-vector-icons/Feather'
+import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import {
     SafeAreaView,
     Container,
@@ -20,6 +21,8 @@ import {
 } from '../../styles/ProfileStyle'
 import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
+import AnimatedBottomSheet from '../AnimatedBottomSheet'
+
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
@@ -85,6 +88,12 @@ const Posts = [
 
 //change Profile in here!
 const ProfileStackScreen = ({ navigation }) => {
+    //Modal Sheet code here!
+    const modalizeRef = React.useRef(null);
+    const onOpenBottomSheet = () => {
+        modalizeRef.current?.open();
+    }
+
     const [name, setName] = useState('Phạm Vũ Lê Minh')
     const [userName, setUserName] = useState('phamvuleminh')
     return (
@@ -97,7 +106,7 @@ const ProfileStackScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
                         <Feather
                             name="menu"
-                            size={28}
+                            size={30}
                             style={{ flex: 1 }}
                         />
                     </TouchableOpacity>
@@ -106,12 +115,12 @@ const ProfileStackScreen = ({ navigation }) => {
                         selectTextOnFocus={false}
                         style={styles.textInput} value={userName} defaultValue={userName} />
                     <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Feather
-                            name="more-vertical"
-                            size={28}
-                            style={{ flex: 1, textAlign: 'right' }} />
+                        <FontAwesome
+                            name="plus-square-o"
+                            size={30}
+                            style={{ flex: 1 }}
+                        />
                     </TouchableOpacity>
-
                 </IconContainer>
 
                 <View style={{ justifyContent: 'center', alignItems: 'center', padding: 15 }}>
@@ -123,7 +132,8 @@ const ProfileStackScreen = ({ navigation }) => {
                         defaultValue={name}
                         editable={false}
                         selectTextOnFocus={false} />
-                    <Description>IT - Software Engineering</Description>
+                    <Description numberOfLines={2}>IT - Software Engineering
+                    </Description>
                 </View>
 
                 <StatsContainer>
@@ -147,19 +157,24 @@ const ProfileStackScreen = ({ navigation }) => {
                 {Posts.map((item, index) => {
                     if (item.userName === userName) {
                         return <View key={item.id} style={styles.viewDeletePost}>
-                            <PostCard item={item} />
+                            <PostCard
+                                onOpenBottomSheet={onOpenBottomSheet}
+                                modalizeRef={modalizeRef}
+                                item={item} />
                         </View>
                     }
                 })}
             </Container>
 
+            <AnimatedBottomSheet
+                modalizeRef={modalizeRef} >
+
+            </AnimatedBottomSheet>
         </SafeAreaView>
     )
 }
 
 export default function ProfileScreen({ navigation }) {
-    // const [posts, setPosts] = useState({ Posts })
-
     return (
 
         <Drawer.Navigator drawerContent={props => <DrawerProfileScreen {...props} />}>

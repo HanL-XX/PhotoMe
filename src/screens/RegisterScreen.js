@@ -9,6 +9,24 @@ export default function SignUpScreen({ navigation }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
+    const _Regis=()=>{
+        fetch(`http://localhost:3000/api/user`, {
+            method: 'POST',
+            headers: {
+                'accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                name:nameUser,
+                email:email,
+                password:password,
+            })
+        })
+            .then((response) => console.log(response.json()))
+            .catch((error) => {
+                console.error(error);
+            });
+    }
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Create an account</Text>
@@ -41,7 +59,7 @@ export default function SignUpScreen({ navigation }) {
                 iconType="lock" />
             <ButtonForm
                 buttonTitle="Sign Up"
-                onPress={() => alert(`user: ${email} password: ${password}`)} />
+                onPress={() => _Regis()} />
             <View style={styles.textPrivate}>
                 <Text style={styles.color_textPrivate}>By registering, you confirm that you accept our</Text>
                 <TouchableOpacity onPress={() => alert("Terms clicked!")}>

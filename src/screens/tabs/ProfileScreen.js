@@ -21,7 +21,7 @@ import {
 } from '../../styles/ProfileStyle'
 import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
-import AnimatedBottomSheet from '../AnimatedBottomSheet'
+import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
@@ -167,7 +167,8 @@ const ProfileStackScreen = ({ navigation }) => {
             </Container>
 
             <AnimatedBottomSheet
-                modalizeRef={modalizeRef} >
+                modalizeRef={modalizeRef}
+                userName={userName} >
 
             </AnimatedBottomSheet>
         </SafeAreaView>
@@ -176,7 +177,6 @@ const ProfileStackScreen = ({ navigation }) => {
 
 export default function ProfileScreen({ navigation }) {
     return (
-
         <Drawer.Navigator drawerContent={props => <DrawerProfileScreen {...props} />}>
             <Drawer.Screen
                 name="ProfileStackScreen" component={ProfileStackScreen} />

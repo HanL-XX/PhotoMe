@@ -12,13 +12,25 @@ import {
     Switch
 } from 'react-native-paper'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { AuthContext } from '../../components/context'
 
-export default function DrawerProfileScreen(props) {
+
+export default function DrawerProfileScreen({ props, navigation }) {
+    //SignOut
+    const { signOut } = React.useContext(AuthContext)
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
-                <View>
-                    <Text>MainContent</Text>
+                <View style={styles.drawerContent}>
+                    <View style={styles.userInfoSection}>
+                        <View>
+                            <Avatar.Image
+                                source={require("../../assets/images/user1.jpg")}
+                                size={50} />
+                            <Text>{ }</Text>
+
+                        </View>
+                    </View>
                 </View>
             </DrawerContentScrollView>
             <Drawer.Section style={styles.bottomDrawerSection}>
@@ -30,9 +42,9 @@ export default function DrawerProfileScreen(props) {
                             size={size} />
                     )}
                     label="Sign Out"
-                    onPress={() => { }} />
+                    onPress={() => { signOut() }} />
             </Drawer.Section>
-        </View>
+        </View >
     )
 }
 

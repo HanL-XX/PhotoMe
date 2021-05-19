@@ -14,7 +14,7 @@ import {
     InputForm,
 
 } from '../../styles/FeedStyle'
-import AnimatedBottomSheet from '../AnimatedBottomSheet'
+import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 
 const time = new Date().toISOString(); //get Date to post Status
 const Posts = [

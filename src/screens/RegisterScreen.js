@@ -9,7 +9,7 @@ export default function SignUpScreen({ navigation }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [confirmPassword, setConfirmPassword] = useState();
-    const _Regis=()=>{
+    const _Regis = () => {
         fetch(`http://localhost:3000/api/user`, {
             method: 'POST',
             headers: {
@@ -17,9 +17,9 @@ export default function SignUpScreen({ navigation }) {
                 'content-type': 'application/json'
             },
             body: JSON.stringify({
-                name:nameUser,
-                email:email,
-                password:password,
+                name: nameUser,
+                email: email,
+                password: password,
             })
         })
             .then((response) => console.log(response.json()))

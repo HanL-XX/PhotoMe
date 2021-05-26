@@ -25,12 +25,22 @@ import {
 export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
     //Set up react heart
     const [liked, setLiked] = useState('') //false: none-color <--> true: red color
+    const [likesText, setLikesText] = useState('Like')
+    const [commentsText, setCommentsText] = useState('Comment')
+    const [savesText, setSavesText] = useState('Save')
     const [followed, setFollowed] = useState('Following')
 
     //return liked in Object
     useEffect(() => {
         setLiked(item.liked);
     }, [])
+
+    useEffect(() => {
+        if (item.likes > 1)
+            return setLikesText('Likes')
+        else
+            return setLikesText('Like')
+    })
 
     //handle event to react
     _onPressReact = () => {
@@ -55,7 +65,9 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
                             {(followed === 'Following' && item.userName !== 'phamvuleminh' ? (
                                 <Follow>
                                     <Text> • </Text>
-                                    <FollowText>{followed}</FollowText>
+                                    <TouchableOpacity>
+                                        <FollowText>{followed}</FollowText>
+                                    </TouchableOpacity>
                                 </Follow>) : <></>)}
 
                         </View>
@@ -84,7 +96,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
                             style={liked ? styles.redColor : styles.emptyColor}
                             size={24} />
                     </TouchableOpacity>
-                    <InteractionText>{item.likes} Likes</InteractionText>
+                    <InteractionText>{item.likes} {likesText}</InteractionText>
                 </Interaction>
                 <Interaction>
                     <TouchableOpacity>
@@ -102,7 +114,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
                                     name="download"
                                     size={24} />
                             </TouchableOpacity>
-                            <InteractionText>{item.shares} Saves</InteractionText>
+                            <InteractionText>{item.saves} Saves</InteractionText>
                         </Interaction>
                     ) : <></>
                 }

@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
 // import { State } from 'react-native-gesture-handler'
@@ -27,9 +27,9 @@ const Posts = [
         postText: `Hi, I'm a developer`,
         postImg: require('../../assets/images/postImg/post1.jpg'),
         liked: true,
-        likes: '1',
+        likes: '2',
         comments: '5',
-        shares: '5',
+        saves: '5',
     },
     {
         id: '2',
@@ -42,7 +42,7 @@ const Posts = [
         liked: false,
         likes: '1',
         comments: '14',
-        shares: '5',
+        saves: '5',
     },
     {
         id: '3',
@@ -55,18 +55,26 @@ const Posts = [
         liked: false,
         likes: '48',
         comments: '2',
-        shares: '5',
+        saves: '5',
     },
 ]
 //change HomeScreen in here!
-const HomeStackScreen = () => {
+const HomeStackScreen = ({ navigation }) => {
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
     const onOpenBottomSheet = () => {
         modalizeRef.current?.open();
     }
 
-    //
+    //Refresh Screen
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1200);
+    })
     return (
         <Container>
             <HeaderBar>
@@ -74,7 +82,8 @@ const HomeStackScreen = () => {
                     <UserImgStatus
                         source={require("../../assets/images/user1.jpg")} />
                     <InputForm
-                        placeholder="What's on your mind?">
+                        placeholder="What's on your mind?"
+                        onFocus={() => { navigation.push('PostMind') }}>
                     </InputForm>
                 </StatusBar>
             </HeaderBar >
@@ -82,12 +91,16 @@ const HomeStackScreen = () => {
                 style={{ width: '100%' }}
                 showsVerticalScrollIndicator={false}
                 data={Posts}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                keyExtractor={item => item.id}
                 renderItem={({ item }) =>
                     <PostCard
                         onOpenBottomSheet={onOpenBottomSheet}
                         modalizeRef={modalizeRef}
                         item={item} />}
-                keyExtractor={item => item.id} />
+            />
 
             {/* //show bottom sheet */}
             <AnimatedBottomSheet
@@ -128,7 +141,7 @@ export default function HomeScreen({ navigation }) {
                     justifyContent: 'space-around',
                 }}
             />
-            <HomeStackScreen />
+            <HomeStackScreen navigation={navigation} />
         </View >
     )
 }

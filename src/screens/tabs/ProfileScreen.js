@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, TextInput, TouchableOpacity } from 'react-native'
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, RefreshControl } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import { NavigationContainer } from '@react-navigation/native'
+import { Header } from 'react-native-elements'
+
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+
 import {
     SafeAreaView,
     Container,
@@ -23,7 +25,6 @@ import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 
-
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
 const time = new Date().toISOString(); //get Date to post Status
@@ -40,7 +41,7 @@ const Posts = [
         liked: 'false',
         likes: '10',
         comments: '5',
-        shares: '5',
+        saves: '5',
 
     },
     {
@@ -54,7 +55,7 @@ const Posts = [
         liked: 'true',
         likes: '1',
         comments: '14',
-        shares: '5',
+        saves: '5',
 
     },
     {
@@ -67,7 +68,7 @@ const Posts = [
         liked: 'false',
         likes: '48',
         comments: '2',
-        shares: '5',
+        saves: '5',
 
     },
     {
@@ -81,7 +82,7 @@ const Posts = [
         liked: 'false',
         likes: '1K',
         comments: '52',
-        shares: '5',
+        saves: '5',
 
     },
 ]
@@ -96,33 +97,25 @@ const ProfileStackScreen = ({ navigation }) => {
 
     const [name, setName] = useState('Phạm Vũ Lê Minh')
     const [userName, setUserName] = useState('phamvuleminh')
+
+    //Refresh Screen
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1200);
+    })
     return (
         <SafeAreaView>
             <Container
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
                 contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} //must be code there!
                 showVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false} >
-                <IconContainer>
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Feather
-                            name="menu"
-                            size={30}
-                            style={{ flex: 1 }}
-                        />
-                    </TouchableOpacity>
-                    <TextInput
-                        editable={false}
-                        selectTextOnFocus={false}
-                        style={styles.textInput} value={userName} defaultValue={userName} />
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <FontAwesome
-                            name="plus-square-o"
-                            size={30}
-                            style={{ flex: 1 }}
-                        />
-                    </TouchableOpacity>
-                </IconContainer>
-
                 <View style={{ justifyContent: 'center', alignItems: 'center', padding: 15 }}>
                     <UserImgContainer>
                         <UserImg source={require("../../assets/images/user1.jpg")} />
@@ -175,11 +168,44 @@ const ProfileStackScreen = ({ navigation }) => {
     )
 }
 
-export default function ProfileScreen({ navigation }) {
+const MainProfileStackScreen = ({ navigation }) => {
+    return (
+        <View style={{
+            flex: 1, flexDirection: 'column', backgroundColor: 'red'
+        }}>
+            <Header
+                leftComponent={
+                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                        <Feather
+                            name="menu"
+                            size={30}
+                        />
+                    </TouchableOpacity>
+                }
+                rightComponent={
+                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                        <FontAwesome
+                            name="plus-square-o"
+                            size={30}
+                        />
+                    </TouchableOpacity>
+                }
+                containerStyle={{
+                    paddingHorizontal: 10,
+                    backgroundColor: '#fff',
+                    justifyContent: 'space-around',
+                }}
+            />
+            <ProfileStackScreen navigation={navigation} />
+        </View >
+    )
+}
+
+export default function ProfileScreen() {
     return (
         <Drawer.Navigator drawerContent={props => <DrawerProfileScreen {...props} />}>
             <Drawer.Screen
-                name="ProfileStackScreen" component={ProfileStackScreen} />
+                name="MainProfileStackScreen" component={MainProfileStackScreen} />
         </Drawer.Navigator>
 
     )

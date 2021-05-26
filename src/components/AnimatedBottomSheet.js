@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 // import { TapGestureHandler } from 'react-native-gesture-handler'
 import { Modalize } from 'react-native-modalize'
 import { windowWidth } from '../utils/Dimensions.js'
@@ -17,7 +17,7 @@ export default function AnimatedBottomSheet({ modalizeRef, userName }) {
             snapPoint={200}
             modalHeight={200}
             style={{ overflow: 'hidden' }} >
-            <View style={styles.containerSheet}>
+            <SafeAreaView style={styles.containerSheet}>
                 {userName ? (
                     <TouchableOpacity style={styles.buttonSheet}>
                         <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
@@ -39,7 +39,7 @@ export default function AnimatedBottomSheet({ modalizeRef, userName }) {
                 <TouchableOpacity style={styles.buttonSheet}>
                     <Text style={{ fontSize: 18 }}>Share</Text>
                 </TouchableOpacity>
-            </View>
+            </SafeAreaView>
         </Modalize>
     )
 }
@@ -71,6 +71,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     buttonSheet: {
+        position: 'relative',
+        top: 0,
+        left: 0,
         padding: 8,
         flexDirection: 'row',
         justifyContent: 'space-between',

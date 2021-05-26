@@ -25,6 +25,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use('/api/user', require("./router/user"))
 app.use('/api/login', require("./router/login"))
+app.use('/api/account', require("./router/account"))
 
 app.get('/', (req, res) => {
     res.send("Welcome to PhotoMe App")

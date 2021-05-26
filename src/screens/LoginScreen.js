@@ -4,36 +4,48 @@ import InputForm from "../components/InputForm"
 import ButtonForm from "../components/ButtonForm"
 import SocialButton from "../components/SocialButton"
 import axios from 'axios'
-import { AuthContext } from '../components/context'
+import { AuthContext } from '../context/AuthContext'
+import getIdUser from '../components/getIdUser'
 
 export default function LoginScreen({ navigation }) {
-    const [isLoading, setIsLoading] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [error, setError] = useState('')
     const data = JSON.stringify({ email, password })
 
+    const userToken = null
     //SignIn
     const { signIn } = React.useContext(AuthContext)
 
     const _Login = async () => {
-        await axios({
-            method: 'POST',
-            url: 'http://localhost:3000/api/login',
-            data: data,
-            headers: { 'Content-Type': 'application/json' }
-        })
-            .then((response) => {
-                // navigation.navigate('MainScreen')
-                const dataParse = JSON.parse(data)
+        try {
+            await signIn(data, userToken)
+            setIsLoading(true)
+        } catch (error) {
+            setError(error.message)
+            setIsLoading(false)
+            console.log(error)
+        }
+        // await axios({
+        //     method: 'POST',
+        //     url: `${MAIN_URL}api/login`,
+        //     data: data,
+        //     headers: { 'Content-Type': 'application/json' }
+        // })
+        //     .then(response => {
+        //         const dataParse = JSON.parse(data)
+        //         const name = response.data.user.name
+        //         const id = response.data.user.id
+        //         // navigation.navigate('Profile', { id: id, name: name })
+        //         // getIdUser = response.data.user.id
+        //         console.log(id)
 
-                signIn(dataParse, response.data.token)
-                // console.log(dataParse.email) //pvlm
-                // console.log(response.data) //object
-                // console.log("TOKEN: " + response.data.token) //token
-            })
-            .catch(err => {
-                console.log(`ERROR!: ${err}`)
-            })
+        //         signIn(dataParse, name, response.data.token)
+        //     })
+        //     .catch(err => {
+        //         console.log(`ERROR!: ${err}`)
+        //     })
     }
 
     return (

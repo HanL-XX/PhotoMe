@@ -4,7 +4,8 @@ import {
     Text,
     TouchableOpacity,
     StyleSheet,
-    FlatList
+    FlatList,
+    RefreshControl
 } from 'react-native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { Header } from 'react-native-elements'
@@ -50,6 +51,52 @@ const Messages = [
 
 ]
 
+//change MessageScreen in here
+const MessageStackScreen = ({ navigation }) => {
+    //Refresh Screen
+    const [refreshing, setRefreshing] = React.useState(false);
+    const onRefresh = React.useCallback(async () => {
+        setRefreshing(true);
+
+        setTimeout(() => {
+            setRefreshing(false);
+        }, 1200);
+    })
+    return (
+        <Container>
+            <FlatList
+                data={Messages}
+                keyExtractor={item => item.id}
+                refreshControl={
+                    <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                }
+                renderItem={({ item }) => (
+                    <Card onPress={() => {
+                        navigation.navigate("Chat", {
+                            userName: item.userName,
+                            userImg: item.userImg,
+                            messageTime: item.messageTime,
+                        })
+                    }}>
+                        <UserInfo >
+                            <UserImgWrapper>
+                                <UserImg source={item.userImg} />
+                                <UserActive></UserActive>
+                            </UserImgWrapper>
+                            <TextSection>
+                                <UserInfoText>
+                                    <UserName>{item.userName}</UserName>
+                                    <PostTime>{item.messageTime}</PostTime>
+                                </UserInfoText>
+                                <MessageText>{item.messageText}</MessageText>
+                            </TextSection>
+                        </UserInfo>
+                    </Card>
+                )} />
+        </Container>
+    )
+}
+
 export default function MessageScreen({ navigation }) {
     return (
         <View style={styles.container}>
@@ -63,7 +110,7 @@ export default function MessageScreen({ navigation }) {
                     <View style={styles.fontIcon}>
                         <TouchableOpacity>
                             <FontAwesome
-                                name="long-arrow-left"
+                                name="angle-left"
                                 size={24}
                                 backgroundColor="#fff"
                                 color="#333"
@@ -89,36 +136,8 @@ export default function MessageScreen({ navigation }) {
                         <Text style={{ fontSize: 20 }}>Username here!</Text>
                     </View>
                 }
-            >
-            </Header>
-            <Container>
-                <FlatList
-                    data={Messages}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                        <Card onPress={() => {
-                            navigation.navigate("Chat", {
-                                userName: item.userName,
-                                userImg: item.userImg,
-                                messageTime: item.messageTime,
-                            })
-                        }}>
-                            <UserInfo >
-                                <UserImgWrapper>
-                                    <UserImg source={item.userImg} />
-                                    <UserActive></UserActive>
-                                </UserImgWrapper>
-                                <TextSection>
-                                    <UserInfoText>
-                                        <UserName>{item.userName}</UserName>
-                                        <PostTime>{item.messageTime}</PostTime>
-                                    </UserInfoText>
-                                    <MessageText>{item.messageText}</MessageText>
-                                </TextSection>
-                            </UserInfo>
-                        </Card>
-                    )} />
-            </Container>
+            />
+            <MessageStackScreen navigation={navigation} />
         </View >
     )
 }

@@ -12,6 +12,7 @@ import MessageScreen from '../screens/tabs/MessageScreen'
 import ChatScreen from '../screens/tabs/ChatScreen'
 import InfoChatScreen from '../screens/tabs/InfoChatScreen'
 import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
+import PostMind from '../screens/tabs/PostMind'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -104,6 +105,13 @@ export default function MainScreen() {
             <Stack.Screen
                 name='EditPersonalProfile'
                 component={EditPersonalProfile}
+                options={({ route }) => ({
+
+                    headerShown: false
+                })} />
+            <Stack.Screen
+                name='PostMind'
+                component={PostMind}
                 options={({ route }) => ({
 
                     headerShown: false

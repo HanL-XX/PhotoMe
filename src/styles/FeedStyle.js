@@ -8,7 +8,7 @@ export const Container = styled.View`
 
 export const Card = styled.View`
     position: relative;
-    background-color:#f0f0f0;
+    background-color:#f1f1f1bc;
     width: 100%;
     margin-bottom:15px;
     /* border-radius:10px; */
@@ -25,16 +25,17 @@ export const StatusBar = styled.View`
     width:100%;
     flex-direction:row;
     justify-content: space-around;
-    padding: 8px 3px;
+    align-items: center;
+    padding: 5px 2px;
     border:none;
     border-radius:10px;
     background-color: #ddd;
 `
 
 export const UserImgStatus = styled.Image`
-    width: 40px;
-    height: 40px;
-    border-radius:20px;
+    width: 44px;
+    height: 44px;
+    border-radius:22px;
 `
 export const UserImg = styled.Image`
     width: 50px;
@@ -79,7 +80,7 @@ export const UserName = styled.Text`
     /* font-family:'Lato-Regular'; */
 `
 
-export const Follow = styled.TouchableOpacity`
+export const Follow = styled.View`
     flex-direction:row;
     justify-content:center;
     text-align:center;

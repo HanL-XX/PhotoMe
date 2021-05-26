@@ -6,106 +6,78 @@ import MainScreen from './MainScreen'
 import { ActivityIndicator } from "react-native" //loading page
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { AuthContext } from '../components/context'
+import { AuthContext } from '../context/AuthContext'
+import axios from 'axios'
+import { MAIN_URL } from '../config'
+import { useDispatch, useSelector } from 'react-redux'
+import { getToken, Login, Logout } from '../redux/actions/auth'
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
-    // const [isLoading, setIsLoading] = useState(true)
-    // const [userToken, setUserToken] = useState(null)
-    const initialLoginState = {
-        //object
-        isLoading: true,
-        userName: null,
-        userToken: null,
-    }
-    //REACT HOOKS useContext & useReducer
-    const loginReducer = (prevState, action) => {
-        switch (action.type) {
-            case 'GET_TOKEN':
-                return {
-                    ...prevState,
-                    userToken: action.token,
-                    isLoading: false
-                };
-            case 'LOGIN':
-                return {
-                    ...prevState,
-                    userName: action.id,
-                    userToken: action.token,
-                    isLoading: false,
-                };
-            case 'LOGOUT':
-                return {
-                    ...prevState,
-                    userName: null,
-                    userToken: null,
-                    isLoading: false,
-                };
-            case 'REGISTER': //same LOGIN
-                return {
-                    ...prevState,
-                    userName: action.id,
-                    userToken: action.token,
-                    isLoading: false,
-                };
-            default:
-                throw new Error()
-        }
-    }
+    const authData = useSelector(state => state.auth)
+    const dispatch = useDispatch()
 
-    const [loginState, dispatch] = useReducer(loginReducer, initialLoginState)
+    const authContext = useMemo(() => ({ //only run once
+        signIn: async (data, userToken) => {
+            await axios({
+                method: 'POST',
+                url: `${MAIN_URL}/api/login`,
+                data: data,
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then(async (response) => {
+                    //Dispatch action 
+                    const action = Login(response.data)
+                    const token = getToken(response.data.token)
 
+                    //get value token from redux
+                    userToken = await token.payload //token user to save login in AsyncStorage
 
-    const authContext = useMemo(() => ({
-        signIn: async (data, userToken) => { //data: email & password, userToken: token
-            // console.log(data)
-            // console.log(data.email)
-            console.log("!TOKEN: " + userToken)
-            console.log(loginState.isLoading)
+                    dispatch(action)
+                    // dispatch(getToken)
+                })
+                .catch(err => {
+                    console.log(`ERROR!: ${err}`)
+                })
             if (data) {
                 try {
                     await AsyncStorage.setItem('userToken_Key', userToken)
                 } catch (error) {
                     console.log(error)
                 }
-                dispatch({ type: 'LOGIN', id: data.email, token: userToken })
             }
         },
         signOut: async () => {
-            // setUserToken(null)
-            // setIsLoading(false)
-            // console.log(userToken)
+
             try {
                 await AsyncStorage.removeItem('userToken_Key')
+
             } catch (error) {
                 console.log(error)
             }
-            dispatch({ type: 'LOGOUT' })
+            dispatch(Logout(null))
+            dispatch(getToken(null))
         },
     }), []) //run only once when refresh app
 
     useEffect(() => {
+        const seconds = Math.floor(Math.random() * 1300) + 800
+        // console.log(seconds)
         setTimeout(async () => {
-            //loading this page
-            loginState.isLoading = false
-
-            let userToken
-            userToken = null
-            console.log(`User Token: ${userToken}`)
+            let userToken = null
             try {
                 userToken = await AsyncStorage.getItem('userToken_Key')
-                //console.log("????: " + userToken)
             } catch (error) {
                 console.log(error)
             }
-            dispatch({ type: 'GET_TOKEN', token: userToken })
-        }, 800);
+            dispatch(getToken(userToken))
+        }, seconds);
 
     }, [])
 
     //effect loading page
-    if (loginState.isLoading) {
+    if (authData.isLoading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" />
@@ -120,13 +92,13 @@ export default function Routes() {
                     headerShown: false
                 }}>
                     {
-                        loginState.userToken !== null ?
+                        authData.userToken !== null ?
                             (
                                 //MainScreen show
                                 <Stack.Screen
                                     name="MainScreen"
-                                    component={MainScreen} />
-
+                                    component={MainScreen}
+                                />
                             ) :
                             (
                                 //LoginScreen & RegisterScreen show

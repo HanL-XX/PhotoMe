@@ -10,9 +10,9 @@ dotenv.config({ path: "../config.env" })
 
 router.post('/', (req, res) => {
     // console.log(req.body)
-    const { name, email, password } = req.body;
+    const { name, email, password,sex } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password||!sex) {
         return res.status(400).json({ msg: 'Please enter all fields' })
     }
     User.findOne({ email }).then(user => {
@@ -21,6 +21,7 @@ router.post('/', (req, res) => {
             name,
             email,
             password,
+            sex,
         })
         bcryptjs.genSalt(10, (err, salt) => {
             bcryptjs.hash(newUser.password, salt, (err, hash) => {

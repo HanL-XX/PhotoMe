@@ -1,23 +1,18 @@
 const mongoose=require("mongoose")
 const Schema=mongoose.Schema
 
-const UserSchema=new Schema({
-    name:{
+const CommentSchema=new Schema({
+    id_User:{
         type: String,
         required: true,
     },
-    email:{
+    id_Newfeed:{
         type: String,
-        required:true,
-        unique:true,
+        required: true,
     },
-    password:{
+    comment:{
         type: String,
-        required:true,
-    },
-    sex:{
-        type: String,
-        required:false,
+        required: true,
     },
     registration_data:{
         type:String,
@@ -25,4 +20,4 @@ const UserSchema=new Schema({
     }
 })
 
-module.exports=User=mongoose.model("user",UserSchema)
+module.exports=comment=mongoose.model("comment",CommentSchema)

@@ -6,7 +6,7 @@ import { windowWidth } from '../utils/Dimensions.js'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 
-export default function AnimatedBottomSheet({ modalizeRef, userName }) {
+export default function AnimatedBottomSheet({ modalizeRef, name }) {
     // const modalizeRef = React.useRef(null);
     // const onOpenBottomSheet = () => {
     //     modalizeRef.current?.open()
@@ -18,7 +18,7 @@ export default function AnimatedBottomSheet({ modalizeRef, userName }) {
             modalHeight={200}
             style={{ overflow: 'hidden' }} >
             <SafeAreaView style={styles.containerSheet}>
-                {userName ? (
+                {name ? (
                     <TouchableOpacity style={styles.buttonSheet}>
                         <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
                         <Ionicons

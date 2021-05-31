@@ -17,7 +17,7 @@ import { AuthContext } from '../../context/AuthContext'
 
 export default function DrawerProfileScreen({ props, navigation }) {
     //SignOut
-    const { signOut } = React.useContext(AuthContext)
+    const { authContext: { signOut } } = React.useContext(AuthContext)
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>

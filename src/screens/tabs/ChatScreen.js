@@ -14,6 +14,7 @@ import {
 
 
 export default function ChatScreen({ navigation, route }) {
+    const { name } = route.params //name in ProfileUserScreen
     const [messages, setMessages] = useState([]);
 
     useEffect(() => {
@@ -43,18 +44,15 @@ export default function ChatScreen({ navigation, route }) {
                     backgroundColor: '#fff',
                 }}
                 centerComponent={
-                    <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-                        <UserInfo>
-                            <UserImgWrapper>
-                                <UserImg source={route.params.userImg} />
-                            </UserImgWrapper>
-                            <UserInfoText>
-                                <UserName>{route.params.userName}</UserName>
-                                <PostTime>{route.params.messageTime}</PostTime>
-                            </UserInfoText>
-                        </UserInfo>
-                    </TouchableOpacity>
-
+                    <UserInfo>
+                        <UserImgWrapper>
+                            <UserImg source={route.params.userImg} />
+                        </UserImgWrapper>
+                        <UserInfoText>
+                            {name ? <UserName>{name}</UserName> : <UserName>{route.params.userName}</UserName>}
+                            <PostTime>?</PostTime>
+                        </UserInfoText>
+                    </UserInfo>
                 }
                 leftComponent={
                     <View style={styles.fontIcon}>

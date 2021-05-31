@@ -73,14 +73,31 @@ export const StatTitle = styled.Text`
 `
 
 export const EditProfile = styled.TouchableOpacity` 
-    width:90%;
+    width:92%;
     padding: 10px;
-    border: 1px solid #b8b8b8;
+    border: 0.5px solid #c7c7c7;
+    border-radius: 6px;
     margin-bottom:40px;
 `
 
 export const EditProfileText = styled.Text`
     color: #202020;
-    font-weight:600;
+    font-weight:700;
+    text-align:center;
+`
+export const ProfileUser = styled.TouchableOpacity` 
+    /* width:90%; */
+    flex: 1;
+    padding: 10px;
+    border: 0.5px solid #c7c7c7;
+    border-radius: 6px;
+    margin-bottom:40px;
+    margin-left: 7px;
+    margin-right: 7px;
+`
+
+export const ProfileUserText = styled.Text`
+    color: #202020;
+    font-weight:700;
     text-align:center;
 `

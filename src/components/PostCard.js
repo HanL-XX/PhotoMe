@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { TouchableOpacity } from 'react-native'
 import { StyleSheet, View, Text } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
@@ -21,8 +21,11 @@ import {
     InteractionText,
     Divide
 } from '../styles/FeedStyle'
+import { AuthContext } from '../context/AuthContext'
 
-export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
+export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress }) {
+    const { name } = useContext(AuthContext) //get name from AuthContext
+
     //Set up react heart
     const [liked, setLiked] = useState('') //false: none-color <--> true: red color
     const [likesText, setLikesText] = useState('Like')
@@ -56,34 +59,37 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef }) {
 
     return (
         <Card>
-            <UserInfo>
-                <View style={{ flexDirection: 'row' }}>
-                    <UserImg source={item.userImg} />
-                    <UserInfoText>
-                        <View style={{ flexDirection: 'row' }}>
-                            <UserName>{item.userName}</UserName>
-                            {(followed === 'Following' && item.userName !== 'phamvuleminh' ? (
-                                <Follow>
-                                    <Text> • </Text>
-                                    <TouchableOpacity>
-                                        <FollowText>{followed}</FollowText>
-                                    </TouchableOpacity>
-                                </Follow>) : <></>)}
+            <TouchableOpacity onPress={onPress} activeOpacity={1}>
 
-                        </View>
-                        <View style={{ flexDirection: 'row' }}>
-                            <TimeAgo time={item.postTime} />
-                            {/* add icon Major */}
-                        </View>
-                    </UserInfoText>
-                </View>
-                <TouchableOpacity onPress={onOpenBottomSheet}>
-                    <Feather
-                        name="more-vertical"
-                        size={23}
-                        style={{ textAlign: 'right' }} />
-                </TouchableOpacity>
-            </UserInfo>
+                <UserInfo onPress={onPress}>
+                    <View style={{ flexDirection: 'row' }} >
+                        <UserImg source={item.userImg} />
+                        <UserInfoText>
+                            <View style={{ flexDirection: 'row' }}>
+                                <UserName>{item.userName}</UserName>
+                                {(followed === 'Following' && item.userName !== name ? (
+                                    <Follow>
+                                        <Text> • </Text>
+                                        <TouchableOpacity>
+                                            <FollowText>{followed}</FollowText>
+                                        </TouchableOpacity>
+                                    </Follow>) : <></>)}
+
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <TimeAgo time={item.postTime} />
+                                {/* add icon Major */}
+                            </View>
+                        </UserInfoText>
+                    </View>
+                    <TouchableOpacity onPress={onOpenBottomSheet}>
+                        <Feather
+                            name="more-vertical"
+                            size={23}
+                            style={{ textAlign: 'right' }} />
+                    </TouchableOpacity>
+                </UserInfo>
+            </TouchableOpacity>
             <PostText>{item.postText}</PostText>
             {/* check display img */}
             {item.postImg != 'none' ? <PostImg source={item.postImg} /> : <Divide />}

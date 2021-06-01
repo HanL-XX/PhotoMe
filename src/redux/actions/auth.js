@@ -1,5 +1,9 @@
-import { GET_TOKEN, LOGIN, LOGOUT, REGISTER } from '../actionTypes'
+import { GET_TOKEN, GET_USER, LOGIN, LOGOUT, REGISTER } from '../actionTypes'
 
+export const getUser = (data) => ({
+    type: GET_USER,
+    payload: data,
+})
 
 export const getToken = (token) => ({
     type: GET_TOKEN,

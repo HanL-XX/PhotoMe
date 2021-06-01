@@ -3,13 +3,11 @@ import { View, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Header } from 'react-native-elements'
 
-import Feather from 'react-native-vector-icons/Feather'
+import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { AuthContext } from '../../context/AuthContext'
 import {
     SafeAreaView,
     Container,
-    IconContainer,
     UserImgContainer,
     UserImg,
     UserName,
@@ -20,12 +18,11 @@ import {
     StatTitle,
     EditProfile,
     EditProfileText,
+    ProfileUser,
+    ProfileUserText
 } from '../../styles/ProfileStyle'
 import PostCard from '../../components/PostCard'
-import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
-
-const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
 const time = new Date().toISOString(); //get Date to post Status
 //test DATA
@@ -45,12 +42,12 @@ const Posts = [
     },
     {
         id: '2',
-        userName: 'Linh',
+        userName: 'Hà Nhật Linh',
         userImg: require('../../assets/images/user2.png'),
         postTime: time,
         postText: `Perfect Image for Bird!`,
         postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: true,
+        liked: false,
         likes: '1',
         comments: '14',
         saves: '5',
@@ -76,7 +73,7 @@ const Posts = [
         postTime: '2021-05-10T03:16:34.820Z',
         postText: `This is a second post!!`,
         postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: true,
+        liked: false,
         likes: '1K',
         comments: '52',
         saves: '5',
@@ -85,15 +82,14 @@ const Posts = [
 ]
 
 //change Profile in here!
-const ProfileStackScreen = ({ navigation }) => {
-    const { name } = useContext(AuthContext) //get name from AuthContext
+const ProfileUserStackScreen = ({ navigation, route }) => {
+    const { userImg, userName } = route.params.dataUser
     // const [countPost, setCountPost] = useState(0)
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
     const onOpenBottomSheet = () => {
         modalizeRef.current?.open();
     }
-
 
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
@@ -115,14 +111,14 @@ const ProfileStackScreen = ({ navigation }) => {
                 showsHorizontalScrollIndicator={false} >
                 <View style={{ justifyContent: 'center', alignItems: 'center', padding: 15 }}>
                     <UserImgContainer>
-                        <UserImg source={require("../../assets/images/user1.jpg")} />
+                        <UserImg source={userImg} />
                     </UserImgContainer>
                     <UserName
-                        value={name}
-                        defaultValue={name}
+                        value={userName}
+                        defaultValue={userName}
                         editable={false}
                         selectTextOnFocus={false} />
-                    <Description numberOfLines={2}>IT - Software Engineering
+                    <Description numberOfLines={2}>{userName}
                     </Description>
                 </View>
 
@@ -140,51 +136,45 @@ const ProfileStackScreen = ({ navigation }) => {
                         <StatTitle>Following</StatTitle>
                     </Stat>
                 </StatsContainer>
+                <View style={{ flexDirection: 'row' }}>
+                    <ProfileUser onPress={() => navigation.navigate('Chat', { name: userName })}>
+                        <ProfileUserText>Message</ProfileUserText>
+                    </ProfileUser>
+                    <ProfileUser style={{ backgroundColor: "#3a96ff" }}>
+                        <ProfileUserText style={{ color: '#fff' }}>Follow</ProfileUserText>
+                    </ProfileUser>
+                </View>
 
-                <EditProfile>
-                    <EditProfileText onPress={() => navigation.navigate('EditPersonalProfile', { name: name })}>Edit Profile</EditProfileText>
-                </EditProfile>
                 {Posts.map((item) => {
-                    if (item.userName === name) {
+                    if (item.userName === userName) {
                         // setCountPost(countPost + 1)
                         return <View key={item.id} style={styles.viewDeletePost}>
                             <PostCard
                                 onOpenBottomSheet={onOpenBottomSheet}
                                 modalizeRef={modalizeRef}
-                                item={item}
-                                name={name} />
+                                item={item} />
                         </View>
                     }
                 })}
             </Container>
 
-            <AnimatedBottomSheet
-                modalizeRef={modalizeRef}
-                name={name} >
+            <AnimatedBottomSheet modalizeRef={modalizeRef} name={userName}>
 
             </AnimatedBottomSheet>
         </SafeAreaView>
     )
 }
 
-const MainProfileStackScreen = ({ navigation }) => {
+export default function ProfileUserScreen({ navigation, route }) {
     return (
         <View style={{
             flex: 1, flexDirection: 'column', backgroundColor: 'red'
         }}>
             <Header
                 leftComponent={
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <Feather
-                            name="menu"
-                            size={30}
-                        />
-                    </TouchableOpacity>
-                }
-                rightComponent={
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <FontAwesome
-                            name="plus-square-o"
+                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                        <Ionicons
+                            name="arrow-back"
                             size={30}
                         />
                     </TouchableOpacity>
@@ -195,18 +185,8 @@ const MainProfileStackScreen = ({ navigation }) => {
                     justifyContent: 'space-around',
                 }}
             />
-            <ProfileStackScreen navigation={navigation} />
+            <ProfileUserStackScreen navigation={navigation} route={route} />
         </View >
-    )
-}
-
-export default function ProfileScreen() {
-    return (
-        <Drawer.Navigator drawerContent={props => <DrawerProfileScreen {...props} />}>
-            <Drawer.Screen
-                name="MainProfileStackScreen" component={MainProfileStackScreen} />
-        </Drawer.Navigator>
-
     )
 }
 

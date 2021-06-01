@@ -6,6 +6,7 @@ import { createStackNavigator } from '@react-navigation/stack'
 
 import HomeScreen from '../screens/tabs/HomeScreen'
 import ProfileScreen from '../screens/tabs/ProfileScreen'
+import ProfileUserScreen from '../screens/tabs/ProfileUserScreen'
 import NotificationScreen from '../screens/tabs/NotificationScreen'
 import SearchScreen from '../screens/tabs/SearchScreen'
 import MessageScreen from '../screens/tabs/MessageScreen'
@@ -13,6 +14,7 @@ import ChatScreen from '../screens/tabs/ChatScreen'
 import InfoChatScreen from '../screens/tabs/InfoChatScreen'
 import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 import PostMind from '../screens/tabs/PostMind'
+import PostCard from '../components/PostCard'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -40,7 +42,7 @@ const MainStackScreen = () => {
                 name="Notification"
                 component={NotificationScreen}
                 options={{
-                    tabBarLabel: 'Updates',
+                    tabBarLabel: 'Notification',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="bell" color={color} size={28} />
                     ),
@@ -82,6 +84,12 @@ export default function MainScreen() {
                     headerShown: false
                 }} />
             <Stack.Screen
+                name="ProfileUserScreen"
+                component={ProfileUserScreen}
+                options={{
+                    headerShown: false
+                }} />
+            <Stack.Screen
                 name='Message'
                 component={MessageScreen}
                 options={{
@@ -112,6 +120,13 @@ export default function MainScreen() {
             <Stack.Screen
                 name='PostMind'
                 component={PostMind}
+                options={({ route }) => ({
+
+                    headerShown: false
+                })} />
+            <Stack.Screen
+                name='PostCard'
+                component={PostCard}
                 options={({ route }) => ({
 
                     headerShown: false

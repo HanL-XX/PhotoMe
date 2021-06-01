@@ -6,36 +6,46 @@ import MainScreen from './MainScreen'
 import { ActivityIndicator } from "react-native" //loading page
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
-import { AuthContext } from '../context/AuthContext'
 import axios from 'axios'
 import { MAIN_URL } from '../config'
+import { AuthContext } from '../context/AuthContext'
+import { UserContext } from '../context/UserContext'
+
 import { useDispatch, useSelector } from 'react-redux'
-import { getToken, Login, Logout } from '../redux/actions/auth'
+import { getUser, Login, Logout } from '../redux/actions/auth'
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
-    const authData = useSelector(state => state.auth)
+    const authData = useSelector(state => state.auth) //get auth from RootReducer
     const dispatch = useDispatch()
+    console.log(authData)
 
     const authContext = useMemo(() => ({ //only run once
-        signIn: async (data, userToken) => {
+        signIn: async (data, userToken, userName, userId) => {
             await axios({
                 method: 'POST',
                 url: `${MAIN_URL}/api/login`,
-                data: data,
+                data: data, //username && password
                 headers: { 'Content-Type': 'application/json' }
             })
                 .then(async (response) => {
-                    //Dispatch action 
-                    const action = Login(response.data)
-                    const token = getToken(response.data.token)
+                    const user = {
+                        id: response.data.user.id,
+                        email: response.data.user.email,
+                        name: response.data.user.name,
+                        token: response.data.token,
+                    }
 
-                    //get value token from redux
-                    userToken = await token.payload //token user to save login in AsyncStorage
-
+                    const action = Login(user)
                     dispatch(action)
-                    // dispatch(getToken)
+
+                    //get value id, name, token from redux
+                    userToken = await action.payload.token
+                    userName = action.payload.name
+                    userId = action.payload.id
+
+                    // console.log(userName, userId)
                 })
                 .catch(err => {
                     console.log(`ERROR!: ${err}`)
@@ -43,21 +53,25 @@ export default function Routes() {
             if (data) {
                 try {
                     await AsyncStorage.setItem('userToken_Key', userToken)
+                    await AsyncStorage.setItem('userName_Key', userName)
+                    await AsyncStorage.setItem('userId_Key', userId)
                 } catch (error) {
                     console.log(error)
                 }
             }
         },
         signOut: async () => {
-
             try {
                 await AsyncStorage.removeItem('userToken_Key')
+                await AsyncStorage.removeItem('userName_Key')
+                await AsyncStorage.removeItem('userId_Key')
 
             } catch (error) {
                 console.log(error)
             }
+
             dispatch(Logout(null))
-            dispatch(getToken(null))
+            dispatch(getUser(null, null, null))
         },
     }), []) //run only once when refresh app
 
@@ -65,13 +79,20 @@ export default function Routes() {
         const seconds = Math.floor(Math.random() * 1300) + 800
         // console.log(seconds)
         setTimeout(async () => {
-            let userToken = null
+            const user = {
+                userToken: null,
+                userName: null,
+                userId: null,
+            }
             try {
-                userToken = await AsyncStorage.getItem('userToken_Key')
+                user.userToken = await AsyncStorage.getItem('userToken_Key')
+                user.userName = await AsyncStorage.getItem('userName_Key')
+                user.userId = await AsyncStorage.getItem('userId_Key')
             } catch (error) {
                 console.log(error)
             }
-            dispatch(getToken(userToken))
+            dispatch(getUser(user))
+            // console.log(dispatch(getUser(user)))
         }, seconds);
 
     }, [])
@@ -84,9 +105,10 @@ export default function Routes() {
             </View>
         )
     }
-
+    // console.log("??? " + authData.userToken)
+    // console.log("!!!! " + authData.userName)
     return (
-        <AuthContext.Provider value={authContext}>
+        <AuthContext.Provider value={{ authContext, name: authData.userName }}>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{
                     headerShown: false
@@ -95,10 +117,13 @@ export default function Routes() {
                         authData.userToken !== null ?
                             (
                                 //MainScreen show
-                                <Stack.Screen
-                                    name="MainScreen"
-                                    component={MainScreen}
-                                />
+                                <Stack.Screen name="MainScreen">
+                                    {() => (
+                                        <UserContext.Provider value={{ id: authData.userId }}>
+                                            <MainScreen />
+                                        </UserContext.Provider>
+                                    )}
+                                </Stack.Screen>
                             ) :
                             (
                                 //LoginScreen & RegisterScreen show
@@ -109,7 +134,7 @@ export default function Routes() {
                     }
                 </Stack.Navigator>
             </NavigationContainer>
-        </AuthContext.Provider>
+        </AuthContext.Provider >
 
     )
 }

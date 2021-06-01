@@ -15,12 +15,14 @@ export default function LoginScreen({ navigation }) {
     const data = JSON.stringify({ email, password })
 
     const userToken = null
+    const userName = null
+    const userId = null
     //SignIn
-    const { signIn } = React.useContext(AuthContext)
+    const { authContext: { signIn } } = React.useContext(AuthContext)
 
     const _Login = async () => {
         try {
-            await signIn(data, userToken)
+            await signIn(data, userToken, userName, userId)
             setIsLoading(true)
         } catch (error) {
             setError(error.message)

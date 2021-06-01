@@ -1,10 +1,7 @@
-import * as React from 'react'
+import React, { useContext, useDispatch, useSelector } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
-// import { State } from 'react-native-gesture-handler'
-// import { TapGestureHandler, PanGestureHandler } from 'react-native-gesture-handler'
-// 
 import PostCard from '../../components/PostCard'
 import {
     Container,
@@ -15,13 +12,14 @@ import {
 
 } from '../../styles/FeedStyle'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
+import { AuthContext } from '../../context/AuthContext'
+
 
 const time = new Date().toISOString(); //get Date to post Status
 const Posts = [
     {
         id: '1',
-        name: 'Phạm Vũ Lê Minh',
-        userName: 'phamvuleminh',
+        userName: 'Minh',
         userImg: require('../../assets/images/user1.jpg'),
         postTime: '2021-05-04T03:16:34.820Z',
         postText: `Hi, I'm a developer`,
@@ -33,8 +31,7 @@ const Posts = [
     },
     {
         id: '2',
-        name: 'Hà Nhật Linh',
-        userName: 'hnlinh',
+        userName: 'Hà Nhật Linh',
         userImg: require('../../assets/images/user2.png'),
         postTime: time,
         postText: `Perfect Image for Bird!`,
@@ -46,8 +43,7 @@ const Posts = [
     },
     {
         id: '3',
-        name: 'Group',
-        userName: 'groupchat',
+        userName: 'Group',
         userImg: require('../../assets/images/user3.jpg'),
         postTime: time,
         postText: `This is a first comment in group!!`,
@@ -58,8 +54,10 @@ const Posts = [
         saves: '5',
     },
 ]
+
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
+    const { name } = useContext(AuthContext) //get name from AuthContext
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
     const onOpenBottomSheet = () => {
@@ -75,6 +73,17 @@ const HomeStackScreen = ({ navigation }) => {
             setRefreshing(false);
         }, 1200);
     })
+
+    const handleNameUser = (dataUser) => {
+        if (dataUser.userName !== name) {
+            navigation.navigate('ProfileUserScreen', { dataUser: dataUser })
+            // console.log(dataUser)
+        }
+        else {
+            navigation.navigate('Profile')
+            // alert(userName)
+        }
+    }
     return (
         <Container>
             <HeaderBar>
@@ -99,7 +108,9 @@ const HomeStackScreen = ({ navigation }) => {
                     <PostCard
                         onOpenBottomSheet={onOpenBottomSheet}
                         modalizeRef={modalizeRef}
-                        item={item} />}
+                        item={item}
+                        onPress={() => { handleNameUser(item) }}
+                    />}
             />
 
             {/* //show bottom sheet */}

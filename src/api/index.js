@@ -1,0 +1,1 @@
+import { MAIN_URL } from '../config'

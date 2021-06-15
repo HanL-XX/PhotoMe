@@ -9,17 +9,24 @@ import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
 import { MAIN_URL } from '../config'
 import { AuthContext } from '../context/AuthContext'
-import { UserContext } from '../context/UserContext'
+import { MainContext } from '../context/MainContext'
 
 import { useDispatch, useSelector } from 'react-redux'
-import { getUser, Login, Logout } from '../redux/actions/auth'
+import { getUser, Login, Logout, Register } from '../redux/actions/auth'
+import { getProfileUser } from '../redux/actions/mainstack'
 
 const Stack = createStackNavigator();
 
 export default function Routes() {
     const authData = useSelector(state => state.auth) //get auth from RootReducer
+    const mainData = useSelector(state => state.mainStack)
     const dispatch = useDispatch()
-    console.log(authData)
+    const [user1, setUser1] = useState({
+        id_User: '',
+        name: '',
+        avatar: '',
+        sex: '',
+    })
 
     const authContext = useMemo(() => ({ //only run once
         signIn: async (data, userToken, userName, userId) => {
@@ -42,10 +49,7 @@ export default function Routes() {
 
                     //get value id, name, token from redux
                     userToken = await action.payload.token
-                    userName = action.payload.name
                     userId = action.payload.id
-
-                    // console.log(userName, userId)
                 })
                 .catch(err => {
                     console.log(`ERROR!: ${err}`)
@@ -53,7 +57,7 @@ export default function Routes() {
             if (data) {
                 try {
                     await AsyncStorage.setItem('userToken_Key', userToken)
-                    await AsyncStorage.setItem('userName_Key', userName)
+                    // await AsyncStorage.setItem('userName_Key', userName)
                     await AsyncStorage.setItem('userId_Key', userId)
                 } catch (error) {
                     console.log(error)
@@ -63,7 +67,7 @@ export default function Routes() {
         signOut: async () => {
             try {
                 await AsyncStorage.removeItem('userToken_Key')
-                await AsyncStorage.removeItem('userName_Key')
+                // await AsyncStorage.removeItem('userName_Key')
                 await AsyncStorage.removeItem('userId_Key')
 
             } catch (error) {
@@ -71,11 +75,60 @@ export default function Routes() {
             }
 
             dispatch(Logout(null))
-            dispatch(getUser(null, null, null))
+            // dispatch(getUser(null))
         },
-    }), []) //run only once when refresh app
+        register: (user) => { //name, email, password, sex
+            axios({
+                method: 'POST',
+                url: `${MAIN_URL}/api/user`,
+                data: user, //username && password
+                headers: { 'Content-Type': 'application/json' }
+            })
+                .then((response) => {
+                    // console.log(response)
+                    const action = Register(user)
+                    dispatch(action)
+                    // setUser1({ ...user1, id_User: response.data.id_User, name: response.data.name, sex: response.data.sex })
+                    // console.log(user1)
+                    return response;
+                })
+                .then(response => {
+                    // console.log(response)
+                    axios({
+                        method: 'POST',
+                        url: `${MAIN_URL}/api/profile`,
+                        data: {
+                            id_User: response.data.user.id,
+                            name: response.data.user.name,
+                            sex: response.data.user.sex,
+                        },
+                        headers: { 'Content-Type': 'application/json' }
+                    }).then(res).catch(err => console.log(err))
+                })
+                .catch(err => {
+                    console.log(`ERROR!: ${err}`)
+                })
 
-    useEffect(() => {
+
+        }
+    }), [dispatch]) //run only once when refresh app
+
+    const mainContext = useMemo(() => ({
+        updateProfile: async (data) => {
+            await axios({
+                method: 'POST',
+                url: `${MAIN_URL}/api/profile/updateprofile`,
+                data: data, //img, name, intro, sex, iconSex, 
+                headers: { 'Content-Type': 'application/json' },
+            })
+                .then(response => {
+                    // console.log(response)
+                })
+                .catch(err => console.log(err))
+        }
+    }), [])
+
+    useEffect(async () => {
         const seconds = Math.floor(Math.random() * 1300) + 800
         // console.log(seconds)
         setTimeout(async () => {
@@ -86,15 +139,16 @@ export default function Routes() {
             }
             try {
                 user.userToken = await AsyncStorage.getItem('userToken_Key')
-                user.userName = await AsyncStorage.getItem('userName_Key')
+                // user.userName = await AsyncStorage.getItem('userName_Key')
                 user.userId = await AsyncStorage.getItem('userId_Key')
+
+                // console.log(id)
             } catch (error) {
                 console.log(error)
             }
             dispatch(getUser(user))
             // console.log(dispatch(getUser(user)))
         }, seconds);
-
     }, [])
 
     //effect loading page
@@ -105,10 +159,9 @@ export default function Routes() {
             </View>
         )
     }
-    // console.log("??? " + authData.userToken)
-    // console.log("!!!! " + authData.userName)
+
     return (
-        <AuthContext.Provider value={{ authContext, name: authData.userName }}>
+        <AuthContext.Provider value={{ authContext, data: authData }}>
             <NavigationContainer>
                 <Stack.Navigator screenOptions={{
                     headerShown: false
@@ -119,9 +172,9 @@ export default function Routes() {
                                 //MainScreen show
                                 <Stack.Screen name="MainScreen">
                                     {() => (
-                                        <UserContext.Provider value={{ id: authData.userId }}>
+                                        <MainContext.Provider value={{ mainContext, dataProfile: mainData }}>
                                             <MainScreen />
-                                        </UserContext.Provider>
+                                        </MainContext.Provider>
                                     )}
                                 </Stack.Screen>
                             ) :

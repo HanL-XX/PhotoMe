@@ -1,15 +1,12 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native'
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Header } from 'react-native-elements'
-
 import Feather from 'react-native-vector-icons/Feather'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import { AuthContext } from '../../context/AuthContext'
 import {
     SafeAreaView,
     Container,
-    IconContainer,
     UserImgContainer,
     UserImg,
     UserName,
@@ -24,6 +21,9 @@ import {
 import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
+import axios from 'axios';
+import { MAIN_URL } from '../../config';
+import AsyncStorage from '@react-native-community/async-storage'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
@@ -86,7 +86,41 @@ const Posts = [
 
 //change Profile in here!
 const ProfileStackScreen = ({ navigation }) => {
-    const { name } = useContext(AuthContext) //get name from AuthContext
+    const [user, setUser] = useState({
+        id: null,
+        name: null,
+        avatar: null,
+        follow: null,
+        following: null,
+        post: null,
+    })
+
+    useEffect(async () => {
+        const id = await AsyncStorage.getItem('userId_Key');
+        try {
+            axios({
+                method: 'GET',
+                url: `${MAIN_URL}/api/profile`,
+                params: {
+                    id_User: id
+                }
+            })
+                .then(response => {
+                    setUser({
+                        id: response.data.profile[0]._id,
+                        name: response.data.profile[0].name,
+                        avatar: response.data.profile[0].avatar,
+                        follow: response.data.profile[0].follow,
+                        following: response.data.profile[0].following,
+                        post: response.data.profile[0].post,
+                    })
+                    console.log(response.data.profile[0].avatar)
+                })
+                .catch(err => console.log(err.msg))
+        } catch (error) {
+            console.log(error)
+        }
+    }, [])
     // const [countPost, setCountPost] = useState(0)
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
@@ -94,9 +128,9 @@ const ProfileStackScreen = ({ navigation }) => {
         modalizeRef.current?.open();
     }
 
-
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
+    const [intro, setIntro] = useState('IT-DEV')
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
@@ -104,6 +138,7 @@ const ProfileStackScreen = ({ navigation }) => {
             setRefreshing(false);
         }, 1200);
     })
+
     return (
         <SafeAreaView>
             <Container
@@ -115,44 +150,44 @@ const ProfileStackScreen = ({ navigation }) => {
                 showsHorizontalScrollIndicator={false} >
                 <View style={{ justifyContent: 'center', alignItems: 'center', padding: 15 }}>
                     <UserImgContainer>
-                        <UserImg source={require("../../assets/images/user1.jpg")} />
+                        <UserImg source={{ uri: user.avatar }} />
                     </UserImgContainer>
                     <UserName
-                        value={name}
-                        defaultValue={name}
+                        value={user.name}
+                        defaultValue={user.name}
                         editable={false}
                         selectTextOnFocus={false} />
-                    <Description numberOfLines={2}>IT - Software Engineering
+                    <Description numberOfLines={2}>{intro}
                     </Description>
                 </View>
 
                 <StatsContainer>
                     <Stat>
-                        <StatAmount>2</StatAmount>
+                        <StatAmount>{user.post}</StatAmount>
                         <StatTitle>Posts</StatTitle>
                     </Stat>
                     <Stat>
-                        <StatAmount>1K</StatAmount>
+                        <StatAmount>{user.follow}</StatAmount>
                         <StatTitle>Followers</StatTitle>
                     </Stat>
                     <Stat>
-                        <StatAmount>305</StatAmount>
+                        <StatAmount>{user.following}</StatAmount>
                         <StatTitle>Following</StatTitle>
                     </Stat>
                 </StatsContainer>
 
                 <EditProfile>
-                    <EditProfileText onPress={() => navigation.navigate('EditPersonalProfile', { name: name })}>Edit Profile</EditProfileText>
+                    <EditProfileText onPress={() => navigation.navigate('EditPersonalProfile', { name: user.name })}>Edit Profile</EditProfileText>
                 </EditProfile>
                 {Posts.map((item) => {
-                    if (item.userName === name) {
+                    if (item.id === user.id) {
                         // setCountPost(countPost + 1)
                         return <View key={item.id} style={styles.viewDeletePost}>
                             <PostCard
                                 onOpenBottomSheet={onOpenBottomSheet}
                                 modalizeRef={modalizeRef}
                                 item={item}
-                                name={name} />
+                                id={user.id} />
                         </View>
                     }
                 })}
@@ -160,9 +195,7 @@ const ProfileStackScreen = ({ navigation }) => {
 
             <AnimatedBottomSheet
                 modalizeRef={modalizeRef}
-                name={name} >
-
-            </AnimatedBottomSheet>
+                id={user.id} />
         </SafeAreaView>
     )
 }

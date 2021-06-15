@@ -9,10 +9,12 @@ import getIdUser from '../components/getIdUser'
 
 export default function LoginScreen({ navigation }) {
     const [isLoading, setIsLoading] = useState(false)
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+    const [user, setUser] = useState({
+        email: '',
+        password: '',
+    })
     const [error, setError] = useState('')
-    const data = JSON.stringify({ email, password })
+    const data = JSON.stringify(user)
 
     const userToken = null
     const userName = null
@@ -29,25 +31,6 @@ export default function LoginScreen({ navigation }) {
             setIsLoading(false)
             console.log(error)
         }
-        // await axios({
-        //     method: 'POST',
-        //     url: `${MAIN_URL}api/login`,
-        //     data: data,
-        //     headers: { 'Content-Type': 'application/json' }
-        // })
-        //     .then(response => {
-        //         const dataParse = JSON.parse(data)
-        //         const name = response.data.user.name
-        //         const id = response.data.user.id
-        //         // navigation.navigate('Profile', { id: id, name: name })
-        //         // getIdUser = response.data.user.id
-        //         console.log(id)
-
-        //         signIn(dataParse, name, response.data.token)
-        //     })
-        //     .catch(err => {
-        //         console.log(`ERROR!: ${err}`)
-        //     })
     }
 
     return (
@@ -57,16 +40,16 @@ export default function LoginScreen({ navigation }) {
                 source={require("../assets/images/Logoden.png")} />
             <Text style={styles.text}>PhotoMe App</Text>
             <InputForm
-                labelValue={email}
-                onChangeText={(userEmail) => setEmail(userEmail)}
+                labelValue={user.email}
+                onChangeText={(userEmail) => setUser({ ...user, email: userEmail })}
                 autoCapitalize="none"
                 keyboardType="email-address"
                 autoCorrect={false}
                 placeholderText="Email"
                 iconType="person" />
             <InputForm
-                labelValue={password}
-                onChangeText={(userPassword) => setPassword(userPassword)}
+                labelValue={user.password}
+                onChangeText={(userPassword) => setUser({ ...user, password: userPassword })}
                 secureTextEntry={true}
                 placeholderText="Password"
                 iconType="lock" />

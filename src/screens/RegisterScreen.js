@@ -3,29 +3,42 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
 import InputForm from "../components/InputForm"
 import ButtonForm from "../components/ButtonForm"
 import SocialButton from "../components/SocialButton"
-
+import { AuthContext } from "../context/AuthContext"
+import CheckBox from '@react-native-community/checkbox'
 export default function SignUpScreen({ navigation }) {
     const [nameUser, setNameUser] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-    const [confirmPassword, setConfirmPassword] = useState();
-    const _Regis = () => {
-        fetch(`http://localhost:3000/api/user`, {
-            method: 'POST',
-            headers: {
-                'accept': 'application/json',
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
+    const [sex, setSex] = useState();
+    const [toggleMaleCheckBox, setToggleMaleCheckBox] = useState(false)
+    const [toggleFemaleCheckBox, setToggleFemaleCheckBox] = useState(false)
+
+    const { authContext: { register } } = React.useContext(AuthContext)
+    const _Register = async () => {
+        try {
+            const user = {
                 name: nameUser,
                 email: email,
                 password: password,
-            })
-        })
-            .then((response) => console.log(response.json()))
-            .catch((error) => {
-                console.error(error);
-            });
+                sex: sex,
+            }
+            console.log(user)
+            await register(JSON.stringify(user));
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const handleMaleCheckBox = (value, sex) => {
+        setToggleMaleCheckBox(value)
+        setToggleFemaleCheckBox(!value)
+        setSex(sex)
+        console.log(sex)
+    }
+    const handleFemaleCheckBox = (value, sex) => {
+        setToggleFemaleCheckBox(value)
+        setToggleMaleCheckBox(!value)
+        setSex(sex)
+        console.log(sex)
     }
     return (
         <View style={styles.container}>
@@ -51,15 +64,23 @@ export default function SignUpScreen({ navigation }) {
                 secureTextEntry={true}
                 placeholderText="Password"
                 iconType="lock" />
-            <InputForm
-                labelValue={confirmPassword}
-                onChangeText={(confirmPassword) => setConfirmPassword(confirmPassword)}
-                secureTextEntry={true}
-                placeholderText="Confirm Password"
-                iconType="lock" />
+            <View style={{ flexDirection: 'row', justifyContent: 'flex-start', width: '100%' }}>
+                <View style={styles.checkBox}>
+                    <CheckBox
+                        value={toggleMaleCheckBox}
+                        onValueChange={(newValue) => handleMaleCheckBox(newValue, 'male')} />
+                    <Text style={{ marginLeft: 8 }}>Male</Text>
+                </View>
+                <View style={styles.checkBox}>
+                    <CheckBox
+                        value={toggleFemaleCheckBox}
+                        onValueChange={(newValue) => handleFemaleCheckBox(newValue, 'female')} />
+                    <Text style={{ marginLeft: 8 }}>Female</Text>
+                </View>
+            </View>
             <ButtonForm
                 buttonTitle="Sign Up"
-                onPress={() => _Regis()} />
+                onPress={() => _Register()} />
             <View style={styles.textPrivate}>
                 <Text style={styles.color_textPrivate}>By registering, you confirm that you accept our</Text>
                 <TouchableOpacity onPress={() => alert("Terms clicked!")}>
@@ -85,7 +106,7 @@ export default function SignUpScreen({ navigation }) {
                 onPress={() => { navigation.navigate("Login") }} >
                 <Text style={styles.navButtonText}>Have an account? Sign In</Text>
             </TouchableOpacity>
-        </View>
+        </View >
     )
 }
 
@@ -128,5 +149,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: '400',
         color: 'grey',
+    },
+    checkBox: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginHorizontal: 10,
+        marginVertical: 5,
     }
 })

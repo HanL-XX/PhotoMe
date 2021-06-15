@@ -50,8 +50,8 @@ const authReducer = (state = initialLoginState, action) => {
         case REGISTER: //same LOGIN
             return {
                 ...state,
-                userName: action.id,
-                userToken: action.token,
+                userId: null,
+                userToken: null,
                 isLoading: false,
             };
         default:

@@ -13,14 +13,14 @@ router.post("/", (req, res) => {
     //console.log(req.body)
     const { id_User, name, intro, job, iconjob, post, follow, following, sex } = req.body
     let avatar
-    console.log(req.body)
+    // console.log(req.body)
     if (sex === 'female') {
         avatar = 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2FAvatarFemale.jpg?alt=media&token=b001d1df-e985-4192-a336-a241d6f90e21'
     }
     else {
         avatar = 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2FAvatarMale.jpg?alt=media&token=75ff7a76-0cef-4c37-9272-c506a116d0c6'
     }
-    console.log(avatar, sex)
+    // console.log(avatar, sex)
     if (!id_User || !avatar || !name) {
         return res.status(400).json({ err: 'Dont have enough properties' })
     }
@@ -50,8 +50,8 @@ router.get("/", async (req, res) => {
     return res.status(200).json({ profile })
 })
 
-router.post("/updateprofile", async (req, res) => {
-    const { id_User, avatar, name, sex, intro, job, iconjob, post, following } = req.body
+router.put("/updateprofile", async (req, res) => {
+    const { id_User, avatar, name, sex, intro, job, iconjob, post, follow, following } = req.body
     if (!id_User) {
         return res.status(400).json({ msg: 'Dont have id user' })
     }
@@ -64,6 +64,7 @@ router.post("/updateprofile", async (req, res) => {
             "job": job,
             "iconjob": iconjob,
             "post": post,
+            "follow": follow,
             "following": following,
         }
     }).catch(error => {

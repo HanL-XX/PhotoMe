@@ -11,7 +11,7 @@ export const Container = styled.ScrollView`
     padding: 15px;
 `
 
-export const UserImgContainer = styled.View`
+export const UserImgContainer = styled.TouchableOpacity`
     border-radius:65px;
     box-shadow:rgba(0,0,0,0.5) 0px 0 10px;
 `

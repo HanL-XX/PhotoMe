@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native'
+import { useIsFocused } from "@react-navigation/native";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Header } from 'react-native-elements'
 import Feather from 'react-native-vector-icons/Feather'
@@ -31,7 +32,7 @@ const time = new Date().toISOString(); //get Date to post Status
 //test DATA
 const Posts = [
     {
-        id: '1',
+        id: '60c86949c2594e39babb9db4',
         userName: 'Minh',
         userImg: require('../../assets/images/user1.jpg'),
         postTime: '2021-05-04T03:16:34.820Z',
@@ -86,41 +87,45 @@ const Posts = [
 
 //change Profile in here!
 const ProfileStackScreen = ({ navigation }) => {
+    const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [user, setUser] = useState({
         id: null,
         name: null,
         avatar: null,
-        follow: null,
-        following: null,
-        post: null,
+        intro: null,
+        follow: 0,
+        following: 0,
+        post: 0,
     })
 
-    useEffect(async () => {
+
+    const fetchProfile = async () => {
         const id = await AsyncStorage.getItem('userId_Key');
-        try {
-            axios({
-                method: 'GET',
-                url: `${MAIN_URL}/api/profile`,
-                params: {
-                    id_User: id
-                }
-            })
-                .then(response => {
-                    setUser({
-                        id: response.data.profile[0]._id,
-                        name: response.data.profile[0].name,
-                        avatar: response.data.profile[0].avatar,
-                        follow: response.data.profile[0].follow,
-                        following: response.data.profile[0].following,
-                        post: response.data.profile[0].post,
-                    })
-                    console.log(response.data.profile[0].avatar)
+        // console.log("????" + id)
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/profile`,
+            params: {
+                id_User: id
+            }
+        })
+            .then(response => {
+                setUser({
+                    id: response.data.profile[0].id_User,
+                    name: response.data.profile[0].name,
+                    avatar: response.data.profile[0].avatar,
+                    intro: response.data.profile[0].intro,
+                    follow: response.data.profile[0].follow,
+                    following: response.data.profile[0].following,
+                    post: response.data.profile[0].post,
                 })
-                .catch(err => console.log(err.msg))
-        } catch (error) {
-            console.log(error)
-        }
-    }, [])
+            })
+            .catch(err => console.log(err))
+    }
+
+    useEffect(async () => {
+        fetchProfile()
+    }, [isFocused])
     // const [countPost, setCountPost] = useState(0)
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
@@ -128,16 +133,22 @@ const ProfileStackScreen = ({ navigation }) => {
         modalizeRef.current?.open();
     }
 
+    //wait time
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        })
+    }
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
-    const [intro, setIntro] = useState('IT-DEV')
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
-        setTimeout(() => {
+        wait(2000).then(async () => {
             setRefreshing(false);
-        }, 1200);
-    })
+            fetchProfile()
+        })
+    }, [refreshing])
 
     return (
         <SafeAreaView>
@@ -157,7 +168,7 @@ const ProfileStackScreen = ({ navigation }) => {
                         defaultValue={user.name}
                         editable={false}
                         selectTextOnFocus={false} />
-                    <Description numberOfLines={2}>{intro}
+                    <Description numberOfLines={2}>{user.intro}
                     </Description>
                 </View>
 
@@ -177,18 +188,27 @@ const ProfileStackScreen = ({ navigation }) => {
                 </StatsContainer>
 
                 <EditProfile>
-                    <EditProfileText onPress={() => navigation.navigate('EditPersonalProfile', { name: user.name })}>Edit Profile</EditProfileText>
+                    <EditProfileText onPress={() => navigation.navigate('EditPersonalProfile', {
+                        id: user.id,
+                        name: user.name,
+                        avatar: user.avatar,
+                        intro: user.intro,
+                    })}>
+                        Edit Profile
+                    </EditProfileText>
                 </EditProfile>
                 {Posts.map((item) => {
                     if (item.id === user.id) {
                         // setCountPost(countPost + 1)
-                        return <View key={item.id} style={styles.viewDeletePost}>
-                            <PostCard
-                                onOpenBottomSheet={onOpenBottomSheet}
-                                modalizeRef={modalizeRef}
-                                item={item}
-                                id={user.id} />
-                        </View>
+                        return (
+                            <View key={item.id} style={styles.viewDeletePost}>
+                                <PostCard
+                                    onOpenBottomSheet={onOpenBottomSheet}
+                                    modalizeRef={modalizeRef}
+                                    item={item}
+                                    id={user.id} />
+                            </View>
+                        )
                     }
                 })}
             </Container>

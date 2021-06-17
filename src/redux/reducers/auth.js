@@ -1,4 +1,4 @@
-import { GET_USER, GET_TOKEN, LOGIN, LOGOUT, REGISTER } from '../actionTypes'
+import { GET_USER, GET_TOKEN, LOGIN, LOGOUT, REGISTER, FETCH_PROFILE } from '../actionTypes'
 
 const initialLoginState = {
     //object
@@ -54,6 +54,8 @@ const authReducer = (state = initialLoginState, action) => {
                 userToken: null,
                 isLoading: false,
             };
+        case FETCH_PROFILE:
+            return action.payload
         default:
             return state;
     }

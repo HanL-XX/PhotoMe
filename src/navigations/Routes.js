@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import AuthStack from './AuthStack'
 import MainScreen from './MainScreen'
-import { ActivityIndicator } from "react-native" //loading page
+import { ActivityIndicator, LogBox } from "react-native" //loading page
 import { View } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import axios from 'axios'
@@ -21,12 +21,6 @@ export default function Routes() {
     const authData = useSelector(state => state.auth) //get auth from RootReducer
     const mainData = useSelector(state => state.mainStack)
     const dispatch = useDispatch()
-    const [user1, setUser1] = useState({
-        id_User: '',
-        name: '',
-        avatar: '',
-        sex: '',
-    })
 
     const authContext = useMemo(() => ({ //only run once
         signIn: async (data, userToken, userName, userId) => {
@@ -129,6 +123,7 @@ export default function Routes() {
     }), [])
 
     useEffect(async () => {
+        LogBox.ignoreLogs(['RCTBridge required dispatch_sync to load RCTDevLoadingView. This may lead to deadlocks']);
         const seconds = Math.floor(Math.random() * 1300) + 800
         // console.log(seconds)
         setTimeout(async () => {

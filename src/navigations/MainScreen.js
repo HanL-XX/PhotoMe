@@ -25,7 +25,7 @@ const MainStackScreen = () => {
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            activeColor="#4867aa"
+            activeColor="#005aad"
             barStyle={{ backgroundColor: '#fff' }}
         >
             <Tab.Screen
@@ -34,7 +34,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="home" color={color} size={28} />
+                        <MaterialCommunityIcons name="home" color={color} size={30} />
                     ),
                 }}
             />
@@ -44,8 +44,9 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Notification',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="bell" color={color} size={28} />
+                        <MaterialCommunityIcons name="bell" color={color} size={30} />
                     ),
+                    tabBarBadge: 3,
                 }}
             />
             <Tab.Screen
@@ -64,7 +65,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="account" color={color} size={28} />
+                        <MaterialCommunityIcons name="account" color={color} size={30} />
                     ),
                 }}
             />

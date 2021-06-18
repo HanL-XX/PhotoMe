@@ -50,8 +50,8 @@ router.get("/", async (req, res) => {
     return res.status(200).json({ profile })
 })
 
-router.put("/updateprofile", async (req, res) => {
-    const { id_User, avatar, name, sex, intro, job, iconjob, post, follow, following } = req.body
+router.post("/updateprofile", async (req, res) => {
+    const { id_User, avatar, name, sex, intro, job, iconjob, post, following, birthday } = req.body
     if (!id_User) {
         return res.status(400).json({ msg: 'Dont have id user' })
     }
@@ -64,8 +64,9 @@ router.put("/updateprofile", async (req, res) => {
             "job": job,
             "iconjob": iconjob,
             "post": post,
-            "follow": follow,
             "following": following,
+            "follow": follow,
+            "birthday": birthday,
         }
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont update profile user' })
@@ -107,9 +108,13 @@ router.post("/updatefollow/unfollow", async (req, res) => {
             $set: {
                 "follow": profile.follow - 1
             }
-        }).catch(error => {
-            return res.status(400).json({ msg: 'Dont unfollow' })
         })
+            .then(() => {
+                return res.status(200).json({ msg: 'Success' })
+            })
+            .catch(error => {
+                return res.status(400).json({ msg: 'Dont unfollow' })
+            })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont unfollow' })
     })

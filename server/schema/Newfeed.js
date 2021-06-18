@@ -15,12 +15,16 @@ const NewfeedSchema=new Schema({
         required: true,
     },
     like:{
-        type: String,
+        type: Number,
         default:0,
     },
     comment:{
-        type: String,
+        type: Number,
         default:0,
+    },
+    id_impact:{
+        type: String,
+        required: false,
     },
     registration_data:{
         type:String,

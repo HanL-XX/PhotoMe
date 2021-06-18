@@ -6,6 +6,10 @@ const ProfileSchema=new Schema({
         type:String,
         required:true,
     },
+    birthday:{
+        type:Date,
+        required:false,
+    },
     avatar:{
         type:String,
         required:true,

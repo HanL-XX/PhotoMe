@@ -28,8 +28,21 @@ router.post("/",async(req,res)=>{
                     const newLiked = new Liked({
                         id_User,id_Newfeed,liked:true,
                      })
-                     newLiked.save().then(Liked=>{
-                         return res.status(200).json({ msg: 'Success',Liked })
+                     newLiked.save().then(async liked=>{
+                        await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                            "like":newfeed.like+1,
+                            "id_impact":id_User.toString(),
+                        }})
+                        .then(()=>{
+                            return res.status(200).json({ msg: 'Success',liked })
+                        })
+                        .catch(async er=>{
+                            await Liked.deleteOne({_id:liked.id}).catch(error=>{
+                                return res.status(400).json({ msg: 'Like success but update newfeed' })
+                            })
+                            return res.status(400).json({ msg: 'Like not found' })
+                        })
+                        return res.status(200).json({ msg: 'Success',liked })
                      })
                 }
             }).catch(err=>{return res.status(400).json({ msg: 'Liked not found' })})
@@ -58,6 +71,33 @@ router.post("/updateliked",async(req,res)=>{
         return res.status(400).json({ err: 'Dont have enough properties' })
     }
     await Liked.findOne({id_User:id_User,id_Newfeed:id_Newfeed}).then( async liked=>{
+        if(!liked)
+        {
+            await User.findOne({_id:id_User}).then( async user => {
+                if(!user)    return res.status(400).json({ msg: 'User not found' })
+                await Newfeed.findOne({_id:id_Newfeed}).then(async newfeed=>{
+                    const newLiked = new Liked({
+                        id_User,id_Newfeed,liked:true,
+                    })
+                    newLiked.save().then(async lik=>{
+                        await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                            "like":newfeed.like+1,
+                            "id_impact":id_User.toString(),
+                        }})
+                        .then(()=>{
+                            return res.status(200).json({ msg: 'Success',lik })
+                        })
+                        .catch(async er=>{
+                            await Liked.deleteOne({_id:liked.id}).catch(error=>{
+                                return res.status(400).json({ msg: 'Like success but update newfeed' })
+                            })
+                        })
+                        return res.status(200).json({ msg: 'Success',liked })
+                    }).catch(err=>{return res.status(400).json({ msg: 'Liked not found' })})
+                }).catch(err=>{return res.status(400).json({ msg: 'Liked not found' })})
+            }).catch(err=>{return res.status(400).json({ msg: 'Liked not found' })})
+            return res.status(200).json({ msg: 'Success'})
+        } 
         const likedse=await Liked.updateOne({id_User:id_User,id_Newfeed:id_Newfeed},{$set:{
             "liked":!liked.liked,
         }}).catch(error=>{
@@ -65,6 +105,37 @@ router.post("/updateliked",async(req,res)=>{
         })
         if(!likedse.nModified)
             return res.status(400).json({ msg: 'Dont update liked user',likedse})
+        else
+        {
+            if(liked.liked)
+            {
+                await Newfeed.findOne({_id:id_Newfeed}).then(async(newfeed)=>{
+                    await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                        "like":newfeed.like-1,
+                    }})
+                    .then(()=>{
+                        return res.status(200).json({msg: 'Update success',likedse})
+                    })
+                    .catch(er=>{
+                        return res.status(400).json({ msg: 'Like not found' })
+                    })
+                })
+            }
+            else
+            {
+                await Newfeed.findOne({_id:id_Newfeed}).then(async(newfeed)=>{
+                    await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                        "like":newfeed.like+1,
+                    }})
+                    .then(()=>{
+                        return res.status(200).json({msg: 'Update success',likedse})
+                    })
+                    .catch(er=>{
+                        return res.status(400).json({ msg: 'Like not found' })
+                    })
+                })
+            }
+        }
         return res.status(200).json({msg: 'Update success',likedse})
     }).catch(error=>{
         return res.status(400).json({ msg: 'Dont update liked user' })

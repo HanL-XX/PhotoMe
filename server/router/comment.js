@@ -24,8 +24,21 @@ router.post("/",async(req,res)=>{
             const newComment = new Comment({
                 id_User,id_Newfeed,comment,
              })
-             newComment.save().then(Comment=>{
-                 return res.status(200).json({ msg: 'Success',Comment })
+             newComment.save().then(async cmt=>{
+                await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                    "comment":newfeed.comment+1,
+                    "id_impact":id_User.toString(),
+                }})
+                .then(()=>{
+                    return res.status(200).json({ msg: 'Success',cmt })
+                })
+                .catch(async er=>{
+                    await Comment.deleteOne({_id:cmt.id}).catch(error=>{
+                        return res.status(400).json({ msg: 'Comment success but update newfeed' })
+                    })
+                    return res.status(400).json({ msg: 'Comment not found' })
+                })
+                return res.status(200).json({ msg: 'Success',cmt })
              }).catch(err=>{return res.status(400).json({ msg: 'Comment not found' })})
         }).catch(err=>{return res.status(400).json({ msg: 'Comment not found' })})
     }).catch(err=>{return res.status(400).json({ msg: 'Comment not found' })})
@@ -48,13 +61,28 @@ router.get("/",async(req,res)=>{
 })
 
 router.post("/deletecomment",async(req,res)=>{
-    const {id_User,id_Newfeed,comment} = req.body
+    const {id_User,id_Newfeed,id_Comment} = req.body
 
-    if(!id_User||!id_Newfeed||!comment)
+    if(!id_User||!id_Newfeed||!id_Comment)
     {
         return res.status(400).json({ msg: 'Dont have enough properties' })
     }
-    const commented =await Comment.deleteOne({id_User:id_User,id_Newfeed:id_Newfeed,comment:comment}).catch(error=>{
+    const commented =await Comment.deleteOne({_id:id_Comment})
+    .then(async ()=>{
+        await Newfeed.findOne({_id:id_Newfeed}).then(async(newfeed)=>{
+            await Newfeed.updateOne({_id:id_Newfeed},{$set:{
+                "comment":newfeed.comment-1,
+            }}).then(()=>{
+                return res.status(200).json({msg: 'Delete success'})
+            }).catch(er=>{
+                return res.status(400).json({ msg: 'Delete comment but update newfeed ' })
+            })
+        }).catch(er=>{
+            return res.status(400).json({ msg: 'Delete comment but update newfeed' })
+        })
+        return res.status(200).json({msg: 'Delete success',commented})
+    })
+    .catch(error=>{
         return res.status(400).json({ msg: 'Dont delete comment user' })
     })
     if(!commented.deletedCount)

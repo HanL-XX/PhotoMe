@@ -44,7 +44,7 @@ router.get("/", async(req,res)=>{
 })
 
 router.post("/updateprofile",async(req,res)=>{
-    const {id_User,avatar,name,sex,intro,job,iconjob,post,following}=req.body
+    const {id_User,avatar,name,sex,intro,job,iconjob,post,following,birthday}=req.body
     if(!id_User)
     {
         return res.status(400).json({ msg: 'Dont have id user' })
@@ -58,6 +58,7 @@ router.post("/updateprofile",async(req,res)=>{
         "iconjob":iconjob,
         "post":post,
         "following":following,
+        "birthday":birthday,
     }}).catch(error=>{
         return res.status(400).json({ msg: 'Dont update profile user' })
     })
@@ -76,7 +77,11 @@ router.post("/updatefollow/follow",async(req,res)=>{
     await Profile.findOne({id_User:id_User}).then(async(profile)=>{
             await Profile.updateOne({id_User:id_User},{$set:{
                 "follow":profile.follow+1
-                    }}).catch(error=>{
+                    }})
+                    .then(()=>{
+                        return res.status(200).json({msg: 'Success'})
+                    })
+                    .catch(error=>{
                         return res.status(400).json({ msg: 'Dont follow' })
                     })
     }).catch(error=>{
@@ -97,7 +102,11 @@ router.post("/updatefollow/unfollow",async(req,res)=>{
             }
             await Profile.updateOne({id_User:id_User},{$set:{
                 "follow":profile.follow-1
-                    }}).catch(error=>{
+                    }})
+                    .then(()=>{
+                        return res.status(200).json({msg: 'Success'})
+                    })
+                    .catch(error=>{
                         return res.status(400).json({ msg: 'Dont unfollow' })
                     })
     }).catch(error=>{

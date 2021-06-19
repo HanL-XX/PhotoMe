@@ -84,62 +84,62 @@ router.post("/updateliked", async (req, res) => {
                                 "id_impact": id_User.toString(),
                             }
                         })
-                            .then(() => {
-                                return res.status(200).json({ msg: 'Success', lik })
+                        .then(() => {
+                            return res.status(200).json({ msg: 'Success', lik })
+                        })
+                        .catch(async er => {
+                            await Liked.deleteOne({ _id: liked.id }).catch(error => {
+                                return res.status(400).json({ msg: 'Like success but update newfeed' })
                             })
-                            .catch(async er => {
-                                await Liked.deleteOne({ _id: liked.id }).catch(error => {
-                                    return res.status(400).json({ msg: 'Like success but update newfeed' })
-                                })
-                            })
-                        return res.status(200).json({ msg: 'Success', liked })
+                        })
                     }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
                 }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
             }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
-            return res.status(200).json({ msg: 'Success' })
         }
-        const likedse = await Liked.updateOne({ id_User: id_User, id_Newfeed: id_Newfeed }, {
-            $set: {
-                "liked": !liked.liked,
-            }
-        }).catch(error => {
-            return res.status(400).json({ msg: 'Dont update liked user' })
-        })
-        if (!likedse.nModified)
-            return res.status(400).json({ msg: 'Dont update liked user', likedse })
-        else {
-            if (liked.liked) {
-                await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
-                    await Newfeed.updateOne({ _id: id_Newfeed }, {
-                        $set: {
-                            "like": newfeed.like - 1,
-                        }
-                    })
-                        .then(() => {
-                            return res.status(200).json({ msg: 'Update success', likedse })
-                        })
-                        .catch(er => {
-                            return res.status(400).json({ msg: 'Like not found' })
-                        })
-                })
-            }
+        else
+        {
+            const likedse = await Liked.updateOne({ id_User: id_User, id_Newfeed: id_Newfeed }, {
+                $set: {
+                    "liked": !liked.liked,
+                }
+            }).catch(error => {
+                return res.status(400).json({ msg: 'Dont update liked user' })
+            })
+            if (!likedse.nModified)
+                return res.status(400).json({ msg: 'Dont update liked user', likedse })
             else {
-                await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
-                    await Newfeed.updateOne({ _id: id_Newfeed }, {
-                        $set: {
-                            "like": newfeed.like + 1,
-                        }
+                if (liked.liked) {
+                    await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
+                        await Newfeed.updateOne({ _id: id_Newfeed }, {
+                            $set: {
+                                "like": newfeed.like - 1,
+                            }
+                        })
+                            .then(() => {
+                                return res.status(200).json({ msg: 'Update success', likedse })
+                            })
+                            .catch(er => {
+                                return res.status(400).json({ msg: 'Like not found' })
+                            })
                     })
-                        .then(() => {
-                            return res.status(200).json({ msg: 'Update success', likedse })
+                }
+                else {
+                    await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
+                        await Newfeed.updateOne({ _id: id_Newfeed }, {
+                            $set: {
+                                "like": newfeed.like + 1,
+                            }
                         })
-                        .catch(er => {
-                            return res.status(400).json({ msg: 'Like not found' })
-                        })
-                })
+                            .then(() => {
+                                return res.status(200).json({ msg: 'Update success', likedse })
+                            })
+                            .catch(er => {
+                                return res.status(400).json({ msg: 'Like not found' })
+                            })
+                    })
+                }
             }
         }
-        return res.status(200).json({ msg: 'Update success', likedse })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont update liked user' })
     })
@@ -152,12 +152,19 @@ router.post("/deleteliked", async (req, res) => {
         return res.status(400).json({ err: 'Dont have enough properties' })
     }
     await Liked.findOne({ id_User: id_User, id_Newfeed: id_Newfeed }).then(async liked => {
-        const likedse = await Liked.deleteOne({ id_User: id_User, id_Newfeed: id_Newfeed }).catch(error => {
-            return res.status(400).json({ msg: 'Dont delete liked user' })
-        })
-        if (!likedse.deletedCount)
-            return res.status(400).json({ msg: 'Dont delete liked user', likedse })
-        return res.status(200).json({ msg: 'Delete success', likedse })
+        if(liked)
+        {
+            const likedse = await Liked.deleteOne({ id_User: id_User, id_Newfeed: id_Newfeed }).catch(error => {
+                return res.status(400).json({ msg: 'Dont delete liked user' })
+            })
+            if (!likedse.deletedCount)
+                return res.status(400).json({ msg: 'Dont delete liked user', likedse })
+            return res.status(200).json({ msg: 'Delete success', likedse })
+        }
+        else
+        {
+            return res.status(400).json({ msg: 'Dont have liked' })
+        }
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont delete liked user' })
     })

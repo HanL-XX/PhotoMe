@@ -18,30 +18,35 @@ router.post("/", async (req, res) => {
     }
     await User.findOne({ _id: id_User }).then(async user => {
         if (!user) return res.status(400).json({ msg: 'User not found' })
-        await Newfeed.findOne({ _id: id_Newfeed }).then(newfeed => {
-            if (!newfeed) return res.status(400).json({ msg: 'Newfeed not found' })
-            const newComment = new Comment({
-                id_User, id_Newfeed, comment,
-            })
-            newComment.save().then(async cmt => {
-                await Newfeed.updateOne({ _id: id_Newfeed }, {
-                    $set: {
-                        "comment": newfeed.comment + 1,
-                        "id_impact": id_User.toString(),
-                    }
-                })
-                    .then(() => {
-                        return res.status(200).json({ msg: 'Success', cmt })
+        else
+        {
+            await Newfeed.findOne({ _id: id_Newfeed }).then(newfeed => {
+                if (!newfeed) return res.status(400).json({ msg: 'Newfeed not found' })
+                else
+                {
+                    const newComment = new Comment({
+                        id_User, id_Newfeed, comment,
                     })
-                    .catch(async er => {
-                        await Comment.deleteOne({ _id: cmt.id }).catch(error => {
-                            return res.status(400).json({ msg: 'Comment success but update newfeed' })
+                    newComment.save().then(async cmt => {
+                        await Newfeed.updateOne({ _id: id_Newfeed }, {
+                            $set: {
+                                "comment": newfeed.comment + 1,
+                                "id_impact": id_User.toString(),
+                            }
                         })
-                        return res.status(400).json({ msg: 'Comment not found' })
-                    })
-                return res.status(200).json({ msg: 'Success', cmt })
+                        .then(() => {
+                            return res.status(200).json({ msg: 'Success', cmt })
+                        })
+                        .catch(async er => {
+                            await Comment.deleteOne({ _id: cmt.id }).catch(error => {
+                                return res.status(400).json({ msg: 'Comment success but update newfeed' })
+                            })
+                            return res.status(400).json({ msg: 'Comment not found' })
+                        })
+                    }).catch(err => { return res.status(400).json({ msg: 'Comment not found' }) })
+                }
             }).catch(err => { return res.status(400).json({ msg: 'Comment not found' }) })
-        }).catch(err => { return res.status(400).json({ msg: 'Comment not found' }) })
+        }
     }).catch(err => { return res.status(400).json({ msg: 'Comment not found' }) })
 })
 
@@ -67,27 +72,37 @@ router.post("/deletecomment", async (req, res) => {
         return res.status(400).json({ msg: 'Dont have enough properties' })
     }
     const commented = await Comment.deleteOne({ _id: id_Comment })
-        .then(async () => {
-            await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
-                await Newfeed.updateOne({ _id: id_Newfeed }, {
-                    $set: {
-                        "comment": newfeed.comment - 1,
+        .then(async (a) => {
+            if(a.deletedCount==1)
+            {
+                await Newfeed.findOne({ _id: id_Newfeed }).then(async (newfeed) => {
+                    if(newfeed)
+                    {
+                        await Newfeed.updateOne({ _id: id_Newfeed }, {
+                            $set: {
+                                "comment": newfeed.comment - 1,
+                            }
+                        }).then((a) => {
+                            return res.status(200).json({ msg: 'Delete success'})
+                        }).catch(er => {
+                            return res.status(400).json({ msg: 'Delete comment but dont update newfeed ' })
+                        })
                     }
-                }).then(() => {
-                    return res.status(200).json({ msg: 'Delete success' })
+                    else
+                    {
+                        return res.status(400).json({ msg: 'Dont have newfeed' })
+                    }
                 }).catch(er => {
-                    return res.status(400).json({ msg: 'Delete comment but update newfeed ' })
+                    return res.status(400).json({ msg: 'Delete comment but update newfeed' })
                 })
-            }).catch(er => {
-                return res.status(400).json({ msg: 'Delete comment but update newfeed' })
-            })
-            return res.status(200).json({ msg: 'Delete success', commented })
+            }
+            else
+            {
+                return res.status(400).json({ msg: 'Dont have comment' })
+            }
         })
         .catch(error => {
             return res.status(400).json({ msg: 'Dont delete comment user' })
         })
-    if (!commented.deletedCount)
-        return res.status(400).json({ msg: 'Dont delete comment user', commented })
-    return res.status(200).json({ msg: 'Delete success', commented })
 })
 module.exports = router;

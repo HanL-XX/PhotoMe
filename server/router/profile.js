@@ -21,7 +21,7 @@ router.post("/", (req, res) => {
         avatar = 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2FAvatarMale.jpg?alt=media&token=75ff7a76-0cef-4c37-9272-c506a116d0c6'
     }
     // console.log(avatar, sex)
-    if (!id_User || !avatar || !name) {
+    if (!id_User || !avatar || !name||!sex) {
         return res.status(400).json({ err: 'Dont have enough properties' })
     }
     User.findOne({ _id: id_User }).then(async user => {
@@ -51,7 +51,7 @@ router.get("/", async (req, res) => {
 })
 
 router.post("/updateprofile", async (req, res) => {
-    const { id_User, avatar, name, sex, intro, job, iconjob, post, following, birthday } = req.body
+    const { id_User, avatar, name, sex, intro, job, iconjob, post, following, birthday,follow } = req.body
     if (!id_User) {
         return res.status(400).json({ msg: 'Dont have id user' })
     }
@@ -87,13 +87,12 @@ router.post("/updatefollow/follow", async (req, res) => {
             $set: {
                 "follow": profile.follow + 1
             }
-        }).catch(error => {
-            return res.status(400).json({ msg: 'Dont follow' })
+        }).then(()=>{
+            return res.status(200).json({ msg: 'Success' })
         })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont follow' })
     })
-    return res.status(200).json({ msg: 'Success' })
 })
 router.post("/updatefollow/unfollow", async (req, res) => {
     const id_User = req.body.id_User
@@ -109,15 +108,11 @@ router.post("/updatefollow/unfollow", async (req, res) => {
                 "follow": profile.follow - 1
             }
         })
-            .then(() => {
-                return res.status(200).json({ msg: 'Success' })
-            })
-            .catch(error => {
-                return res.status(400).json({ msg: 'Dont unfollow' })
-            })
+        .then(()=>{
+            return res.status(200).json({ msg: 'Success' })
+        })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont unfollow' })
     })
-    return res.status(200).json({ msg: 'Success' })
 })
 module.exports = router;

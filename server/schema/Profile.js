@@ -1,51 +1,55 @@
-const mongoose=require("mongoose")
-const Schema=mongoose.Schema
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-const ProfileSchema=new Schema({
-    id_User:{
-        type:String,
-        required:true,
+const ProfileSchema = new Schema({
+    id_User: {
+        type: String,
+        required: true,
     },
-    avatar:{
-        type:String,
-        required:true,
+    birthday: {
+        type: Date,
+        required: false,
     },
-    name:{
-        type:String,
-        required:true,
+    avatar: {
+        type: String,
+        required: true,
     },
-    sex:{
-        type:String,
-        required:false,
+    name: {
+        type: String,
+        required: true,
     },
-    intro:{
-        type:String,
-        required:false,
+    sex: {
+        type: String,
+        required: false,
     },
-    job:{
-        type:String,
-        required:false,
+    intro: {
+        type: String,
+        required: false,
     },
-    iconjob:{
-        type:String,
-        required:false,
+    job: {
+        type: String,
+        required: false,
     },
-    post:{
-        type:Number,
-        default:0,
+    iconjob: {
+        type: String,
+        required: false,
     },
-    follow:{
-        type:Number,
-        default:0,
+    post: {
+        type: Number,
+        default: 0,
     },
-    following:{
-        type:Number,
-        default:0,
+    follow: {
+        type: Number,
+        default: 0,
     },
-    registration_data:{
-        type:String,
-        default:Date.now,
+    following: {
+        type: Number,
+        default: 0,
+    },
+    registration_data: {
+        type: String,
+        default: Date.now,
     }
 })
 
-module.exports=Profile=mongoose.model("profile",ProfileSchema)
+module.exports = Profile = mongoose.model("profile", ProfileSchema)

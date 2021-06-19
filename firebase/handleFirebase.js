@@ -102,126 +102,126 @@ export const deletePic = (uri) => {
             });
     }
 }
-export default class App extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            avatarSource: null, // chứa uri ảnh trong thiết bị
-            pic: null, // chưa thông tin image trong thiết bị
-            uri: null // chưa uri khi đả upload thành công 
-        }
-    }
+// export default class App extends Component {
+//     constructor(props) {
+//         super(props);
+//         this.state = {
+//             avatarSource: null, // chứa uri ảnh trong thiết bị
+//             pic: null, // chưa thông tin image trong thiết bị
+//             uri: null // chưa uri khi đả upload thành công 
+//         }
+//     }
 
-    library = () => {
-        //alert('clicked');
-        // ImagePicker.launchImageLibrary(options, (response) => {
-        //   console.log('Response = ', response);
+//     library = () => {
+//         //alert('clicked');
+//         // ImagePicker.launchImageLibrary(options, (response) => {
+//         //   console.log('Response = ', response);
 
-        //   if (response.didCancel) {
-        //     console.log('User cancelled image picker');
-        //   }
-        //   else if (response.error) {
-        //     console.log('Image Picker Error: ', response.error);
-        //   }
+//         //   if (response.didCancel) {
+//         //     console.log('User cancelled image picker');
+//         //   }
+//         //   else if (response.error) {
+//         //     console.log('Image Picker Error: ', response.error);
+//         //   }
 
-        //   else {
-        //     let source = { uri: response.uri };
+//         //   else {
+//         //     let source = { uri: response.uri };
 
-        //     // You can also display the image using data:
-        //     // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+//         //     // You can also display the image using data:
+//         //     // let source = { uri: 'data:image/jpeg;base64,' + response.data };
 
-        //     this.setState({
-        //       avatarSource: source,
-        //       pic:response.data
-        //     });
-        //   }
-        // });
-        ImagePicker.openPicker({
-            width: 300,
-            height: 300,
-            cropping: true,
-        }).then(async image => {
-            console.log(image);
-            let a = await uploadPic(image.path, image.mime)
-            console.log('ủi::', a)
-            this.setState({
-                avatarSource: image.path,
-                pic: image,
-                uri: a,
-            })
-        }).catch(e => { // Fix err user cancel
-            if (e.code !== 'E_PICKER_CANCELLED') {
-                console.log(e);
-                Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
-            }
-        })
-    }
-    takecam = () => {
-        //alert('clicked');
-        ImagePicker.openCamera({
-            compressImageMaxWidth: 300,
-            compressImageMaxHeight: 300,
-            cropping: true,
-            compressImageQuality: 0.7
-        }).then(async image => {
-            console.log(image);
-            let a = await uploadPic(image.path, image.mime)
-            console.log('ủi::', a)
-            this.setState({
-                avatarSource: image.path,
-                pic: image,
-                uri: a
-            });
-        }).catch(e => {// Fix err user cancel
-            if (e.code !== 'E_PICKER_CANCELLED') {
-                console.log(e);
-                Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
-            }
-        })
-    }
-    delete = async (uri) => {
-        await deletePic(this.state.uri)
-        this.setState({
-            uri: null
-        });
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>Welcome to React Native!</Text>
-                <Image source={{ uri: this.state.uri }}
-                    style={{ width: '100%', height: 300, margin: 10 }} />
-                <TouchableOpacity style={{ backgroundColor: 'green', margin: 10, padding: 10 }}
-                    onPress={this.takecam}>
-                    <Text style={{ color: '#fff' }}>Use Photo</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={{ backgroundColor: 'green', margin: 10, padding: 10 }}
-                    onPress={this.library}>
-                    <Text style={{ color: '#fff' }}>Choice library</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => { this.delete(this.state.uri) }}>
-                    <Text>DeletePic</Text>
-                </TouchableOpacity>
-            </View>
-        );
-    }
-}
+//         //     this.setState({
+//         //       avatarSource: source,
+//         //       pic:response.data
+//         //     });
+//         //   }
+//         // });
+//         ImagePicker.openPicker({
+//             width: 300,
+//             height: 300,
+//             cropping: true,
+//         }).then(async image => {
+//             console.log(image);
+//             let a = await uploadPic(image.path, image.mime)
+//             console.log('ủi::', a)
+//             this.setState({
+//                 avatarSource: image.path,
+//                 pic: image,
+//                 uri: a,
+//             })
+//         }).catch(e => { // Fix err user cancel
+//             if (e.code !== 'E_PICKER_CANCELLED') {
+//                 console.log(e);
+//                 Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
+//             }
+//         })
+//     }
+//     takecam = () => {
+//         //alert('clicked');
+//         ImagePicker.openCamera({
+//             compressImageMaxWidth: 300,
+//             compressImageMaxHeight: 300,
+//             cropping: true,
+//             compressImageQuality: 0.7
+//         }).then(async image => {
+//             console.log(image);
+//             let a = await uploadPic(image.path, image.mime)
+//             console.log('ủi::', a)
+//             this.setState({
+//                 avatarSource: image.path,
+//                 pic: image,
+//                 uri: a
+//             });
+//         }).catch(e => {// Fix err user cancel
+//             if (e.code !== 'E_PICKER_CANCELLED') {
+//                 console.log(e);
+//                 Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
+//             }
+//         })
+//     }
+//     delete = async (uri) => {
+//         await deletePic(this.state.uri)
+//         this.setState({
+//             uri: null
+//         });
+//     }
+//     render() {
+//         return (
+//             <View style={styles.container}>
+//                 <Text style={styles.welcome}>Welcome to React Native!</Text>
+//                 <Image source={{ uri: this.state.uri }}
+//                     style={{ width: '100%', height: 300, margin: 10 }} />
+//                 <TouchableOpacity style={{ backgroundColor: 'green', margin: 10, padding: 10 }}
+//                     onPress={this.takecam}>
+//                     <Text style={{ color: '#fff' }}>Use Photo</Text>
+//                 </TouchableOpacity>
+//                 <TouchableOpacity style={{ backgroundColor: 'green', margin: 10, padding: 10 }}
+//                     onPress={this.library}>
+//                     <Text style={{ color: '#fff' }}>Choice library</Text>
+//                 </TouchableOpacity>
+//                 <TouchableOpacity onPress={() => { this.delete(this.state.uri) }}>
+//                     <Text>DeletePic</Text>
+//                 </TouchableOpacity>
+//             </View>
+//         );
+//     }
+// }
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
-});
+// const styles = StyleSheet.create({
+//     container: {
+//         flex: 1,
+//         justifyContent: 'center',
+//         alignItems: 'center',
+//         backgroundColor: '#F5FCFF',
+//     },
+//     welcome: {
+//         fontSize: 20,
+//         textAlign: 'center',
+//         margin: 10,
+//     },
+//     instructions: {
+//         textAlign: 'center',
+//         color: '#333333',
+//         marginBottom: 5,
+//     },
+// });

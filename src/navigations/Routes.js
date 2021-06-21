@@ -97,7 +97,9 @@ export default function Routes() {
                             sex: response.data.user.sex,
                         },
                         headers: { 'Content-Type': 'application/json' }
-                    }).then(res).catch(err => console.log(err))
+                    })
+                        .then(response => { console.log(response) })
+                        .catch(err => console.log(err))
                 })
                 .catch(err => {
                     console.log(`ERROR!: ${err}`)

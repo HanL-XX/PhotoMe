@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
+import ImagePicker from "react-native-image-crop-picker"
 
 import { View, TouchableOpacity, StyleSheet, Alert, LogBox, ActivityIndicator } from 'react-native'
-import { Header } from 'react-native-elements'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import axios from 'axios';
 
 import {
     SafeAreaView, Container,
@@ -12,19 +13,27 @@ import {
     Label, TextInput,
     IntroText,
 } from '../../styles/EditProfileStyle'
-import ChangeImageSheet from '../../components/ChangeImageSheet'
-import axios from 'axios';
+import {
+    ViewLabel, LabelHeader, LabelIntro,
+    ButtonArea, ButtonForm, ButtonText,
+} from '../../styles/ChangeImageSheetStyle'
 
+import { Modalize } from 'react-native-modalize'
+import { uploadPic, deletePic } from '../../../firebase/handleFirebase'
 
 //main window EditPersonalProfile here!
 export default function EditPersonalProfile({ navigation, route }) {
-    //route params
-    const dataUser = route.params //name && avatar && id && intro
-    //bottom sheet
-    const modalizeRef = React.useRef(null);
+    const onCloseBottomSheet = () => {
+        modalizeRef.current?.close();
+    }
     const onOpenBottomSheet = () => {
         modalizeRef.current?.open();
     }
+    //route params
+    const dataUser = route.params //name && avatar && id && intro
+
+    //bottom sheet
+    const modalizeRef = React.useRef(null);
 
     const [showReload1, setShowReload1] = useState(false)
     const [showReload2, setShowReload2] = useState(false)
@@ -58,7 +67,6 @@ export default function EditPersonalProfile({ navigation, route }) {
     ]);
 
     //handle close Icon
-
     const cancelEdit = () => {
         Alert.alert(
             //Title
@@ -120,6 +128,87 @@ export default function EditPersonalProfile({ navigation, route }) {
         LogBox.ignoreLogs(['VirtualizedLists should never be nested']);
     }, [])
 
+    //handle open library picture
+    const OpenLibrary = () => {
+        ImagePicker.openPicker({
+            width: 300,
+            height: 300,
+            cropping: true,
+        }).then(async image => {
+            console.log(image);
+            // let a = await uploadPic(image.path, image.mime)
+            // console.log('uri::', a)
+            setUploadUProfile({ avatar: image.path })
+        }).catch(e => { // Fix err user cancel
+            if (e.code !== 'E_PICKER_CANCELLED') {
+                console.log(e);
+                Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
+            }
+        })
+    }
+    //handle open camera button
+    const TakeCamera = () => {
+        //alert('clicked');
+        ImagePicker.openCamera({
+            compressImageMaxWidth: 300,
+            compressImageMaxHeight: 300,
+            cropping: true,
+            compressImageQuality: 0.7
+        }).then(async image => {
+            console.log(image);
+            let a = await uploadPic(image.path, image.mime)
+            console.log('uri::', a)
+        }).catch(e => {// Fix err user cancel
+            if (e.code !== 'E_PICKER_CANCELLED') {
+                console.log(e);
+                Alert.alert('Sorry, there was an issue attempting to get the image/video you selected. Please try again');
+            }
+        })
+    }
+    //handle delete picture
+    const DeletePic = () => {
+        deletePic(picInfo.uri)
+        setPicInfo({
+            uri: null
+        });
+    }
+    const ChangeImageSheet = () => {
+        return (
+            <Modalize
+                ref={modalizeRef}
+                snapPoint={360}
+                scrollViewProps={{ showsVerticalScrollIndicator: false }}
+                modalHeight={360}
+                closeAnimationConfig={{ timing: { duration: 400 }, spring: { speed: 10, bounciness: 5 } }}
+                handlePosition="inside"
+                HeaderComponent={
+                    <ViewLabel>
+                        <LabelHeader>Upload Photo</LabelHeader>
+                        <LabelIntro>Choose Your Profile Picture</LabelIntro>
+                    </ViewLabel>
+                }>
+                <SafeAreaView style={styles.containerSheet}>
+                    <ButtonArea>
+                        <ButtonForm onPress={TakeCamera}>
+                            <ButtonText>Take Photo</ButtonText>
+                        </ButtonForm>
+                        <ButtonForm>
+                            <ButtonText onPress={OpenLibrary}>Choose From Library</ButtonText>
+                        </ButtonForm>
+                        <ButtonForm onPress={DeletePic}>
+                            <ButtonText>Remove Photo</ButtonText>
+                        </ButtonForm>
+                        <ButtonForm
+                            style={{ backgroundColor: '#ff4f4f' }}
+                            onPress={onCloseBottomSheet}>
+                            <ButtonText>Cancel</ButtonText>
+                        </ButtonForm>
+                    </ButtonArea>
+                </SafeAreaView>
+            </Modalize>
+        )
+    }
+
     if (showReload2 == true) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -127,6 +216,7 @@ export default function EditPersonalProfile({ navigation, route }) {
             </View>
         )
     }
+
     return (
         <SafeAreaView>
             <View style={styles.handleView}>
@@ -251,7 +341,7 @@ export default function EditPersonalProfile({ navigation, route }) {
                 </>
             </Container>
             <ChangeImageSheet
-                modalizeRef={modalizeRef} >
+                modalizeRef={modalizeRef}>
 
             </ChangeImageSheet>
         </SafeAreaView >
@@ -259,6 +349,11 @@ export default function EditPersonalProfile({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    containerSheet: {
+        flex: 1,
+        marginHorizontal: 15,
+        // backgroundColor: '#ccc',
+    },
     handleView: {
         justifyContent: 'space-between',
         flexDirection: 'row',

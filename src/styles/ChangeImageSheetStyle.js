@@ -6,7 +6,7 @@ export const ViewLabel = styled.View`
     margin: 10px 0;
 `
 
-export const Label = styled.Text`
+export const LabelHeader = styled.Text`
     font-size: 23px;
     font-weight: 500;
     letter-spacing: 0.3px;

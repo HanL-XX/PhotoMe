@@ -28,63 +28,6 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
-const time = new Date().toISOString(); //get Date to post Status
-//test DATA
-const Posts = [
-    {
-        id: '60c86949c2594e39babb9db4',
-        userName: 'Minh',
-        userImg: require('../../assets/images/user1.jpg'),
-        postTime: '2021-05-04T03:16:34.820Z',
-        postText: `Hi, I'm a developer`,
-        postImg: require('../../assets/images/postImg/post1.jpg'),
-        liked: false,
-        likes: '10',
-        comments: '5',
-        saves: '5',
-
-    },
-    {
-        id: '2',
-        userName: 'Linh',
-        userImg: require('../../assets/images/user2.png'),
-        postTime: time,
-        postText: `Perfect Image for Bird!`,
-        postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: true,
-        likes: '1',
-        comments: '14',
-        saves: '5',
-
-    },
-    {
-        id: '3',
-        userName: 'Group',
-        userImg: require('../../assets/images/user3.jpg'),
-        postTime: time,
-        postText: `This is a first comment in group!!`,
-        postImg: 'none',
-        liked: false,
-        likes: '48',
-        comments: '2',
-        saves: '5',
-
-    },
-    {
-        id: '4',
-        userName: 'Minh',
-        userImg: require('../../assets/images/user1.jpg'),
-        postTime: '2021-05-10T03:16:34.820Z',
-        postText: `This is a second post!!`,
-        postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: true,
-        likes: '1K',
-        comments: '52',
-        saves: '5',
-
-    },
-]
-
 //change Profile in here!
 const ProfileStackScreen = ({ navigation }) => {
     const isFocused = useIsFocused(); //refresh when goBack here!!!
@@ -97,6 +40,8 @@ const ProfileStackScreen = ({ navigation }) => {
         following: 0,
         post: 0,
     })
+    //Array Posts
+    const [Posts, setPosts] = useState([])
 
 
     const fetchProfile = async () => {
@@ -123,14 +68,30 @@ const ProfileStackScreen = ({ navigation }) => {
             .catch(err => console.log(err))
     }
 
+    fetchNewFeed = async () => {
+        const id = await AsyncStorage.getItem('userId_Key')
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/newfeed`,
+            params: {
+                id_User: id
+            },
+        })
+            .then((response) => {
+                setPosts(response.data.newfeed)
+            })
+    }
+
     useEffect(async () => {
-        fetchProfile()
+        await fetchProfile()
+        await fetchNewFeed()
     }, [isFocused])
-    // const [countPost, setCountPost] = useState(0)
+
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
-    const onOpenBottomSheet = () => {
-        modalizeRef.current?.open();
+    const onOpenBottomSheet = (idPost) => {
+        console.log(idPost)
+        modalizeRef.current?.open(idPost);
     }
 
     //wait time
@@ -139,14 +100,16 @@ const ProfileStackScreen = ({ navigation }) => {
             setTimeout(resolve, timeout);
         })
     }
+
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
         wait(2000).then(async () => {
+            await fetchProfile()
+            await fetchNewFeed()
             setRefreshing(false);
-            fetchProfile()
         })
     }, [refreshing])
 
@@ -197,20 +160,24 @@ const ProfileStackScreen = ({ navigation }) => {
                         Edit Profile
                     </EditProfileText>
                 </EditProfile>
-                {Posts.map((item) => {
-                    if (item.id === user.id) {
-                        // setCountPost(countPost + 1)
-                        return (
-                            <View key={item.id} style={styles.viewDeletePost}>
-                                <PostCard
-                                    onOpenBottomSheet={onOpenBottomSheet}
-                                    modalizeRef={modalizeRef}
-                                    item={item}
-                                    id={user.id} />
-                            </View>
-                        )
-                    }
-                })}
+                {
+                    Posts.map((item) => {
+                        if (item.id_User === user.id) {
+                            // setCountPost(countPost + 1)
+                            return (
+                                <View key={item._id} style={styles.viewDeletePost}>
+                                    <PostCard
+                                        onOpenBottomSheet={onOpenBottomSheet}
+                                        modalizeRef={modalizeRef}
+                                        item={item}
+                                        id={user.id}
+                                        avatar={user.avatar}
+                                        name={user.name} />
+                                </View>
+                            )
+                        }
+                    })
+                }
             </Container>
 
             <AnimatedBottomSheet

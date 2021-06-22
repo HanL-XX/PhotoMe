@@ -19,7 +19,7 @@ import {
 } from '../../styles/ChangeImageSheetStyle'
 
 import { Modalize } from 'react-native-modalize'
-import { uploadPic, deletePic } from '../../../firebase/handleFirebase'
+import { uploadPic, deletePic } from '../../../firebase/logicImage'
 
 //main window EditPersonalProfile here!
 export default function EditPersonalProfile({ navigation, route }) {
@@ -136,8 +136,8 @@ export default function EditPersonalProfile({ navigation, route }) {
             cropping: true,
         }).then(async image => {
             console.log(image);
-            // let a = await uploadPic(image.path, image.mime)
-            // console.log('uri::', a)
+            let a = await uploadPic(image.path, image.mime)
+            console.log('uri::', a)
             setUploadUProfile({ avatar: image.path })
         }).catch(e => { // Fix err user cancel
             if (e.code !== 'E_PICKER_CANCELLED') {
@@ -158,6 +158,7 @@ export default function EditPersonalProfile({ navigation, route }) {
             console.log(image);
             let a = await uploadPic(image.path, image.mime)
             console.log('uri::', a)
+            setUploadUProfile({ avatar: image.path })
         }).catch(e => {// Fix err user cancel
             if (e.code !== 'E_PICKER_CANCELLED') {
                 console.log(e);
@@ -167,10 +168,10 @@ export default function EditPersonalProfile({ navigation, route }) {
     }
     //handle delete picture
     const DeletePic = () => {
-        deletePic(picInfo.uri)
-        setPicInfo({
-            uri: null
-        });
+        logicImage.deletePic(uploadProfile.avatar)
+        // setPicInfo({
+        //     uri: null
+        // });
     }
     const ChangeImageSheet = () => {
         return (

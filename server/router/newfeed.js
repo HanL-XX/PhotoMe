@@ -28,20 +28,20 @@ router.post("/", async (req, res) => {
                         "post": pfile.post + 1,
                     }
                 })
-                .then(() => {
-                    return res.status(200).json({ msg: 'Success',newfeed })
-                })
-                .catch(()=>{
-                    return res.status(400).json({ msg: 'Update post profile fail' })
-                })
+                    .then(() => {
+                        return res.status(200).json({ msg: 'Success', newfeed })
+                    })
+                    .catch(() => {
+                        return res.status(400).json({ msg: 'Update post profile fail' })
+                    })
             })
         })
     }).catch(err => { return res.status(400).json({ msg: 'Profile not found' }) })
 })
 
 router.get("/", async (req, res) => {
-    const id_User = req.body.id_User
-    await Newfeed.findOne({ id_User: id_User }).then(newfeed => {
+    const { id_User } = req.query
+    await Newfeed.find({ id_User: id_User }).then(newfeed => {
         if (!newfeed)
             return res.status(200).json({ msg: 'Dont have newfeed' })
         return res.status(200).json({ msg: 'Success', newfeed })
@@ -54,6 +54,7 @@ router.post("/updatenewfeed", async (req, res) => {
         $set: {
             "status": status,
             "image": image,
+            "registration_data": Date.now,
         }
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont update newfeed user' })
@@ -67,8 +68,7 @@ router.post("/deletenewfeed", async (req, res) => {
     const { id } = req.body
     let id_User
     await Newfeed.findOne({ _id: id }).then(newfeed => {
-        if(newfeed)
-        {
+        if (newfeed) {
             id_User = newfeed.id_User
         }
         else
@@ -77,32 +77,30 @@ router.post("/deletenewfeed", async (req, res) => {
         return res.status(400).json({ msg: 'Dont find newfeed' })
     })
     await Newfeed.deleteOne({ _id: id })
-    .then(async(a)=>{
-        if(a.deletedCount==1)
-        {
-            await Comment.deleteMany({ id_Newfeed: id })
-            await Liked.deleteMany({ id_Newfeed: id })
-            await Profile.findOne({ id_User: id_User }).then(async pfile => {
-                await Profile.updateOne({ _id: pfile.id }, {
-                    $set: {
-                        "post": pfile.post - 1,
-                    }
+        .then(async (a) => {
+            if (a.deletedCount == 1) {
+                await Comment.deleteMany({ id_Newfeed: id })
+                await Liked.deleteMany({ id_Newfeed: id })
+                await Profile.findOne({ id_User: id_User }).then(async pfile => {
+                    await Profile.updateOne({ _id: pfile.id }, {
+                        $set: {
+                            "post": pfile.post - 1,
+                        }
+                    })
+                        .then(() => {
+                            return res.status(200).json({ msg: 'Delete success' })
+                        })
+                }).catch(er => {
+                    return
                 })
-                .then(()=>{
-                    return res.status(200).json({ msg: 'Delete success' })
-                })
-            }).catch(er => {
-                return 
-            })
-        }
-        else
-        {
+            }
+            else {
+                return res.status(400).json({ msg: 'Dont delete newfeed user' })
+            }
+        })
+        .catch(error => {
             return res.status(400).json({ msg: 'Dont delete newfeed user' })
-        }
-    })
-    .catch(error => {
-        return res.status(400).json({ msg: 'Dont delete newfeed user' })
-    })
+        })
 })
 
 module.exports = router;

@@ -107,7 +107,6 @@ export const PostImgEffect = styled.TouchableOpacity`
 `
 
 export const PostImg = styled.Image`
-    position: relative;
     margin-top:15px;
     width:100%;
     height:250px;

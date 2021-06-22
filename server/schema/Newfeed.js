@@ -27,7 +27,7 @@ const NewfeedSchema = new Schema({
         required: false,
     },
     registration_data: {
-        type: String,
+        type: Date,
         default: Date.now,
     }
 })

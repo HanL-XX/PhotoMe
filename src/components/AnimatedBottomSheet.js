@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
 // import { TapGestureHandler } from 'react-native-gesture-handler'
 import { Modalize } from 'react-native-modalize'
 import { windowWidth } from '../utils/Dimensions.js'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import AsyncStorage from '@react-native-community/async-storage'
 
-export default function AnimatedBottomSheet({ modalizeRef, name }) {
+
+export default function AnimatedBottomSheet({ modalizeRef, id }) {
+    useEffect(async () => {
+        const id = await AsyncStorage.getItem('userId_Key');
+    }, [])
     // const modalizeRef = React.useRef(null);
     // const onOpenBottomSheet = () => {
     //     modalizeRef.current?.open()
@@ -18,7 +23,7 @@ export default function AnimatedBottomSheet({ modalizeRef, name }) {
             modalHeight={200}
             style={{ overflow: 'hidden' }} >
             <SafeAreaView style={styles.containerSheet}>
-                {name ? (
+                {id ? (
                     <TouchableOpacity style={styles.buttonSheet}>
                         <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
                         <Ionicons

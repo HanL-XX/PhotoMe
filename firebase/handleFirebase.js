@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { Platform } from 'react-native';
 import { firebaseApp } from './firebaseconfig'/// npm install firebase ở firebase config
 import RNFetchBlob from 'react-native-fetch-blob'/// npm install
 import TimeOutFirebase from './TimeOutFirebase'

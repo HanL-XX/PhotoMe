@@ -46,7 +46,7 @@ const MainStackScreen = () => {
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="bell" color={color} size={30} />
                     ),
-                    tabBarBadge: 3,
+                    tabBarBadge: null,
                 }}
             />
             <Tab.Screen

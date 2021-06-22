@@ -40,8 +40,8 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/", async (req, res) => {
-    const id_User = req.body.id_User
-    await Newfeed.findOne({ id_User: id_User }).then(newfeed => {
+    const id_User = req.query.id_User
+    await Newfeed.find({ id_User: id_User }).then(newfeed => {
         if (!newfeed)
             return res.status(200).json({ msg: 'Dont have newfeed' })
         return res.status(200).json({ msg: 'Success', newfeed })

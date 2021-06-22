@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
+import { View, SafeAreaView, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
 import InputForm from "../components/InputForm"
 import ButtonForm from "../components/ButtonForm"
 import SocialButton from "../components/SocialButton"
@@ -34,7 +34,7 @@ export default function LoginScreen({ navigation }) {
     }
 
     return (
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Image
                 style={styles.logo}
                 source={require("../assets/images/Logoden.png")} />
@@ -76,7 +76,7 @@ export default function LoginScreen({ navigation }) {
                 onPress={() => navigation.navigate('Register')} >
                 <Text style={styles.navButtonText}>Don't have an account? Create here</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#f9fafd",
         flex: 1,
-        justifyContent: "center",
+        // justifyContent: "center",
         alignItems: "center",
         padding: 20,
     },

@@ -12,7 +12,7 @@ target 'PhotoMe' do
     :hermes_enabled => false
   )
 
-
+  pod 'react-native-fetch-blob', :path => '../node_modules/react-native-fetch-blob'
 
   target 'PhotoMeTests' do
     inherit! :complete

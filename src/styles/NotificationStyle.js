@@ -16,7 +16,13 @@ export const UserInfo = styled.TouchableOpacity`
     padding: 5px 10px;
     margin: 5px 0;
 `
-
+export const UserNotifi = styled.TouchableOpacity`
+    width: 100%;
+    background-color: #C0C0C0;
+    flex-direction:row;
+    padding: 5px 10px;
+    margin: 5px 0;
+`
 export const UserImg = styled.Image`
     width: 60px;
     height: 60px;

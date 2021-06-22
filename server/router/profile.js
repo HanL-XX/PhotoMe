@@ -41,7 +41,7 @@ router.post("/", (req, res) => {
 
 router.get("/", async (req, res) => {
     console.log(req.query.id_User)
-    const profile = await Profile.find({ "id_User": `${req.query.id_User}` }).sort({ registration_data: -1 }).limit(1).catch(error => {
+    const profile = await Profile.findOne({ "id_User": `${req.query.id_User}` }).sort({ registration_data: -1 }).limit(1).catch(error => {
         return res.status(400).json({ msg: 'Dont connect or error user' })
     })
     if (!profile) {

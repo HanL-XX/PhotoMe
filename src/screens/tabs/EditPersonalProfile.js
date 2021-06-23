@@ -88,7 +88,7 @@ export default function EditPersonalProfile({ navigation, route }) {
     //handle check Icon
     const acceptEdit = (data) => {
         axios({
-            method: 'PUT',
+            method: 'POST',
             url: `http://localhost:3000/api/profile/updateprofile`,
             data: data,
         })

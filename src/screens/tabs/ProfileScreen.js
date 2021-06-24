@@ -56,13 +56,13 @@ const ProfileStackScreen = ({ navigation }) => {
         })
             .then(response => {
                 setUser({
-                    id: response.data.profile[0].id_User,
-                    name: response.data.profile[0].name,
-                    avatar: response.data.profile[0].avatar,
-                    intro: response.data.profile[0].intro,
-                    follow: response.data.profile[0].follow,
-                    following: response.data.profile[0].following,
-                    post: response.data.profile[0].post,
+                    id: response.data.profile.id_User,
+                    name: response.data.profile.name,
+                    avatar: response.data.profile.avatar,
+                    intro: response.data.profile.intro,
+                    follow: response.data.profile.follow,
+                    following: response.data.profile.following,
+                    post: response.data.profile.post,
                 })
             })
             .catch(err => console.log(err))

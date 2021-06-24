@@ -25,7 +25,7 @@ import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import axios from 'axios';
 import { MAIN_URL } from '../../config';
 import AsyncStorage from '@react-native-community/async-storage'
-import { fetchDataProfile } from '../../api'
+import { fetchDataProfile, getAllMindPost } from '../../api'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
@@ -46,9 +46,7 @@ const ProfileStackScreen = ({ navigation }) => {
 
 
     const fetchProfile = async () => {
-        const id = await AsyncStorage.getItem('userId_Key');
-        // console.log("????" + id)
-        fetchDataProfile().then(data => {
+        await fetchDataProfile().then(data => {
             setUser({
                 id: data.id_User,
                 name: data.name,
@@ -65,16 +63,9 @@ const ProfileStackScreen = ({ navigation }) => {
 
     fetchNewFeed = async () => {
         const id = await AsyncStorage.getItem('userId_Key')
-        axios({
-            method: 'GET',
-            url: `${MAIN_URL}/api/newfeed`,
-            params: {
-                id_User: id
-            },
+        await getAllMindPost(id).then(data => {
+            setPosts(data)
         })
-            .then((response) => {
-                setPosts(response.data.newfeed)
-            })
     }
 
     useEffect(async () => {

@@ -18,9 +18,9 @@ export const UserInfo = styled.TouchableOpacity`
 `
 export const UserNotifi = styled.TouchableOpacity`
     width: 100%;
-    background-color: #C0C0C0;
+    background-color: #eee;
     flex-direction:row;
-    padding: 5px 10px;
+    padding: 7px 10px;
     margin: 5px 0;
 `
 export const UserImg = styled.Image`
@@ -31,14 +31,14 @@ export const UserImg = styled.Image`
 export const UserInfoWrapper = styled.View`
     flex: 1;
     flex-wrap: wrap;
-    margin-left: 10px;
+    margin-left: 5px;
     justify-content: center;
     align-items: center;
 `
 
 export const UserInfoText = styled.Text`
     font-size: 17px;
-    color: #444;
+    color: #4e4e4e;
     font-weight: 500;
 `
 export const UserName = styled.Text`

@@ -4,6 +4,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
+import { UpdateLikePost } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -25,6 +26,10 @@ import {
 export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, id, avatar, name }) {
     //Set up react heart
     const [liked, setLiked] = useState('') //false: none-color <--> true: red color
+    const [react, setReact] = useState({
+        liked: null,
+        likeCount: item.like
+    })
     const [followed, setFollowed] = useState('Following')
 
     //return liked in Object
@@ -34,15 +39,27 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
 
 
     //handle event to react
-    _onPressReact = () => {
-        if (!liked) {
-            item.like++;
-            setLiked(!liked)
+    _onPressReact = async () => {
+        const id_User = await AsyncStorage.getItem('userId_Key')
+        UpdateLikePost(id_User, item._id).
+            then(data => {
+                setLiked(!liked)
+                if (!liked) {
+                    setReact({ likeCount: react.likeCount + 1 })
+                    // console.log("true: " + react.likeCount)
+                    return;
+                }
+                else {
+                    setReact({ likeCount: react.likeCount - 1 })
+                    // console.log("false: " + react.likeCount)
+                    return;
+                }
+            })
+
+        if (item.like == 0) {
+            item.like = 0
         }
-        else {
-            (item.like == 0) ? item.like = 0 : item.like--;
-            setLiked(!liked)
-        }
+        else item.like--;
     }
 
     return (
@@ -95,7 +112,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                             style={liked ? styles.redColor : styles.emptyColor}
                             size={24} />
                     </TouchableOpacity>
-                    <InteractionText>{item.like} Like</InteractionText>
+                    <InteractionText>{react.likeCount} Like</InteractionText>
                 </Interaction>
                 <Interaction>
                     <TouchableOpacity>

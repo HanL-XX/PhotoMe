@@ -15,6 +15,7 @@ import InfoChatScreen from '../screens/tabs/InfoChatScreen'
 import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 import PostMind from '../screens/tabs/PostMind'
 import PostCard from '../components/PostCard'
+import PostScreen from '../screens/tabs/PostScreen'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -128,6 +129,13 @@ export default function MainScreen() {
             <Stack.Screen
                 name='PostCard'
                 component={PostCard}
+                options={({ route }) => ({
+
+                    headerShown: false
+                })} />
+            <Stack.Screen
+                name='Post'
+                component={PostScreen}
                 options={({ route }) => ({
 
                     headerShown: false

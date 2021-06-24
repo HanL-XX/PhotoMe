@@ -1,4 +1,5 @@
-import React, { useContext, useDispatch, useSelector } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useIsFocused } from "@react-navigation/native";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
@@ -13,7 +14,7 @@ import {
 } from '../../styles/FeedStyle'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import { AuthContext } from '../../context/AuthContext'
-
+import { fetchDataProfile } from '../../api'
 
 const time = new Date().toISOString(); //get Date to post Status
 const Posts = [
@@ -57,7 +58,9 @@ const Posts = [
 
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
+    const isFocused = useIsFocused(); //refresh when goBack here!!!
     const { name } = useContext(AuthContext) //get name from AuthContext
+    const [avatar, setAvatar] = useState(null)
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
     const onOpenBottomSheet = () => {
@@ -81,19 +84,35 @@ const HomeStackScreen = ({ navigation }) => {
         }
         else {
             navigation.navigate('Profile')
-            // alert(userName)
         }
     }
+
+    useEffect(() => {
+        fetchDataProfile().then((data) => {
+            setAvatar(data.avatar)
+        })
+    }, [isFocused])
+
     return (
         <Container>
             <HeaderBar>
                 <StatusBar>
-                    <UserImgStatus
-                        source={require("../../assets/images/user1.jpg")} />
-                    <InputForm
-                        placeholder="What's on your mind?"
-                        onFocus={() => { navigation.push('PostMind') }}>
-                    </InputForm>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => navigation.navigate("Profile")}>
+                        <UserImgStatus
+                            source={{ uri: avatar }} />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        activeOpacity={0.8}
+                        style={{ width: "80%" }}
+                        onPress={() => { navigation.push('PostMind') }}>
+                        <InputForm>
+                            What's on your mind?
+                        </InputForm>
+                    </TouchableOpacity>
+
                 </StatusBar>
             </HeaderBar >
             <FlatList

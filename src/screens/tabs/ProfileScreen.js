@@ -25,6 +25,7 @@ import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import axios from 'axios';
 import { MAIN_URL } from '../../config';
 import AsyncStorage from '@react-native-community/async-storage'
+import { fetchDataProfile } from '../../api'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
@@ -47,25 +48,19 @@ const ProfileStackScreen = ({ navigation }) => {
     const fetchProfile = async () => {
         const id = await AsyncStorage.getItem('userId_Key');
         // console.log("????" + id)
-        axios({
-            method: 'GET',
-            url: `${MAIN_URL}/api/profile`,
-            params: {
-                id_User: id
-            }
-        })
-            .then(response => {
-                setUser({
-                    id: response.data.profile.id_User,
-                    name: response.data.profile.name,
-                    avatar: response.data.profile.avatar,
-                    intro: response.data.profile.intro,
-                    follow: response.data.profile.follow,
-                    following: response.data.profile.following,
-                    post: response.data.profile.post,
-                })
+        fetchDataProfile().then(data => {
+            setUser({
+                id: data.id_User,
+                name: data.name,
+                avatar: data.avatar,
+                intro: data.intro,
+                follow: data.follow,
+                following: data.following,
+                post: data.post,
             })
-            .catch(err => console.log(err))
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
     fetchNewFeed = async () => {
@@ -224,7 +219,8 @@ export default function ProfileScreen() {
     return (
         <Drawer.Navigator drawerContent={props => <DrawerProfileScreen {...props} />}>
             <Drawer.Screen
-                name="MainProfileStackScreen" component={MainProfileStackScreen} />
+                name="MainProfileStackScreen"
+                component={MainProfileStackScreen} />
         </Drawer.Navigator>
 
     )

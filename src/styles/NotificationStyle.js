@@ -4,7 +4,7 @@ export const SafeAreaView = styled.SafeAreaView`
     flex: 1;
     background: #fff;
 `
-export const Container = styled.ScrollView`
+export const Container = styled.View`
     padding: 10px;
     background: #fff;
 `
@@ -29,6 +29,8 @@ export const UserImg = styled.Image`
     border-radius:30px;
 `
 export const UserInfoWrapper = styled.View`
+    flex: 1;
+    flex-wrap: wrap;
     margin-left: 10px;
     justify-content: center;
     align-items: center;

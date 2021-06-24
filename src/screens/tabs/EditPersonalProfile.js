@@ -23,6 +23,8 @@ import { uploadPic, deletePic } from '../../../firebase/logicImage'
 
 //main window EditPersonalProfile here!
 export default function EditPersonalProfile({ navigation, route }) {
+    //bottom sheet
+    const modalizeRef = React.useRef(null);
     const onCloseBottomSheet = () => {
         modalizeRef.current?.close();
     }
@@ -31,9 +33,6 @@ export default function EditPersonalProfile({ navigation, route }) {
     }
     //route params
     const dataUser = route.params //name && avatar && id && intro
-
-    //bottom sheet
-    const modalizeRef = React.useRef(null);
 
     const [showReload1, setShowReload1] = useState(false)
     const [showReload2, setShowReload2] = useState(false)
@@ -46,6 +45,11 @@ export default function EditPersonalProfile({ navigation, route }) {
         intro: dataUser.intro,
         sex: null,
         work: null,
+    })
+
+    const [pathImg, setPathImg] = useState({
+        path: null,
+        mime: null,
     })
 
     //data Sex
@@ -102,7 +106,11 @@ export default function EditPersonalProfile({ navigation, route }) {
                         {
                             text: 'Yes',
                             onPress: async () => {
-                                const seconds = Math.floor(Math.random() * 1500) + 900
+                                if (pathImg.path !== null && pathImg.mime !== null) {
+                                    let a = await uploadPic(pathImg.path, pathImg.mime)
+                                    console.log('uri::', a)
+                                }
+                                const seconds = Math.floor(Math.random() * 1600) + 950
                                 setShowReload2(true)
                                 setTimeout(() => {
                                     navigation.goBack()
@@ -112,7 +120,6 @@ export default function EditPersonalProfile({ navigation, route }) {
                         },
                     ]
                 )
-                // alert(response.data.msg)
             })
             .catch(err => {
                 const seconds = Math.floor(Math.random() * 1000) + 500
@@ -136,8 +143,7 @@ export default function EditPersonalProfile({ navigation, route }) {
             cropping: true,
         }).then(async image => {
             console.log(image);
-            let a = await uploadPic(image.path, image.mime)
-            console.log('uri::', a)
+            setPathImg({ path: image.path, mime: image.mime })
             setUploadUProfile({ avatar: image.path })
         }).catch(e => { // Fix err user cancel
             if (e.code !== 'E_PICKER_CANCELLED') {

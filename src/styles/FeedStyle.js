@@ -29,7 +29,7 @@ export const StatusBar = styled.View`
     padding: 5px 2px;
     border:none;
     border-radius:10px;
-    background-color: #ddd;
+    background-color: #e1e1e1;
 `
 
 export const UserImgStatus = styled.Image`
@@ -43,11 +43,12 @@ export const UserImg = styled.Image`
     border-radius:25px;
 `
 
-export const InputForm = styled.TextInput`
+export const InputForm = styled.Text`
     margin: 3px;
     padding-left: 5px;
     border: none;
     width: 80%;
+    color: #333;
 `
 
 export const TextSection = styled.View`

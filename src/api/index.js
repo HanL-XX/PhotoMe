@@ -12,6 +12,7 @@ export const fetchDataProfile = async () => {
             params: { id_User: id }
         })
             .then(response => {
+                // console.log(response.data.profile)
                 resolve(response.data.profile)
             })
             .catch(err => {
@@ -33,7 +34,6 @@ export const UpdateLikePost = async (idUser, idNewFeed) => {
             }
         })
             .then(response => {
-                // console.log(response.data)
                 resolve(response.data)
             })
             .catch(err => {
@@ -43,7 +43,21 @@ export const UpdateLikePost = async (idUser, idNewFeed) => {
     })
 }
 
-export const getThisPost = async (idNewFeed) => {
+export const getAllMindPost = async (id_User) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/newfeed`,
+            params: {
+                id_User: id_User
+            },
+        })
+            .then((response) => {
+                resolve(response.data.newfeed)
+            })
+    })
+}
+export const getPost = async (idNewFeed) => {
     return new Promise((resolve, reject) => {
         axios({
             method: 'GET',
@@ -62,3 +76,4 @@ export const getThisPost = async (idNewFeed) => {
             })
     })
 }
+

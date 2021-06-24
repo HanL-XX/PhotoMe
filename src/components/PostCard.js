@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
-import { UpdateLikePost } from '../api'
+import { UpdateLikePost, getPost, getAllMindPost } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -25,7 +25,7 @@ import {
 
 export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, id, avatar, name }) {
     //Set up react heart
-    const [liked, setLiked] = useState('') //false: none-color <--> true: red color
+    const [liked, setLiked] = useState(false) //false: none-color <--> true: red color
     const [react, setReact] = useState({
         liked: null,
         likeCount: item.like
@@ -33,27 +33,51 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
     const [followed, setFollowed] = useState('Following')
 
     //return liked in Object
-    useEffect(() => {
-        setLiked(item.like);
+    useEffect(async () => {
+        const id_User = await AsyncStorage.getItem('userId_Key')
+        //check existed like?
+        if (item.allIdReact) {
+            for (let i of item.allIdReact) {
+                if (id_User === i) {
+                    setLiked(true);
+                    return;
+                }
+            }
+        }
     }, [])
-
 
     //handle event to react
     _onPressReact = async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
         UpdateLikePost(id_User, item._id).
             then(data => {
-                setLiked(!liked)
-                if (!liked) {
-                    setReact({ likeCount: react.likeCount + 1 })
-                    // console.log("true: " + react.likeCount)
-                    return;
-                }
-                else {
-                    setReact({ likeCount: react.likeCount - 1 })
-                    // console.log("false: " + react.likeCount)
-                    return;
-                }
+                console.log(data.id_Newfeed)
+                getPost(data.id_Newfeed).then(async (data) => {
+                    data.allIdReact.map(item => {
+                        if (item === id_User) {
+                            console.log("Exist ID React Post")
+                            setLiked(true)
+                            setReact({ likeCount: react.likeCount + 1 })
+                            return;
+                        }
+                        else {
+                            setLiked(false)
+                            setReact({ likeCount: react.likeCount - 1 })
+                            return;
+                        }
+                    })
+                })
+                // setLiked(!liked)
+                // if (!liked) {
+                //     setReact({ likeCount: react.likeCount + 1 })
+                //     // console.log("true: " + react.likeCount)
+                //     return;
+                // }
+                // else {
+                //     setReact({ likeCount: react.likeCount - 1 })
+                //     // console.log("false: " + react.likeCount)
+                //     return;
+                // }
             })
 
         if (item.like == 0) {

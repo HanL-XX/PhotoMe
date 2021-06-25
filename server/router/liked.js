@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/", async (req, res) => {
-    const { id_User, id_Newfeed } = req.body
+    const { id_User, id_Newfeed } = req.query
 
     if (!id_User || !id_Newfeed) {
         return res.status(400).json({ err: 'Dont have enough properties' })
@@ -84,20 +84,19 @@ router.post("/updateliked", async (req, res) => {
                                 "id_impact": id_User.toString(),
                             }
                         })
-                        .then(() => {
-                            return res.status(200).json({ msg: 'Success', lik })
-                        })
-                        .catch(async er => {
-                            await Liked.deleteOne({ _id: liked.id }).catch(error => {
-                                return res.status(400).json({ msg: 'Like success but update newfeed' })
+                            .then(() => {
+                                return res.status(200).json({ msg: 'Like1 Success', id_Newfeed })
                             })
-                        })
+                            .catch(async er => {
+                                await Liked.deleteOne({ _id: liked.id }).catch(error => {
+                                    return res.status(400).json({ msg: 'Like success but update newfeed' })
+                                })
+                            })
                     }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
                 }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
             }).catch(err => { return res.status(400).json({ msg: 'Liked not found' }) })
         }
-        else
-        {
+        else {
             const likedse = await Liked.updateOne({ id_User: id_User, id_Newfeed: id_Newfeed }, {
                 $set: {
                     "liked": !liked.liked,
@@ -114,9 +113,10 @@ router.post("/updateliked", async (req, res) => {
                             $set: {
                                 "like": newfeed.like - 1,
                             }
+
                         })
                             .then(() => {
-                                return res.status(200).json({ msg: 'Update success', likedse })
+                                return res.status(200).json({ msg: 'Unlike success', id_Newfeed })
                             })
                             .catch(er => {
                                 return res.status(400).json({ msg: 'Like not found' })
@@ -131,7 +131,7 @@ router.post("/updateliked", async (req, res) => {
                             }
                         })
                             .then(() => {
-                                return res.status(200).json({ msg: 'Update success', likedse })
+                                return res.status(200).json({ msg: 'Like2 success', id_Newfeed })
                             })
                             .catch(er => {
                                 return res.status(400).json({ msg: 'Like not found' })
@@ -152,8 +152,7 @@ router.post("/deleteliked", async (req, res) => {
         return res.status(400).json({ err: 'Dont have enough properties' })
     }
     await Liked.findOne({ id_User: id_User, id_Newfeed: id_Newfeed }).then(async liked => {
-        if(liked)
-        {
+        if (liked) {
             const likedse = await Liked.deleteOne({ id_User: id_User, id_Newfeed: id_Newfeed }).catch(error => {
                 return res.status(400).json({ msg: 'Dont delete liked user' })
             })
@@ -161,8 +160,7 @@ router.post("/deleteliked", async (req, res) => {
                 return res.status(400).json({ msg: 'Dont delete liked user', likedse })
             return res.status(200).json({ msg: 'Delete success', likedse })
         }
-        else
-        {
+        else {
             return res.status(400).json({ msg: 'Dont have liked' })
         }
     }).catch(error => {

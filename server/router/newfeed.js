@@ -67,6 +67,15 @@ router.get("/home", async (req, res) => {
 })
 
 
+router.get("/thispost", async (req, res) => {
+    const id_Newfeed = req.query.id_Newfeed
+    await Newfeed.findOne({ _id: id_Newfeed }).then(newfeed => {
+        if (!newfeed)
+            return res.status(200).json({ msg: 'Dont have newfeed' })
+        return res.status(200).json({ msg: 'Success', newfeed })
+    }).catch(error => { return res.status(400).send(error) })
+})
+
 router.post("/updatenewfeed", async (req, res) => {
     const { id, status, image } = req.body
     const newfeed = await Newfeed.updateOne({ _id: id }, {

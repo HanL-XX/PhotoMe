@@ -26,7 +26,6 @@ const NewfeedSchema = new Schema({
         type: String,
         required: false,
     },
-    allIdReact: [String],
     registration_data: {
         type: Date,
         default: Date.now,

@@ -57,6 +57,7 @@ export const getAllMindPost = async (id_User) => {
             })
     })
 }
+
 export const getPost = async (idNewFeed) => {
     return new Promise((resolve, reject) => {
         axios({
@@ -71,9 +72,28 @@ export const getPost = async (idNewFeed) => {
                 resolve(response.data.newfeed)
             })
             .catch(err => {
-                console.log(err)
+                // console.log(err)
                 return err;
             })
     })
 }
 
+export const getLiked = async (id_User, id_Newfeed) => {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/liked`,
+            params: {
+                id_User: id_User,
+                id_Newfeed: id_Newfeed
+            }
+        })
+            .then(response => {
+                resolve(response.data)
+            })
+            .catch(err => {
+                // console.log(err)
+                return err;
+            })
+    })
+}

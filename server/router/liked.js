@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
 })
 
 router.get("/", async (req, res) => {
-    const { id_User, id_Newfeed } = req.body
+    const { id_User, id_Newfeed } = req.query
 
     if (!id_User || !id_Newfeed) {
         return res.status(400).json({ err: 'Dont have enough properties' })
@@ -82,9 +82,6 @@ router.post("/updateliked", async (req, res) => {
                             $set: {
                                 "like": newfeed.like + 1,
                                 "id_impact": id_User.toString(),
-                            },
-                            $addToSet: {
-                                "allIdReact": id_User,
                             }
                         })
                             .then(() => {
@@ -115,9 +112,6 @@ router.post("/updateliked", async (req, res) => {
                         await Newfeed.updateOne({ _id: id_Newfeed }, {
                             $set: {
                                 "like": newfeed.like - 1,
-                            },
-                            $pull: {
-                                "allIdReact": id_User,
                             }
 
                         })
@@ -134,9 +128,6 @@ router.post("/updateliked", async (req, res) => {
                         await Newfeed.updateOne({ _id: id_Newfeed }, {
                             $set: {
                                 "like": newfeed.like + 1,
-                            },
-                            $addToSet: {
-                                "allIdReact": id_User,
                             }
                         })
                             .then(() => {

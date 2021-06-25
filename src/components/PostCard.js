@@ -4,7 +4,7 @@ import { StyleSheet, View, Text } from 'react-native'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
-import { UpdateLikePost, getPost, getLiked } from '../api'
+import { UpdateLikePost, getThisPost, getLiked } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -20,10 +20,12 @@ import {
     InteractionWrapper,
     Interaction,
     InteractionText,
-    Divide
+    Divide,
+    IconJob
 } from '../styles/FeedStyle'
+import { iconJob } from '../styles/globalIcon'
 
-export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, id, avatar, name }) {
+export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, id, avatar, name, iconjob }) {
     //Set up react heart
     const [liked, setLiked] = useState(false) //false: none-color <--> true: red color
     const [react, setReact] = useState({
@@ -81,6 +83,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                             </View>
                             <View style={{ flexDirection: 'row' }}>
                                 <TimeAgo time={item.registration_data} />
+                                <IconJob source={iconJob.icons[iconjob]} />
                                 {/* add icon Major */}
                             </View>
                         </UserInfoText>

@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from "react-native-image-crop-picker"
-
-import { View, TouchableOpacity, StyleSheet, Alert, LogBox, ActivityIndicator } from 'react-native'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { View, TouchableOpacity, StyleSheet, Alert, LogBox, ActivityIndicator, Button } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios';
+
+LogBox.ignoreAllLogs();//Ignore all log notifications
 
 import {
     SafeAreaView, Container,
     UserImgContainer, UserImg,
     Label, TextInput,
     IntroText,
+    ButtonDate,
 } from '../../styles/EditProfileStyle'
 import {
     ViewLabel, LabelHeader, LabelIntro,
@@ -20,6 +23,7 @@ import {
 
 import { Modalize } from 'react-native-modalize'
 import { uploadPic, deletePic } from '../../../firebase/logicImage'
+import moment from 'moment';
 
 //main window EditPersonalProfile here!
 export default function EditPersonalProfile({ navigation, route }) {
@@ -31,6 +35,14 @@ export default function EditPersonalProfile({ navigation, route }) {
     const onOpenBottomSheet = () => {
         modalizeRef.current?.open();
     }
+
+    //DateTime Picker
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const handleConfirm = (date) => {
+        setUploadUProfile({ ...uploadProfile, birthday: moment(date).format('DD-MM-YYYY').toString() })
+        setDatePickerVisibility(false);
+    };
+
     //route params
     const dataUser = route.params //name && avatar && id && intro
 
@@ -41,10 +53,11 @@ export default function EditPersonalProfile({ navigation, route }) {
         id_User: dataUser.id,
         avatar: dataUser.avatar,
         name: dataUser.name,
-        // email: '',
         intro: dataUser.intro,
-        sex: null,
-        work: null,
+        birthday: dataUser.birthday,
+        sex: dataUser.sex,
+        job: dataUser.job,
+        iconjob: dataUser.job
     })
 
     const [pathImg, setPathImg] = useState({
@@ -54,14 +67,14 @@ export default function EditPersonalProfile({ navigation, route }) {
 
     //data Sex
     const [openSex, setOpenSex] = useState(false);
-    const [valueSex, setValueSex] = useState(null);
+    const [valueSex, setValueSex] = useState(dataUser.sex);
     const [itemsSex, setItemsSex] = useState([
         { label: 'Male', value: 'male' },
         { label: 'Female', value: 'female' }
     ]);
     //data Work
     const [openWork, setOpenWork] = useState(false);
-    const [valueWork, setValueWork] = useState(null);
+    const [valueWork, setValueWork] = useState(dataUser.job);
     const [itemsWork, setItemsWork] = useState([
         { label: 'Photographer', value: 'photographer' },
         { label: 'Cameraman', value: 'cameraman' },
@@ -90,7 +103,13 @@ export default function EditPersonalProfile({ navigation, route }) {
     }
 
     //handle check Icon
-    const acceptEdit = (data) => {
+    const acceptEdit = async (data) => {
+        if (pathImg.path !== null && pathImg.mime !== null) {
+            let a = await uploadPic(pathImg.path, pathImg.mime)
+            console.log('uri::', a)
+            setUploadUProfile({ ...uploadProfile, avatar: a })
+        }
+
         axios({
             method: 'POST',
             url: `http://localhost:3000/api/profile/updateprofile`,
@@ -106,10 +125,6 @@ export default function EditPersonalProfile({ navigation, route }) {
                         {
                             text: 'Yes',
                             onPress: async () => {
-                                if (pathImg.path !== null && pathImg.mime !== null) {
-                                    let a = await uploadPic(pathImg.path, pathImg.mime)
-                                    console.log('uri::', a)
-                                }
                                 const seconds = Math.floor(Math.random() * 1600) + 950
                                 setShowReload2(true)
                                 setTimeout(() => {
@@ -144,7 +159,7 @@ export default function EditPersonalProfile({ navigation, route }) {
         }).then(async image => {
             console.log(image);
             setPathImg({ path: image.path, mime: image.mime })
-            setUploadUProfile({ avatar: image.path })
+            setUploadUProfile({ ...uploadProfile, avatar: image.path })
         }).catch(e => { // Fix err user cancel
             if (e.code !== 'E_PICKER_CANCELLED') {
                 console.log(e);
@@ -280,14 +295,31 @@ export default function EditPersonalProfile({ navigation, route }) {
                             defaultValue={dataUser.name}
                             onChangeText={(value) => { setUploadUProfile({ ...uploadProfile, name: value }) }} />
                     </View>
-                    <View>
+                    {/* <View>
                         <Label>Email Address</Label>
                         <TextInput
                             onChangeText={(value) => { setUploadUProfile({ ...uploadProfile, email: value }) }} />
-                    </View>
+                    </View> */}
                     <View>
                         <Label>Date of Birth</Label>
-                        <TextInput />
+                        <DateTimePickerModal
+                            isVisible={isDatePickerVisible}
+                            mode="date"
+                            onConfirm={handleConfirm}
+                            onCancel={() => setDatePickerVisibility(false)}
+                        />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <TextInput
+                                defaultValue={uploadProfile.birthday}
+                                editable={false}
+                                style={{ width: '85%' }} />
+                            <ButtonDate onPress={() => setDatePickerVisibility(true)} activeOpacity={0.7} >
+                                <Icon
+                                    name="calendar"
+                                    size={40}
+                                    color="#585858" />
+                            </ButtonDate>
+                        </View>
                     </View>
                     <View>
                         <Label>Introduction</Label>
@@ -308,6 +340,7 @@ export default function EditPersonalProfile({ navigation, route }) {
                                 <DropDownPicker
                                     placeholder="Select sex"
                                     dropDownDirection="TOP"
+                                    defaultValue={dataUser.sex}
                                     dropDownContainerStyle={{ borderWidth: 1, borderColor: '#aaa' }}
                                     style={{ borderWidth: 0.5, borderColor: '#aaa' }}
                                     placeholderStyle={{ fontSize: 17, fontStyle: 'italic' }}
@@ -319,7 +352,9 @@ export default function EditPersonalProfile({ navigation, route }) {
                                     setOpen={setOpenSex}
                                     setValue={setValueSex}
                                     setItems={setItemsSex}
-                                    onChangeValue={(value) => { setUploadUProfile({ ...uploadProfile, sex: value }) }}
+                                    onChangeValue={(value) => {
+                                        setUploadUProfile({ ...uploadProfile, sex: value })
+                                    }}
 
                                 />
                             </>
@@ -330,6 +365,7 @@ export default function EditPersonalProfile({ navigation, route }) {
                                 <DropDownPicker
                                     placeholder="Select work"
                                     dropDownDirection="TOP"
+                                    defaultValue={dataUser.work}
                                     dropDownContainerStyle={{ borderWidth: 1, borderColor: '#aaa' }}
                                     style={{ borderWidth: 0.5, borderColor: '#aaa' }}
                                     placeholderStyle={{ fontSize: 17, fontStyle: 'italic' }}
@@ -340,7 +376,9 @@ export default function EditPersonalProfile({ navigation, route }) {
                                     setOpen={setOpenWork}
                                     setValue={setValueWork}
                                     setItems={setItemsWork}
-                                    onChangeValue={(value) => { setUploadUProfile({ ...uploadProfile, work: value }) }}
+                                    onChangeValue={(value) => {
+                                        setUploadUProfile({ ...uploadProfile, job: value, iconjob: value })
+                                    }}
                                 />
                             </>
                         </View>

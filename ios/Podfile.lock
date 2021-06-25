@@ -277,6 +277,8 @@ PODS:
     - React-Core
   - RNCMaskedView (0.1.10):
     - React
+  - RNDateTimePicker (3.5.2):
+    - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
   - RNImageCropPicker (0.36.2):
@@ -359,6 +361,7 @@ DEPENDENCIES:
   - "RNCAsyncStorage (from `../node_modules/@react-native-community/async-storage`)"
   - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCMaskedView (from `../node_modules/@react-native-community/masked-view`)"
+  - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNImageCropPicker (from `../node_modules/react-native-image-crop-picker`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
@@ -436,6 +439,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/checkbox"
   RNCMaskedView:
     :path: "../node_modules/@react-native-community/masked-view"
+  RNDateTimePicker:
+    :path: "../node_modules/@react-native-community/datetimepicker"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
   RNImageCropPicker:
@@ -483,6 +488,7 @@ SPEC CHECKSUMS:
   RNCAsyncStorage: b03032fdbdb725bea0bd9e5ec5a7272865ae7398
   RNCCheckbox: d1749e6a92178ce5dbc31e63becd1f34f0c76bbd
   RNCMaskedView: 5a8ec07677aa885546a0d98da336457e2bea557f
+  RNDateTimePicker: 7658208086d86d09e1627b5c34ba0cf237c60140
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNImageCropPicker: 35a3ceb837446fa11547704709bb22b5fac6d584
   RNReanimated: b8c8004b43446e3c2709fe64b2b41072f87428ad
@@ -491,6 +497,6 @@ SPEC CHECKSUMS:
   TOCropViewController: 3105367e808b7d3d886a74ff59bf4804e7d3ab38
   Yoga: 8c8436d4171c87504c648ae23b1d81242bdf3bbf
 
-PODFILE CHECKSUM: 2134467a4810f00c800112705036ff1b30bafadd
+PODFILE CHECKSUM: 0cb9bb5db5775b8dc2ae865a96bf883972a1e780
 
 COCOAPODS: 1.10.1

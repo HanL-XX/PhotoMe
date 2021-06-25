@@ -22,8 +22,6 @@ import {
 import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
-import axios from 'axios';
-import { MAIN_URL } from '../../config';
 import AsyncStorage from '@react-native-community/async-storage'
 import { fetchDataProfile, getAllMindPost } from '../../api'
 
@@ -37,10 +35,15 @@ const ProfileStackScreen = ({ navigation }) => {
         name: null,
         avatar: null,
         intro: null,
+        sex: null,
         follow: 0,
         following: 0,
         post: 0,
+        job: null,
+        iconjob: null,
+        birthday: null,
     })
+
     //Array Posts
     const [Posts, setPosts] = useState([])
 
@@ -52,16 +55,20 @@ const ProfileStackScreen = ({ navigation }) => {
                 name: data.name,
                 avatar: data.avatar,
                 intro: data.intro,
+                sex: data.sex,
                 follow: data.follow,
                 following: data.following,
                 post: data.post,
+                job: data.job,
+                iconjob: data.iconjob,
+                birthday: data.birthday,
             })
         }).catch(err => {
             console.log(err)
         })
     }
 
-    fetchNewFeed = async () => {
+    const fetchNewFeed = async () => {
         const id = await AsyncStorage.getItem('userId_Key')
         await getAllMindPost(id).then(data => {
             setPosts(data)
@@ -142,6 +149,9 @@ const ProfileStackScreen = ({ navigation }) => {
                         name: user.name,
                         avatar: user.avatar,
                         intro: user.intro,
+                        job: user.job,
+                        birthday: user.birthday,
+                        sex: user.sex,
                     })}>
                         Edit Profile
                     </EditProfileText>
@@ -158,7 +168,8 @@ const ProfileStackScreen = ({ navigation }) => {
                                         item={item}
                                         id={user.id}
                                         avatar={user.avatar}
-                                        name={user.name} />
+                                        name={user.name}
+                                        iconjob={user.iconjob} />
                                 </View>
                             )
                         }

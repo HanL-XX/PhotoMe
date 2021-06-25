@@ -35,7 +35,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="home" color={color} size={30} />
+                        <MaterialCommunityIcons name="home" color={color} size={27} />
                     ),
                 }}
             />
@@ -45,7 +45,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Notification',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="bell" color={color} size={30} />
+                        <MaterialCommunityIcons name="bell" color={color} size={27} />
                     ),
                     tabBarBadge: null,
                 }}
@@ -56,7 +56,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Search',
                     tabBarIcon: ({ color }) => (
-                        <Icon name="search" color={color} size={24} />
+                        <Icon name="search" color={color} size={23} />
                     ),
                 }}
             />
@@ -66,7 +66,7 @@ const MainStackScreen = () => {
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => (
-                        <MaterialCommunityIcons name="account" color={color} size={30} />
+                        <MaterialCommunityIcons name="account" color={color} size={27} />
                     ),
                 }}
             />

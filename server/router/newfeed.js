@@ -57,6 +57,25 @@ router.get("/thispost", async (req, res) => {
     }).catch(error => { return res.status(400).send(error) })
 })
 
+router.get("/home", async (req, res) => {
+    await Newfeed.aggregate([{
+        $sample:{size:23}
+    },{
+        $group: {
+            _id: "$_id",
+            document: { $push: "$$ROOT" }
+        }
+    },{
+        $limit:23
+    }]).then(newfeed=>{
+        if(!newfeed)
+            return res.status(200).json({ msg: 'Dont have newfeed' })
+        else
+            return res.status(200).json({ msg: 'Success', newfeed })
+    }).catch(error => { return res.status(400).send(error) })
+})
+
+
 router.post("/updatenewfeed", async (req, res) => {
     const { id, status, image } = req.body
     const newfeed = await Newfeed.updateOne({ _id: id }, {

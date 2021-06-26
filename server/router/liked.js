@@ -82,6 +82,9 @@ router.post("/updateliked", async (req, res) => {
                             $set: {
                                 "like": newfeed.like + 1,
                                 "id_impact": id_User.toString(),
+                            },
+                            $push: {
+                                "allIdReact": id_User
                             }
                         })
                             .then(() => {
@@ -112,6 +115,9 @@ router.post("/updateliked", async (req, res) => {
                         await Newfeed.updateOne({ _id: id_Newfeed }, {
                             $set: {
                                 "like": newfeed.like - 1,
+                            },
+                            $pull: {
+                                "allIdReact": id_User
                             }
 
                         })
@@ -128,6 +134,9 @@ router.post("/updateliked", async (req, res) => {
                         await Newfeed.updateOne({ _id: id_Newfeed }, {
                             $set: {
                                 "like": newfeed.like + 1,
+                            },
+                            $push: {
+                                "allIdReact": id_User
                             }
                         })
                             .then(() => {

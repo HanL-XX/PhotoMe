@@ -71,6 +71,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                         <UserInfoText>
                             <View style={{ flexDirection: 'row' }}>
                                 <UserName>{name}</UserName>
+                                <IconJob source={iconJob.icons[iconjob]} />
                                 {(item.id_User !== id) ?
                                     (
                                         <Follow>
@@ -83,9 +84,8 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                                     (<></>)}
 
                             </View>
-                            <View style={{ flexDirection: 'row' }}>
+                            <View>
                                 <TimeAgo time={item.registration_data} />
-                                <IconJob source={iconJob.icons[iconjob]} />
                                 {/* add icon Major */}
                             </View>
                         </UserInfoText>

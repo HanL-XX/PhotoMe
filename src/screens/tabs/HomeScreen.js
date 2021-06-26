@@ -21,11 +21,6 @@ import { fetchDataProfile, getAllPosts } from '../../api'
 const HomeStackScreen = ({ navigation }) => {
     // const [id, setId] = useState(null)
     const [Posts, setPosts] = useState([])
-    const [infoUser, setInfoUser] = useState({
-        avatar: null,
-        name: null,
-        iconjob: null,
-    })
 
     const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
@@ -47,7 +42,19 @@ const HomeStackScreen = ({ navigation }) => {
 
     //get all Posts from db
     const getPosts = async () => {
-        await getAllPosts().then(data => {
+        await getAllPosts().then(async (data) => {
+            for (let i of data) {
+                await fetchDataProfile(i.document[0].id_User)
+                    .then(profile => {
+                        i.__proto__ = "avatar"
+                        i.avatar = profile.avatar
+                        i.__proto__ = "name"
+                        i.name = profile.name
+                        i.__proto__ = "iconjob"
+                        i.iconjob = profile.iconjob
+
+                    })
+            }
             setPosts(data)
         })
     }
@@ -62,16 +69,6 @@ const HomeStackScreen = ({ navigation }) => {
             navigation.navigate('Profile') // my Profile
         }
     }
-
-    // const getInfoUser = async (id) => {
-    //     await fetchDataProfile(id).then(data => {
-    //         setInfoUser({
-    //             avatar: data.avatar,
-    //             name: data.name,
-    //             iconjob: data.iconjob,
-    //         })
-    //     })
-    // }
 
     useEffect(async () => {
         const ids = await AsyncStorage.getItem('userId_Key')
@@ -97,7 +94,7 @@ const HomeStackScreen = ({ navigation }) => {
                     <TouchableOpacity
                         activeOpacity={0.8}
                         style={{ width: "80%" }}
-                        onPress={() => { navigation.push('PostMind') }}>
+                        onPress={() => { navigation.navigate('PostMind') }}>
                         <InputForm>
                             What's on your mind?
                         </InputForm>
@@ -110,22 +107,14 @@ const HomeStackScreen = ({ navigation }) => {
             }>
                 {
                     Posts.map((item) => {
-                        // await fetchDataProfile(item.document[0].id_User).then(data => {
-                        //     setInfoUser({
-                        //         avatar: data.avatar,
-                        //         name: data.name,
-                        //         iconjob: data.iconjob,
-                        //     })
-                        // })
-                        // getInfoUser(item.document[0].id_User)
                         return (
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard
                                     onOpenBottomSheet={onOpenBottomSheet}
                                     modalizeRef={modalizeRef}
                                     item={item.document[0]}
-                                    // avatar={item.document.avatar}
-                                    name={item.document[0].name}
+                                    avatar={item.avatar}
+                                    name={item.name}
                                     // iconjob={user.iconjob}
                                     onPress={() => handlePostCardUser(item.document[0])} />
                             </View>

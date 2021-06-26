@@ -129,3 +129,25 @@ export const UpdateLikePost = async (idUser, idNewFeed) => {
             })
     })
 }
+
+
+export const createNewPost = async (data) => {
+    const id_User = await AsyncStorage.getItem('userId_Key')
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'POST',
+            url: `${MAIN_URL}/api/newfeed`,
+            data: {
+                id_User: id_User,
+                status: data.status,
+                image: data.image,
+            },
+            headers: { 'Content-Type': 'application/json' }
+        })
+            .then(response => {
+                console.log(response)
+                resolve(response.data)
+            })
+            .catch(err => reject(err))
+    })
+}

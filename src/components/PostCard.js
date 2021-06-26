@@ -25,7 +25,8 @@ import {
 } from '../styles/FeedStyle'
 import { iconJob } from '../styles/globalIcon'
 
-export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, id, avatar, name, iconjob }) {
+export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
+    const [id, setId] = useState(null)
     //Set up react heart
     const [liked, setLiked] = useState(false) //false: none-color <--> true: red color
     const [react, setReact] = useState({
@@ -37,6 +38,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
     //return liked in Object
     useEffect(async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
+        setId(id_User)
         await getLiked(id_User, item._id).then(data => setLiked(data.liked.liked))
     }, [item._id])
 

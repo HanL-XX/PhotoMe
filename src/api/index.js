@@ -2,8 +2,8 @@ import axios from 'axios'
 import { MAIN_URL } from '../config'
 import AsyncStorage from '@react-native-community/async-storage'
 
-export const fetchDataProfile = async () => {
-    const id = await AsyncStorage.getItem('userId_Key');
+export const fetchDataProfile = async (id) => {
+    // const id = await AsyncStorage.getItem('userId_Key');
 
     return new Promise((resolve, reject) => {
         axios({
@@ -22,6 +22,19 @@ export const fetchDataProfile = async () => {
     })
 }
 
+export const getAllPosts = async () => {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/newfeed/home`,
+        })
+            .then(response => { resolve(response.data.newfeed) })
+            .catch(err => {
+                return err;
+            })
+    })
+}
+
 export const checkUserReactPost = (id_User) => {
     return new Promise((resolve, reject) => {
         axios({
@@ -35,27 +48,6 @@ export const checkUserReactPost = (id_User) => {
                 resolve(response.data.profile)
             })
             .catch(err => {
-                return err;
-            })
-    })
-}
-
-export const UpdateLikePost = async (idUser, idNewFeed) => {
-    idUser = await AsyncStorage.getItem('userId_Key')
-    return new Promise((resolve, reject) => {
-        axios({
-            method: 'POST',
-            url: `${MAIN_URL}/api/liked/updateliked`,
-            data: {
-                id_User: idUser,
-                id_Newfeed: idNewFeed,
-            }
-        })
-            .then(response => {
-                resolve(response.data)
-            })
-            .catch(err => {
-                // console.log(err)
                 return err;
             })
     })
@@ -104,6 +96,28 @@ export const getLiked = async (id_User, id_Newfeed) => {
             params: {
                 id_User: id_User,
                 id_Newfeed: id_Newfeed
+            }
+        })
+            .then(response => {
+                resolve(response.data)
+            })
+            .catch(err => {
+                // console.log(err)
+                return err;
+            })
+    })
+}
+
+
+export const UpdateLikePost = async (idUser, idNewFeed) => {
+    idUser = await AsyncStorage.getItem('userId_Key')
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'POST',
+            url: `${MAIN_URL}/api/liked/updateliked`,
+            data: {
+                id_User: idUser,
+                id_Newfeed: idNewFeed,
             }
         })
             .then(response => {

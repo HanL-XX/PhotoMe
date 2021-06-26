@@ -61,8 +61,8 @@ export default function EditPersonalProfile({ navigation, route }) {
     })
 
     const [pathImg, setPathImg] = useState({
-        path: null,
-        mime: null,
+        path: '',
+        mime: '',
     })
 
     //data Sex
@@ -104,7 +104,7 @@ export default function EditPersonalProfile({ navigation, route }) {
 
     //handle check Icon
     const acceptEdit = async (data) => {
-        if (pathImg.path !== null && pathImg.mime !== null) {
+        if (pathImg.path !== '' && pathImg.mime !== '') {
             let a = await uploadPic(pathImg.path, pathImg.mime)
             console.log('uri::', a)
             setUploadUProfile({ ...uploadProfile, avatar: a })

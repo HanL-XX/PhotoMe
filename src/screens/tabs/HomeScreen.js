@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useIsFocused } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
 import PostCard from '../../components/PostCard'
@@ -13,54 +13,22 @@ import {
 
 } from '../../styles/FeedStyle'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
+import AsyncStorage from '@react-native-community/async-storage'
 import { AuthContext } from '../../context/AuthContext'
-import { fetchDataProfile } from '../../api'
-
-const time = new Date().toISOString(); //get Date to post Status
-const Posts = [
-    {
-        id: '1',
-        userName: 'Minh',
-        userImg: require('../../assets/images/user1.jpg'),
-        postTime: '2021-05-04T03:16:34.820Z',
-        postText: `Hi, I'm a developer`,
-        postImg: require('../../assets/images/postImg/post1.jpg'),
-        liked: true,
-        likes: '2',
-        comments: '5',
-        saves: '5',
-    },
-    {
-        id: '2',
-        userName: 'Hà Nhật Linh',
-        userImg: require('../../assets/images/user2.png'),
-        postTime: time,
-        postText: `Perfect Image for Bird!`,
-        postImg: require('../../assets/images/postImg/post2.jpg'),
-        liked: false,
-        likes: '1',
-        comments: '14',
-        saves: '5',
-    },
-    {
-        id: '3',
-        userName: 'Group',
-        userImg: require('../../assets/images/user3.jpg'),
-        postTime: time,
-        postText: `This is a first comment in group!!`,
-        postImg: 'none',
-        liked: false,
-        likes: '48',
-        comments: '2',
-        saves: '5',
-    },
-]
+import { fetchDataProfile, getAllPosts } from '../../api'
 
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
+    // const [id, setId] = useState(null)
+    const [Posts, setPosts] = useState([])
+    const [infoUser, setInfoUser] = useState({
+        avatar: null,
+        name: null,
+        iconjob: null,
+    })
+
     const isFocused = useIsFocused(); //refresh when goBack here!!!
-    const { name } = useContext(AuthContext) //get name from AuthContext
-    const [avatar, setAvatar] = useState(null)
+    const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
     const onOpenBottomSheet = () => {
@@ -77,20 +45,42 @@ const HomeStackScreen = ({ navigation }) => {
         }, 1200);
     })
 
-    const handleNameUser = (dataUser) => {
-        if (dataUser.userName !== name) {
-            navigation.navigate('ProfileUserScreen', { dataUser: dataUser })
-            // console.log(dataUser)
+    //get all Posts from db
+    const getPosts = async () => {
+        await getAllPosts().then(data => {
+            setPosts(data)
+        })
+    }
+
+    const handlePostCardUser = async (dataUser) => {
+        const id = await AsyncStorage.getItem('userId_Key')
+        // console.log(dataUser)
+        if (id !== dataUser.id_User) {
+            navigation.navigate('ProfileUserScreen', { dataUser: dataUser }) // their Profile 
         }
         else {
-            navigation.navigate('Profile')
+            navigation.navigate('Profile') // my Profile
         }
     }
 
-    useEffect(() => {
-        fetchDataProfile().then((data) => {
+    // const getInfoUser = async (id) => {
+    //     await fetchDataProfile(id).then(data => {
+    //         setInfoUser({
+    //             avatar: data.avatar,
+    //             name: data.name,
+    //             iconjob: data.iconjob,
+    //         })
+    //     })
+    // }
+
+    useEffect(async () => {
+        const ids = await AsyncStorage.getItem('userId_Key')
+        // setId(ids)
+        // console.log(id)
+        await fetchDataProfile(ids).then((data) => {
             setAvatar(data.avatar)
         })
+        await getPosts()
     }, [isFocused])
 
     return (
@@ -115,22 +105,54 @@ const HomeStackScreen = ({ navigation }) => {
 
                 </StatusBar>
             </HeaderBar >
-            <FlatList
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }>
+                {
+                    Posts.map((item) => {
+                        // await fetchDataProfile(item.document[0].id_User).then(data => {
+                        //     setInfoUser({
+                        //         avatar: data.avatar,
+                        //         name: data.name,
+                        //         iconjob: data.iconjob,
+                        //     })
+                        // })
+                        // getInfoUser(item.document[0].id_User)
+                        return (
+                            <View key={item._id} style={styles.viewDeletePost}>
+                                <PostCard
+                                    onOpenBottomSheet={onOpenBottomSheet}
+                                    modalizeRef={modalizeRef}
+                                    item={item.document[0]}
+                                    // avatar={item.document.avatar}
+                                    name={item.document[0].name}
+                                    // iconjob={user.iconjob}
+                                    onPress={() => handlePostCardUser(item.document[0])} />
+                            </View>
+                        )
+                    })
+                }
+            </ScrollView>
+
+            {/* <FlatList
                 style={{ width: '100%' }}
                 showsVerticalScrollIndicator={false}
                 data={Posts}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
-                keyExtractor={item => item.id}
+                keyExtractor={item => item._id}
                 renderItem={({ item }) =>
                     <PostCard
                         onOpenBottomSheet={onOpenBottomSheet}
                         modalizeRef={modalizeRef}
-                        item={item}
-                        onPress={() => { handleNameUser(item) }}
+                        item={item.document}
+                        // aavatar={item.document.image}
+                        // name={item.document.name}
+                        // iconjob={item.document.iconjob}
+                        onPress={() => { handlePostCardUser(item.document) }}
                     />}
-            />
+            /> */}
 
             {/* //show bottom sheet */}
             <AnimatedBottomSheet

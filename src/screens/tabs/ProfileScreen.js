@@ -49,7 +49,8 @@ const ProfileStackScreen = ({ navigation }) => {
 
 
     const fetchProfile = async () => {
-        await fetchDataProfile().then(data => {
+        const id = await AsyncStorage.getItem('userId_Key')
+        await fetchDataProfile(id).then(data => {
             setUser({
                 id: data.id_User,
                 name: data.name,
@@ -166,7 +167,6 @@ const ProfileStackScreen = ({ navigation }) => {
                                         onOpenBottomSheet={onOpenBottomSheet}
                                         modalizeRef={modalizeRef}
                                         item={item}
-                                        id={user.id}
                                         avatar={user.avatar}
                                         name={user.name}
                                         iconjob={user.iconjob} />

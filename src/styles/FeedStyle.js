@@ -1,8 +1,8 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.View`
+export const Container = styled.SafeAreaView`
     flex:1;
-    align-items:center;
+    /* align-items:center; */
     background-color:#fff;
 `
 
@@ -99,7 +99,9 @@ export const PostTime = styled.Text`
 `
 
 export const PostText = styled.Text`
-    font-size: 14px;  
+    font-size: 15px;  
+    font-weight: 500;
+    color: #333;
     padding: 0 15px;
 `
 export const PostImgEffect = styled.TouchableOpacity`

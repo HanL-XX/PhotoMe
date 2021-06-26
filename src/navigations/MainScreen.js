@@ -9,6 +9,7 @@ import ProfileScreen from '../screens/tabs/ProfileScreen'
 import ProfileUserScreen from '../screens/tabs/ProfileUserScreen'
 import NotificationScreen from '../screens/tabs/NotificationScreen'
 import SearchScreen from '../screens/tabs/SearchScreen'
+import DiscoverScreen from '../screens/tabs/DiscoverScreen'
 import MessageScreen from '../screens/tabs/MessageScreen'
 import ChatScreen from '../screens/tabs/ChatScreen'
 import InfoChatScreen from '../screens/tabs/InfoChatScreen'
@@ -25,7 +26,7 @@ const Stack = createStackNavigator()
 const MainStackScreen = () => {
     return (
         <Tab.Navigator
-            initialRouteName="Home"
+            initialRouteName="Discover"
             activeColor="#005aad"
             barStyle={{ backgroundColor: '#fff' }}
         >
@@ -36,6 +37,16 @@ const MainStackScreen = () => {
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="home" color={color} size={27} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Discover"
+                component={DiscoverScreen}
+                options={{
+                    tabBarLabel: 'Discover',
+                    tabBarIcon: ({ color }) => (
+                        <MaterialCommunityIcons name="compass" color={color} size={27} />
                     ),
                 }}
             />

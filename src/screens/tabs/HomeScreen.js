@@ -47,7 +47,19 @@ const HomeStackScreen = ({ navigation }) => {
 
     //get all Posts from db
     const getPosts = async () => {
-        await getAllPosts().then(data => {
+        await getAllPosts().then(async (data) => {
+            for (let i of data) {
+                await fetchDataProfile(i.document[0].id_User)
+                    .then(profile => {
+                        i.__proto__ = "avatar"
+                        i.avatar = profile.avatar
+
+                        i.__proto__ = "name"
+                        i.name = profile.name
+
+                    })
+            }
+            // console.log(data)
             setPosts(data)
         })
     }
@@ -80,6 +92,7 @@ const HomeStackScreen = ({ navigation }) => {
         await fetchDataProfile(ids).then((data) => {
             setAvatar(data.avatar)
         })
+
         await getPosts()
     }, [isFocused])
 
@@ -118,16 +131,17 @@ const HomeStackScreen = ({ navigation }) => {
                         //     })
                         // })
                         // getInfoUser(item.document[0].id_User)
+                        console.log(item)
                         return (
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard
                                     onOpenBottomSheet={onOpenBottomSheet}
                                     modalizeRef={modalizeRef}
                                     item={item.document[0]}
-                                    // avatar={item.document.avatar}
-                                    name={item.document[0].name}
+                                    avatar={item.avatar}
+                                    name={item.name}
                                     // iconjob={user.iconjob}
-                                    onPress={() => handlePostCardUser(item.document[0])} />
+                                    onPress={() => handlePostCardUser(item.document)} />
                             </View>
                         )
                     })

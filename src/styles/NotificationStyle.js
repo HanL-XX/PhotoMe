@@ -3,8 +3,10 @@ import styled from 'styled-components/native'
 export const SafeAreaView = styled.SafeAreaView`
     flex: 1;
     background: #fff;
+    padding: 15px 0;
 `
 export const Container = styled.View`
+    flex: 1;
     padding: 10px;
     background: #fff;
 `
@@ -16,7 +18,7 @@ export const UserInfo = styled.TouchableOpacity`
     padding: 5px 10px;
     margin: 5px 0;
 `
-export const UserNotifi = styled.TouchableOpacity`
+export const UserNotification = styled.TouchableOpacity`
     width: 100%;
     background-color: #eee;
     flex-direction:row;

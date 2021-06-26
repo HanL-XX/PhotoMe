@@ -2,7 +2,7 @@ import styled from 'styled-components'
 export const SafeAreaView = styled.SafeAreaView`
     flex: 1;
     background: #fff;
-    padding-bottom: 20px;
+    padding: 20px 0;
 `
 
 export const Container = styled.ScrollView`
@@ -49,8 +49,6 @@ export const IntroText = styled.TextInput`
     padding: 5px;
 `
 
-export const ProfileUserText = styled.Text`
-    color: #202020;
-    font-weight:700;
-    text-align:center;
+export const ButtonDate = styled.TouchableOpacity`
+    padding: 5px;
 `

@@ -2,74 +2,64 @@ import React, { useState, useEffect } from 'react'
 import { Text, FlatList, RefreshControl } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 import { useIsFocused } from "@react-navigation/native";
-import axios from 'axios'
-import { MAIN_URL } from '../../config'
+import { getAllMindPost, checkUserReactPost } from '../../api'
 import {
-    SafeAreaView, Container,
-    UserInfo, UserImg,
-    UserInfoWrapper, UserInfoText, UserNotifi
+    SafeAreaView, Container, UserImg,
+    UserInfoWrapper, UserInfoText, UserNotification
 } from '../../styles/NotificationStyle'
 
 export default function NotificationScreen({ navigation }) {
     const isFocused = useIsFocused()
-    const [notifi, setNotifi] = useState([])
+    const [notification, setNotification] = useState([])
     const [idUser, setIdUser] = useState(null)
-    const fetchNotifi = async () => {
+
+    const fetchNotification = async () => {
         const id = await AsyncStorage.getItem('userId_Key');
         setIdUser(id)
-        // console.log(idUser)
-        axios({
-            method: 'GET',
-            url: `${MAIN_URL}/api/newfeed`,
-            params: {
-                id_User: id
-            }
-        })
-            .then(async response => {
-                for (let i of response.data.newfeed) {
+
+        getAllMindPost(id)
+            .then(data => {
+                for (let i of data) {
                     if (i.id_impact) {
-                        axios({
-                            method: 'GET',
-                            url: `${MAIN_URL}/api/profile`,
-                            params: {
-                                id_User: i.id_impact
+                        checkUserReactPost(i.id_impact).then((data) => {
+                            let noti = {
+                                id_User: data.id_User,
+                                id: i._id,
+                                avatar: data.avatar,
+                                name: data.name
+                            }
+                            if (data) {
+                                setNotification(notification => [...notification, noti])
                             }
                         })
-                            .then((profile) => {
-                                let noti = {
-                                    id_User: profile.data.profile.id_User,
-                                    id: i._id,
-                                    avatar: profile.data.profile.avatar,
-                                    name: profile.data.profile.name
-                                }
-                                if (profile) {
-                                    setNotifi(notifi => [...notifi, noti])
-                                }
-                            })
                             .catch(err => console.log(err))
                     }
                 }
             })
             .catch(err => console.log(err))
     }
+
     useEffect(async () => {
-        setNotifi([])
-        fetchNotifi()
+        setNotification([])
+        await fetchNotification()
     }, [isFocused])
+
+    //wait time
     const wait = (timeout) => {
         return new Promise(resolve => {
             setTimeout(resolve, timeout);
         })
     }
+
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
         wait(2000).then(async () => {
-            setNotifi([])
+            await fetchNotification()
+            setNotification([])
             setRefreshing(false);
-            fetchNotifi()
         })
     }, [refreshing])
 
@@ -81,18 +71,18 @@ export default function NotificationScreen({ navigation }) {
         <SafeAreaView>
             <Container>
                 <FlatList
-                    showsVerticalScrollIndicator={false}
-                    data={notifi}
                     refreshControl={
                         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                     }
+                    showsVerticalScrollIndicator={false}
+                    data={notification}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) =>
                     (
                         (idUser === item.id_User) ? (
                             <></>
                         ) : (
-                            <UserNotifi
+                            <UserNotification
                                 activeOpacity={0.8}
                                 onPress={() => { openThisPost(item.id) }}>
                                 <UserImg source={{ uri: item.avatar }} />
@@ -106,7 +96,7 @@ export default function NotificationScreen({ navigation }) {
                                             }}> {item.name} </Text>
                                         đã tương tác bài viết của bạn</UserInfoText>
                                 </UserInfoWrapper>
-                            </UserNotifi>)
+                            </UserNotification>)
 
                     )}
                 />

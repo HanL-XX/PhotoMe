@@ -140,3 +140,10 @@ export const Divide = styled.View`
     margin-top:15px;
     width:90%;
 `
+
+export const IconJob = styled.ImageBackground`
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    margin: 0 8px;
+`

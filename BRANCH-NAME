@@ -3,5 +3,18 @@ newTheme from branch newfe2
 
 //Add discover screen
 
+Add: 
+//screen/tabs
+DiscoverScreen
+DiscoverStyle
+
+//styles
+NewPostCard
+NewPostCardStyle
+
+
+use command 
+    grep -rl "s.dependency 'React/Core'" node_modules/ | xargs sed -i '' 's=React/Core=React-Core=g'
+when error React/Core 
 
 Pham Vu Le Minh - 18520103

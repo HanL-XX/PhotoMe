@@ -5,7 +5,7 @@ export const SafeAreaView = styled.SafeAreaView`
     background: #fff;
 `
 
-export const Container = styled.ScrollView`
+export const Container = styled.View`
     flex: 1;
     padding: 10px;
     background: #fff;
@@ -49,10 +49,10 @@ export const FormInputText = styled.TextInput`
     margin-left: 5px;
 `
 
-export const BodyContent = styled.View`
+export const BodyContent = styled.ScrollView`
     margin-top: 10px;
     background-color: #eee;
-    padding:5px;
+    padding: 5px;
     border-radius: 5px;
 `
 

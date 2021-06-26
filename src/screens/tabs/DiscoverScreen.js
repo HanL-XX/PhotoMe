@@ -49,7 +49,7 @@ const Posts = [
             },
             {
                 id: 3,
-                source: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2F1624645536475.jpg?alt=media&token=9627b752-b4ff-481d-a3c2-4f140ff7f4e1',
+                source: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2F1624704851844.jpg?alt=media&token=cc3735ab-212a-4082-b03b-8dcc0630c0db',
             },
         ]
     },
@@ -57,7 +57,7 @@ const Posts = [
 
 const dataImg = {
     source: {
-        avatar: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2F1624645536475.jpg?alt=media&token=9627b752-b4ff-481d-a3c2-4f140ff7f4e1'
+        avatar: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2F1624704851844.jpg?alt=media&token=cc3735ab-212a-4082-b03b-8dcc0630c0db'
     }
 }
 export default function DiscoverScreen() {

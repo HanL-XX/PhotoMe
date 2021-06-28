@@ -24,6 +24,7 @@ import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import AsyncStorage from '@react-native-community/async-storage'
 import { fetchDataProfile, getAllMindPost } from '../../api'
+import { onOpenBottomSheet } from '../../api/deletePost'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
@@ -83,10 +84,6 @@ const ProfileStackScreen = ({ navigation }) => {
 
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
-    const onOpenBottomSheet = (idPost) => {
-        console.log(idPost)
-        modalizeRef.current?.open(idPost);
-    }
 
     //wait time
     const wait = (timeout) => {
@@ -160,16 +157,16 @@ const ProfileStackScreen = ({ navigation }) => {
                 {
                     Posts.map((item) => {
                         if (item.id_User === user.id) {
-                            // setCountPost(countPost + 1)
                             return (
                                 <View key={item._id} style={styles.viewDeletePost}>
                                     <PostCard
+                                        navigation={navigation}
                                         onOpenBottomSheet={onOpenBottomSheet}
                                         modalizeRef={modalizeRef}
                                         item={item}
+                                        iconjob={user.iconjob}
                                         avatar={user.avatar}
-                                        name={user.name}
-                                        iconjob={user.iconjob} />
+                                        name={user.name} />
                                 </View>
                             )
                         }

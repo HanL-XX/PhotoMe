@@ -2,7 +2,7 @@ import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator, CardStyleInterpolators, TransitionPresets } from '@react-navigation/stack'
 
 import HomeScreen from '../screens/tabs/HomeScreen'
 import ProfileScreen from '../screens/tabs/ProfileScreen'
@@ -16,6 +16,8 @@ import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 import PostMind from '../screens/tabs/PostMind'
 import PostCard from '../components/PostCard'
 import PostScreen from '../screens/tabs/PostScreen'
+import CommentScreen from '../screens/tabs/CommentScreen'
+import AnimatedBottomSheet from '../components/AnimatedBottomSheet'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -28,6 +30,7 @@ const MainStackScreen = () => {
             initialRouteName="Home"
             activeColor="#005aad"
             barStyle={{ backgroundColor: '#fff' }}
+            animation='fade'
         >
             <Tab.Screen
                 name="Home"
@@ -37,6 +40,8 @@ const MainStackScreen = () => {
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="home" color={color} size={27} />
                     ),
+                    cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS
+
                 }}
             />
             <Tab.Screen
@@ -68,6 +73,8 @@ const MainStackScreen = () => {
                     tabBarIcon: ({ color }) => (
                         <MaterialCommunityIcons name="account" color={color} size={27} />
                     ),
+                    cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid
+
                 }}
             />
 
@@ -78,7 +85,12 @@ const MainStackScreen = () => {
 
 export default function MainScreen() {
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                ...TransitionPresets.SlideFromRightIOS,
+            }}
+            animation='fade'
+        >
             <Stack.Screen
                 name="MainScreen"
                 component={MainStackScreen}
@@ -137,10 +149,16 @@ export default function MainScreen() {
                 name='Post'
                 component={PostScreen}
                 options={({ route }) => ({
-
-                    headerShown: false
+                    headerShown: false,
+                    // cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
                 })} />
-
+            <Stack.Screen
+                name='Comment'
+                component={CommentScreen}
+                options={({ route }) => ({
+                    headerShown: false,
+                    cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid
+                })} />
         </Stack.Navigator>
     )
 }

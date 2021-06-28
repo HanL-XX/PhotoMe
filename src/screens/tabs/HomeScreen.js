@@ -14,14 +14,12 @@ import {
 } from '../../styles/FeedStyle'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import AsyncStorage from '@react-native-community/async-storage'
-import { AuthContext } from '../../context/AuthContext'
-import { fetchDataProfile, getAllPosts } from '../../api'
+import { fetchDataProfile, getAllPosts, fetchMyAvatar } from '../../api'
 
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
     // const [id, setId] = useState(null)
     const [Posts, setPosts] = useState([])
-
     const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
     //Modal Sheet code here!
@@ -30,15 +28,23 @@ const HomeStackScreen = ({ navigation }) => {
         modalizeRef.current?.open();
     }
 
+    //wait time
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        })
+    }
+
     //Refresh Screen
-    const [refreshing, setRefreshing] = React.useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
         setRefreshing(true);
 
-        setTimeout(() => {
+        wait(2000).then(async () => {
+            await getPosts()
             setRefreshing(false);
-        }, 1200);
-    })
+        })
+    }, [refreshing])
 
     //get all Posts from db
     const getPosts = async () => {
@@ -74,11 +80,11 @@ const HomeStackScreen = ({ navigation }) => {
         const ids = await AsyncStorage.getItem('userId_Key')
         // setId(ids)
         // console.log(id)
-        await fetchDataProfile(ids).then((data) => {
-            setAvatar(data.avatar)
+        await fetchMyAvatar().then((avatar) => {
+            setAvatar(avatar)
         })
         await getPosts()
-    }, [isFocused])
+    }, [])
 
     return (
         <Container>
@@ -110,12 +116,13 @@ const HomeStackScreen = ({ navigation }) => {
                         return (
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard
+                                    navigation={navigation}
                                     onOpenBottomSheet={onOpenBottomSheet}
                                     modalizeRef={modalizeRef}
                                     item={item.document[0]}
+                                    iconjob={item.iconjob}
                                     avatar={item.avatar}
                                     name={item.name}
-                                    // iconjob={user.iconjob}
                                     onPress={() => handlePostCardUser(item.document[0])} />
                             </View>
                         )
@@ -145,7 +152,8 @@ const HomeStackScreen = ({ navigation }) => {
 
             {/* //show bottom sheet */}
             <AnimatedBottomSheet
-                modalizeRef={modalizeRef} >
+                modalizeRef={modalizeRef}
+            >
 
             </AnimatedBottomSheet>
         </Container >

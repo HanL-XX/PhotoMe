@@ -11,8 +11,8 @@ dotenv.config({ path: "../config.env" })
 
 router.post("/", (req, res) => {
     //console.log(req.body)
-    const { id_User, name, intro, job, iconjob, post, follow, following, sex } = req.body
-    let avatar
+    const { id_User, name, intro, job, post, follow, following, sex } = req.body
+    let avatar, iconjob = "undefined"
     // console.log(req.body)
     if (sex === 'female') {
         avatar = 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2FAvatarFemale.jpg?alt=media&token=b001d1df-e985-4192-a336-a241d6f90e21'

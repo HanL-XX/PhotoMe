@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react'
-import { TouchableOpacity } from 'react-native'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import { useIsFocused } from "@react-navigation/native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
-import { UpdateLikePost, getThisPost, getLiked } from '../api'
+import { UpdateLikePost, getLiked } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -25,13 +25,14 @@ import {
 } from '../styles/FeedStyle'
 import { iconJob } from '../styles/globalIcon'
 
-export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
+export default function PostCard({ navigation, item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
+    const isFocused = useIsFocused()
     const [id, setId] = useState(null)
     //Set up react heart
     const [liked, setLiked] = useState(false) //false: none-color <--> true: red color
     const [react, setReact] = useState({
         liked: null,
-        likeCount: item.like
+        likeCount: null
     })
     const [followed, setFollowed] = useState('Following')
 
@@ -39,8 +40,9 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
     useEffect(async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
         setId(id_User)
+        setReact({ ...react, likeCount: item.like })
         await getLiked(id_User, item._id).then(data => setLiked(data.liked.liked))
-    }, [item._id])
+    }, [isFocused])
 
     //handle event to react
     _onPressReact = async () => {
@@ -61,6 +63,10 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
 
             })
     }
+    //open Comment post
+    const openComment = () => {
+        navigation.navigate("Comment", { id_Post: item._id, comments: item.comment })
+    }
 
     return (
         <Card>
@@ -75,9 +81,9 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                                 {(item.id_User !== id) ?
                                     (
                                         <Follow>
-                                            <Text> • </Text>
+                                            <Text>•</Text>
                                             <TouchableOpacity>
-                                                <FollowText>{followed}</FollowText>
+                                                <FollowText> {followed} </FollowText>
                                             </TouchableOpacity>
                                         </Follow>
                                     ) :
@@ -92,7 +98,7 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            onOpenBottomSheet(item._id)
+                            onOpenBottomSheet(modalizeRef, item._id)
                         }}>
                         <Feather
                             name="more-vertical"
@@ -113,15 +119,15 @@ export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress
                             style={liked ? styles.redColor : styles.emptyColor}
                             size={24} />
                     </TouchableOpacity>
-                    <InteractionText>{react.likeCount} Like</InteractionText>
+                    <InteractionText>{react.likeCount} Likes</InteractionText>
                 </Interaction>
                 <Interaction>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={openComment}>
                         <FontAwesome
                             name="comment-o"
                             size={24} />
                     </TouchableOpacity>
-                    <InteractionText>{item.comment} Comment</InteractionText>
+                    <InteractionText>{item.comment} Comments</InteractionText>
                 </Interaction>
                 {/* {item.image != 'none' ?
                     (

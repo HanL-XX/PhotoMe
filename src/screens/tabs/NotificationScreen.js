@@ -42,7 +42,7 @@ export default function NotificationScreen({ navigation }) {
     useEffect(async () => {
         setNotification([])
         await fetchNotification()
-    }, [isFocused])
+    }, [])
 
     //wait time
     const wait = (timeout) => {
@@ -64,6 +64,7 @@ export default function NotificationScreen({ navigation }) {
     }, [refreshing])
 
     const openThisPost = (idPost) => {
+        // console.log(idPost)
         navigation.navigate('Post', { idPost: idPost })
     }
 

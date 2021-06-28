@@ -1,23 +1,23 @@
-const mongoose=require("mongoose")
-const Schema=mongoose.Schema
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-const CommentSchema=new Schema({
-    id_User:{
+const CommentSchema = new Schema({
+    id_User: {
         type: String,
         required: true,
     },
-    id_Newfeed:{
+    id_Newfeed: {
         type: String,
         required: true,
     },
-    comment:{
+    comment: {
         type: String,
         required: true,
     },
-    registration_data:{
-        type:String,
-        default:Date.now,
+    registration_data: {
+        type: Date,
+        default: Date.now,
     }
 })
 
-module.exports=comment=mongoose.model("comment",CommentSchema)
+module.exports = comment = mongoose.model("comment", CommentSchema)

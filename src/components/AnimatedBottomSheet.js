@@ -1,21 +1,62 @@
-import React, { useEffect } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView, Alert, ActivityIndicator } from 'react-native'
 // import { TapGestureHandler } from 'react-native-gesture-handler'
 import { Modalize } from 'react-native-modalize'
 import { windowWidth } from '../utils/Dimensions.js'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import AsyncStorage from '@react-native-community/async-storage'
+import { handleDeletePost } from '../api/deletePost'
+import { NavigatorIOS } from 'react-native'
 
+export default function AnimatedBottomSheet({ modalizeRef, id, navigation }) {
+    const [showReload2, setShowReload2] = useState(false)
+    const deleteThisPost = () => {
+        Alert.alert(
+            //Title
+            '',
+            //Body
+            "Are you sure to delete this post?",
+            [
+                {
+                    text: 'Yes',
+                    onPress: async () => {
+                        const seconds = Math.floor(Math.random() * 1000) + 600
+                        setShowReload2(true)
+                        await handleDeletePost()
+                        setTimeout(() => {
+                            Alert.alert(
+                                //Title
+                                '',
+                                //Body
+                                "Delete successfully!",
+                                [
+                                    {
+                                        text: 'Yes',
+                                        onPress: () => {
+                                            setShowReload2(false)
+                                            modalizeRef.current?.close()
+                                        }
+                                    },
+                                ]
+                            )
+                        }, seconds);
 
-export default function AnimatedBottomSheet({ modalizeRef, id }) {
-    useEffect(async () => {
-        const id = await AsyncStorage.getItem('userId_Key');
-    }, [])
-    // const modalizeRef = React.useRef(null);
-    // const onOpenBottomSheet = () => {
-    //     modalizeRef.current?.open()
-    // }
+                    }
+                },
+                {
+                    text: 'No',
+                }
+            ]
+        )
+    }
+
+    if (showReload2 == true) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        )
+    }
+
     return (
         <Modalize
             ref={modalizeRef}
@@ -24,7 +65,7 @@ export default function AnimatedBottomSheet({ modalizeRef, id }) {
             style={{ overflow: 'hidden' }} >
             <SafeAreaView style={styles.containerSheet}>
                 {id ? (
-                    <TouchableOpacity style={styles.buttonSheet}>
+                    <TouchableOpacity style={styles.buttonSheet} onPress={deleteThisPost}>
                         <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
                         <Ionicons
                             name='trash-bin'
@@ -32,7 +73,10 @@ export default function AnimatedBottomSheet({ modalizeRef, id }) {
                     </TouchableOpacity>)
                     : <></>
                 }
-                <TouchableOpacity style={styles.buttonSheet}>
+                <TouchableOpacity style={styles.buttonSheet} onPress={() => {
+                    modalizeRef.current?.close()
+                }
+                }>
                     <Text style={{ fontSize: 18 }}>Report...</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.buttonSheet}>
@@ -45,7 +89,7 @@ export default function AnimatedBottomSheet({ modalizeRef, id }) {
                     <Text style={{ fontSize: 18 }}>Share</Text>
                 </TouchableOpacity>
             </SafeAreaView>
-        </Modalize>
+        </Modalize >
     )
 }
 

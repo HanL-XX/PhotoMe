@@ -1,7 +1,8 @@
 export const iconJob = {
     icons: {
         "creator": require('../assets/images/icon-job/popular-man-2.png'),
-        "photographer": require('../assets/images/icon-job/photographer.png')
+        "photographer": require('../assets/images/icon-job/photographer.png'),
+        "undefined": require('../assets/images/icon-job/people-inquiry.png'),
     }
 
 }

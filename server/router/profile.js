@@ -50,6 +50,16 @@ router.get("/", async (req, res) => {
     return res.status(200).json({ profile })
 })
 
+router.get("/name", async (req, res) => {
+    const profile = await Profile.find().sort({ registration_data: -1 }).catch(error => {
+        return res.status(400).json({ msg: 'Dont connect or error user' })
+    })
+    if (!profile) {
+        return res.status(400).json({ msg: 'Dont connect or error user' })
+    }
+    return res.status(200).json({ profile })
+})
+
 router.post("/updateprofile", async (req, res) => {
     const { id_User, avatar, name, sex, intro, job, iconjob, post, following, birthday, follow } = req.body
     if (!id_User) {

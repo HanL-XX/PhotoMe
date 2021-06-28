@@ -106,10 +106,12 @@ export default function EditPersonalProfile({ navigation, route }) {
     const acceptEdit = async (data) => {
         if (pathImg.path !== null && pathImg.mime !== null) {
             let a = await uploadPic(pathImg.path, pathImg.mime)
-            console.log('uri::', a)
+            // console.log('uri::', a)
+            data.avatar=a
             setUploadUProfile({ ...uploadProfile, avatar: a })
+            // console.log('uploadProfile::', uploadProfile)
         }
-
+        
         axios({
             method: 'POST',
             url: `http://localhost:3000/api/profile/updateprofile`,

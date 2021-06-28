@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react'
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePicker from "react-native-image-crop-picker"
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import { View, TouchableOpacity, StyleSheet, Alert, LogBox, ActivityIndicator, Button } from 'react-native'
+import { View, TouchableOpacity, StyleSheet, Alert, LogBox, ActivityIndicator } from 'react-native'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import axios from 'axios';
 
 LogBox.ignoreAllLogs();//Ignore all log notifications
+
 
 import {
     SafeAreaView, Container,
@@ -107,11 +108,10 @@ export default function EditPersonalProfile({ navigation, route }) {
         if (pathImg.path !== '' && pathImg.mime !== '') {
             let a = await uploadPic(pathImg.path, pathImg.mime)
             // console.log('uri::', a)
-            data.avatar=a
+            data.avatar = a
             setUploadUProfile({ ...uploadProfile, avatar: a })
-            // console.log('uploadProfile::', uploadProfile)
         }
-        
+
         axios({
             method: 'POST',
             url: `http://localhost:3000/api/profile/updateprofile`,

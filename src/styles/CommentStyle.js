@@ -50,6 +50,7 @@ export const InputCommentView = styled.View`
 
 export const InputComment = styled.TextInput`
     width: 90%;
+    color: #333;
     border: none;
     font-size: 15px;
     font-weight: 500;

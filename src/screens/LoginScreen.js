@@ -35,33 +35,34 @@ export default function LoginScreen({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Image
-                style={styles.logo}
-                source={require("../assets/images/Logoden.png")} />
-            <Text style={styles.text}>PhotoMe App</Text>
-            <InputForm
-                labelValue={user.email}
-                onChangeText={(userEmail) => setUser({ ...user, email: userEmail })}
-                autoCapitalize="none"
-                keyboardType="email-address"
-                autoCorrect={false}
-                placeholderText="Email"
-                iconType="person" />
-            <InputForm
-                labelValue={user.password}
-                onChangeText={(userPassword) => setUser({ ...user, password: userPassword })}
-                secureTextEntry={true}
-                placeholderText="Password"
-                iconType="lock" />
-            <ButtonForm
-                buttonTitle="Sign In"
-                onPress={() => _Login()} />
-            <TouchableOpacity
-                style={styles.forgotButton}
-                onPress={() => { }} >
-                <Text style={styles.navButtonText}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <SocialButton
+            <View style={styles.wrapper}>
+                <Image
+                    style={styles.logo}
+                    source={require("../assets/images/Logoden.png")} />
+                <Text style={styles.text}>PhotoMe App</Text>
+                <InputForm
+                    labelValue={user.email}
+                    onChangeText={(userEmail) => setUser({ ...user, email: userEmail })}
+                    autoCapitalize="none"
+                    keyboardType="email-address"
+                    autoCorrect={false}
+                    placeholderText="Email"
+                    iconType="person" />
+                <InputForm
+                    labelValue={user.password}
+                    onChangeText={(userPassword) => setUser({ ...user, password: userPassword })}
+                    secureTextEntry={true}
+                    placeholderText="Password"
+                    iconType="lock" />
+                <ButtonForm
+                    buttonTitle="Sign In"
+                    onPress={() => _Login()} />
+                <TouchableOpacity
+                    style={styles.forgotButton}
+                    onPress={() => { }} >
+                    <Text style={styles.navButtonText}>Forgot Password?</Text>
+                </TouchableOpacity>
+                {/* <SocialButton
                 buttonTitle="Sign In with Facebook"
                 btnType="facebook"
                 color="#4867aa"
@@ -70,12 +71,13 @@ export default function LoginScreen({ navigation }) {
                 buttonTitle="Sign In with Google"
                 btnType="google"
                 color="#de4d41"
-                backgroundColor="#f5e7ea" />
-            <TouchableOpacity
-                style={styles.forgotButton}
-                onPress={() => navigation.navigate('Register')} >
-                <Text style={styles.navButtonText}>Don't have an account? Create here</Text>
-            </TouchableOpacity>
+                backgroundColor="#f5e7ea" /> */}
+                <TouchableOpacity
+                    style={styles.forgotButton}
+                    onPress={() => navigation.navigate('Register')} >
+                    <Text style={styles.navButtonText}>Don't have an account? Create here</Text>
+                </TouchableOpacity>
+            </View>
         </SafeAreaView>
     )
 }
@@ -85,7 +87,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         flex: 1,
         alignItems: "center",
+    },
+    wrapper: {
+        flex: 1,
+        width: "100%",
         paddingHorizontal: 20,
+        alignItems: "center",
     },
     logo: {
         height: 150,

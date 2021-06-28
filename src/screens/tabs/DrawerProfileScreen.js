@@ -23,13 +23,13 @@ export default function DrawerProfileScreen({ props, navigation }) {
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
-                        <View>
+                        {/* <View>
                             <Avatar.Image
                                 source={require("../../assets/images/user1.jpg")}
                                 size={50} />
                             <Text>{ }</Text>
 
-                        </View>
+                        </View> */}
                     </View>
                 </View>
             </DrawerContentScrollView>

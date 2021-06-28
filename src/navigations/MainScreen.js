@@ -17,7 +17,6 @@ import PostMind from '../screens/tabs/PostMind'
 import PostCard from '../components/PostCard'
 import PostScreen from '../screens/tabs/PostScreen'
 import CommentScreen from '../screens/tabs/CommentScreen'
-import AnimatedBottomSheet from '../components/AnimatedBottomSheet'
 //
 const Tab = createMaterialBottomTabNavigator();
 

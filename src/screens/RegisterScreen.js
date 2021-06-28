@@ -2,7 +2,6 @@ import React, { useState } from "react"
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native"
 import InputForm from "../components/InputForm"
 import ButtonForm from "../components/ButtonForm"
-import SocialButton from "../components/SocialButton"
 import { AuthContext } from "../context/AuthContext"
 import CheckBox from '@react-native-community/checkbox'
 export default function SignUpScreen({ navigation }) {
@@ -91,7 +90,7 @@ export default function SignUpScreen({ navigation }) {
                     <Text style={[styles.color_textPrivate, { color: "#e88832" }]}>Privacy policy</Text>
                 </TouchableOpacity>
             </View>
-            <SocialButton
+            {/* <SocialButton
                 buttonTitle="Sign Up with Facebook"
                 btnType="facebook"
                 color="#4867aa"
@@ -100,7 +99,7 @@ export default function SignUpScreen({ navigation }) {
                 buttonTitle="Sign Up with Google"
                 btnType="google"
                 color="#de4d41"
-                backgroundColor="#f5e7ea" />
+                backgroundColor="#f5e7ea" /> */}
             <TouchableOpacity
                 style={styles.forgotButton}
                 onPress={() => { navigation.navigate("Login") }} >
@@ -112,7 +111,7 @@ export default function SignUpScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: "#f9fafd",
+        backgroundColor: "#fff",
         flex: 1,
         alignItems: "center",
         paddingHorizontal: 20,

@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useIsFocused } from "@react-navigation/native";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native'
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { Header } from 'react-native-elements'
 import PostCard from '../../components/PostCard'
 import {
@@ -15,18 +14,16 @@ import {
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import AsyncStorage from '@react-native-community/async-storage'
 import { fetchDataProfile, getAllPosts, fetchMyAvatar } from '../../api'
+import { onOpenBottomSheet } from '../../api/deletePost'
 
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
-    // const [id, setId] = useState(null)
+    const [id, setId] = useState(null)
     const [Posts, setPosts] = useState([])
     const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
-    const onOpenBottomSheet = () => {
-        modalizeRef.current?.open();
-    }
 
     //wait time
     const wait = (timeout) => {
@@ -49,6 +46,7 @@ const HomeStackScreen = ({ navigation }) => {
     //get all Posts from db
     const getPosts = async () => {
         await getAllPosts().then(async (data) => {
+            console.log(data)
             for (let i of data) {
                 await fetchDataProfile(i.document[0].id_User)
                     .then(profile => {
@@ -58,18 +56,16 @@ const HomeStackScreen = ({ navigation }) => {
                         i.name = profile.name
                         i.__proto__ = "iconjob"
                         i.iconjob = profile.iconjob
-
                     })
             }
             setPosts(data)
         })
     }
 
-    const handlePostCardUser = async (dataUser) => {
-        const id = await AsyncStorage.getItem('userId_Key')
-        // console.log(dataUser)
-        if (id !== dataUser.id_User) {
-            navigation.navigate('ProfileUserScreen', { dataUser: dataUser }) // their Profile 
+    const handlePostCardUser = async (id) => {
+        const id_User = await AsyncStorage.getItem('userId_Key')
+        if (id !== id_User) {
+            navigation.navigate('ProfileUserScreen', { id_User: id }) // their Profile 
         }
         else {
             navigation.navigate('Profile') // my Profile
@@ -77,14 +73,13 @@ const HomeStackScreen = ({ navigation }) => {
     }
 
     useEffect(async () => {
-        const ids = await AsyncStorage.getItem('userId_Key')
-        // setId(ids)
-        // console.log(id)
+        const id_User = await AsyncStorage.getItem('userId_Key')
+        setId(id_User)
         await fetchMyAvatar().then((avatar) => {
             setAvatar(avatar)
         })
         await getPosts()
-    }, [])
+    }, [isFocused])
 
     return (
         <Container>
@@ -113,6 +108,7 @@ const HomeStackScreen = ({ navigation }) => {
             }>
                 {
                     Posts.map((item) => {
+                        console.log(item.document[0])
                         return (
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard
@@ -123,7 +119,7 @@ const HomeStackScreen = ({ navigation }) => {
                                     iconjob={item.iconjob}
                                     avatar={item.avatar}
                                     name={item.name}
-                                    onPress={() => handlePostCardUser(item.document[0])} />
+                                    onPress={() => handlePostCardUser(item.document[0].id_User)} />
                             </View>
                         )
                     })
@@ -153,6 +149,7 @@ const HomeStackScreen = ({ navigation }) => {
             {/* //show bottom sheet */}
             <AnimatedBottomSheet
                 modalizeRef={modalizeRef}
+            // id={id}
             >
 
             </AnimatedBottomSheet>
@@ -164,26 +161,31 @@ export default function HomeScreen({ navigation }) {
     return (
         <View style={styles.container}>
             <Header
-                leftComponent={<Text style={styles.textContent}>PhotoMe</Text>}
-                rightComponent={
-                    <View style={styles.fontIcon}>
-                        <TouchableOpacity>
-                            <FontAwesome5
-                                style={styles.icon}
-                                name="plus"
-                                size={25}
-                                color="#000" />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <FontAwesome5
-                                style={styles.icon}
-                                name="facebook-messenger"
-                                size={25}
-                                color="#000"
-                                onPress={() => { navigation.navigate("Message") }} />
-                        </TouchableOpacity>
+                leftComponent={
+                    <View>
+                        <Text style={styles.textContent}>PhotoMe</Text>
                     </View>
+
                 }
+                // rightComponent={
+                //     <View style={styles.fontIcon}>
+                //         <TouchableOpacity>
+                //             <FontAwesome5
+                //                 style={styles.icon}
+                //                 name="plus"
+                //                 size={25}
+                //                 color="#000" />
+                //         </TouchableOpacity>
+                //         <TouchableOpacity>
+                //             <FontAwesome5
+                //                 style={styles.icon}
+                //                 name="facebook-messenger"
+                //                 size={25}
+                //                 color="#000"
+                //                 onPress={() => { navigation.navigate("Message") }} />
+                //         </TouchableOpacity>
+                //     </View>
+                // }
                 containerStyle={{
                     paddingHorizontal: 10,
                     backgroundColor: '#fff',
@@ -200,7 +202,6 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     textContent: {
-        flex: 1,
         width: 130,
         fontSize: 25,
         fontStyle: "italic",

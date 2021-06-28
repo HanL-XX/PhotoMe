@@ -4,7 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
-import { UpdateLikePost, getLiked } from '../api'
+import { UpdateLikePost, fetchLiked } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -12,8 +12,6 @@ import {
     UserImg,
     UserInfo,
     UserName,
-    Follow,
-    FollowText,
     UserInfoText,
     PostText,
     PostImg,
@@ -26,10 +24,10 @@ import {
 import { iconJob } from '../styles/globalIcon'
 
 export default function PostCard({ navigation, item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
-    const isFocused = useIsFocused()
+    // const isFocused = useIsFocused()
     const [id, setId] = useState(null)
     //Set up react heart
-    const [liked, setLiked] = useState(false) //false: none-color <--> true: red color
+    const [liked, setLiked] = useState(null) //false: none-color <--> true: red color
     const [react, setReact] = useState({
         liked: null,
         likeCount: null
@@ -41,8 +39,8 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
         const id_User = await AsyncStorage.getItem('userId_Key')
         setId(id_User)
         setReact({ ...react, likeCount: item.like })
-        await getLiked(id_User, item._id).then(data => setLiked(data.liked.liked))
-    }, [isFocused])
+        await fetchLiked(id_User, item._id).then(liked => setLiked(liked))
+    }, [item._id])
 
     //handle event to react
     _onPressReact = async () => {
@@ -53,11 +51,11 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
                 if (liked === false) {
 
                     console.log("Exist ID React Post")
-                    setReact({ likeCount: react.likeCount + 1 })
+                    setReact({ ...react, likeCount: react.likeCount + 1 })
                     return;
                 }
                 else {
-                    setReact({ likeCount: react.likeCount - 1 })
+                    setReact({ ...react, likeCount: react.likeCount - 1 })
                     return;
                 }
 
@@ -78,7 +76,7 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
                             <View style={{ flexDirection: 'row' }}>
                                 <UserName>{name}</UserName>
                                 <IconJob source={iconJob.icons[iconjob]} />
-                                {(item.id_User !== id) ?
+                                {/* {(item.id_User !== id) ?
                                     (
                                         <Follow>
                                             <Text>•</Text>
@@ -87,7 +85,7 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
                                             </TouchableOpacity>
                                         </Follow>
                                     ) :
-                                    (<></>)}
+                                    (<></>)} */}
 
                             </View>
                             <View>

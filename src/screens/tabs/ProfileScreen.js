@@ -195,14 +195,14 @@ const MainProfileStackScreen = ({ navigation }) => {
                         />
                     </TouchableOpacity>
                 }
-                rightComponent={
-                    <TouchableOpacity onPress={() => navigation.openDrawer()}>
-                        <FontAwesome
-                            name="plus-square-o"
-                            size={30}
-                        />
-                    </TouchableOpacity>
-                }
+                // rightComponent={
+                //     <TouchableOpacity onPress={() => navigation.openDrawer()}>
+                //         <FontAwesome
+                //             name="plus-square-o"
+                //             size={30}
+                //         />
+                //     </TouchableOpacity>
+                // }
                 containerStyle={{
                     paddingHorizontal: 10,
                     backgroundColor: '#fff',

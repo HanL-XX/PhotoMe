@@ -9,8 +9,7 @@ export default function PostInput({ iconType, namePost, check, checkDescript, te
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     return (
-
-        <View style={styles.inputContainer}>
+        <View style={styles.inputContainer} activeOpacity={0.1}>
             <View style={styles.iconStyle}>
                 {
                     (check) ? (

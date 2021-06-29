@@ -188,7 +188,6 @@ export const fetchLiked = async (id_User, id_Newfeed) => {
             }
         })
             .then(response => {
-                console.log(response.data.liked.liked)
                 resolve(response.data.liked.liked)
             })
             .catch(err => reject(err))

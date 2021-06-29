@@ -4,7 +4,7 @@ import { useIsFocused } from "@react-navigation/native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import Feather from 'react-native-vector-icons/Feather'
 import AsyncStorage from '@react-native-community/async-storage'
-import { UpdateLikePost, fetchLiked } from '../api'
+import { UpdateLikePost, fetchLiked, getThisPost } from '../api'
 
 import TimeAgo from './Time'
 import {
@@ -24,6 +24,7 @@ import {
 import { iconJob } from '../styles/globalIcon'
 
 export default function PostCard({ navigation, item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
+    const isFocused = useIsFocused(); //refresh when goBack here!!!
     // const isFocused = useIsFocused()
     const [id, setId] = useState(null)
     //Set up react heart
@@ -38,27 +39,22 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
     useEffect(async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
         setId(id_User)
-        setReact({ ...react, likeCount: item.like })
         await fetchLiked(id_User, item._id).then(liked => setLiked(liked))
-    }, [item._id])
+        await getThisPost(item._id).then(data => {
+            setReact({ ...react, likeCount: data.like })
+        })
+    }, [item.like, isFocused])
 
     //handle event to react
     _onPressReact = async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
         UpdateLikePost(id_User, item._id).
-            then(() => {
+            then(async () => {
                 setLiked(!liked)
-                if (liked === false) {
-
-                    console.log("Exist ID React Post")
-                    setReact({ ...react, likeCount: react.likeCount + 1 })
-                    return;
-                }
-                else {
-                    setReact({ ...react, likeCount: react.likeCount - 1 })
-                    return;
-                }
-
+                react.likeCount = item.like
+                await getThisPost(item._id).then(data => {
+                    setReact({ ...react, likeCount: data.like })
+                })
             })
     }
     //open Comment post

@@ -46,7 +46,6 @@ const HomeStackScreen = ({ navigation }) => {
     //get all Posts from db
     const getPosts = async () => {
         await getAllPosts().then(async (data) => {
-            console.log(data)
             for (let i of data) {
                 await fetchDataProfile(i.document[0].id_User)
                     .then(profile => {
@@ -108,7 +107,6 @@ const HomeStackScreen = ({ navigation }) => {
             }>
                 {
                     Posts.map((item) => {
-                        console.log(item.document[0])
                         return (
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useIsFocused } from "@react-navigation/native";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, RefreshControl, ActivityIndicator } from 'react-native'
 import { Header } from 'react-native-elements'
 import PostCard from '../../components/PostCard'
 import {
@@ -24,6 +24,8 @@ const HomeStackScreen = ({ navigation }) => {
     const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
+
+    const [showReload, setShowReload] = useState(true)
 
     //wait time
     const wait = (timeout) => {
@@ -78,7 +80,18 @@ const HomeStackScreen = ({ navigation }) => {
             setAvatar(avatar)
         })
         await getPosts()
+        setTimeout(() => {
+            setShowReload(false)
+        }, (3000))
     }, [isFocused])
+
+    if (showReload == true) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        )
+    }
 
     return (
         <Container>
@@ -120,6 +133,7 @@ const HomeStackScreen = ({ navigation }) => {
                                     onPress={() => handlePostCardUser(item.document[0].id_User)} />
                             </View>
                         )
+
                     })
                 }
             </ScrollView>

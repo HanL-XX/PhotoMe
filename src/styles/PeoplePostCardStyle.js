@@ -1,11 +1,5 @@
 import styled from 'styled-components/native'
 
-export const Container = styled.View`
-    flex: 1;
-    background: #eee;
-    margin-top: 20px;
-`
-
 export const HeaderBar = styled.View`
     flex-direction: row;
     align-items: center;
@@ -46,4 +40,16 @@ export const ImgView = styled.Image`
     flex: 1; 
     justify-content: center;
     align-items: center;
+`
+
+export const Label = styled.Text`
+    color: #000;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 5px 0;
+`
+
+export const ButtonShow = styled.TouchableOpacity`
+    border: none;
+    background: transparent;
 `

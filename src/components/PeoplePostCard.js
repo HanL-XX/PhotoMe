@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import React from 'react'
+import { View, Text, TouchableOpacity } from 'react-native'
 import EvilIcons from 'react-native-vector-icons/EvilIcons'
 import {
-    Container, HeaderBar,
+    HeaderBar,
     UserImg, UserInfo,
     UserName, UserFollow,
     ListImg, ImgView,
-} from "../styles/NewPostCardStyle"
+} from '../styles/PeoplePostCardStyle'
 
 
-export default function NewPostCard({ item }) {
+export default function PeoplePostCard({ item }) {
     return (
-        <Container>
+        <View>
             <HeaderBar>
                 <UserInfo>
                     <UserImg source={{ uri: item.avatar }} />
@@ -35,7 +35,6 @@ export default function NewPostCard({ item }) {
                 </TouchableOpacity>
             </HeaderBar>
             <ListImg>
-                {/* show 3 img in list post of user */}
                 {
                     item.imgList.map(item => (
                         <TouchableOpacity
@@ -50,6 +49,6 @@ export default function NewPostCard({ item }) {
                     ))
                 }
             </ListImg>
-        </Container>
+        </View>
     )
 }

@@ -48,28 +48,3 @@ export const FormInputText = styled.TextInput`
     border: none;
     margin-left: 5px;
 `
-
-export const BodyContent = styled.ScrollView`
-    margin-top: 10px;
-    background-color: #eee;
-    padding: 5px;
-    border-radius: 5px;
-`
-
-export const HeaderBodyContent = styled.View`
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px;
-`
-
-export const Label = styled.Text`
-    color: #000;
-    font-weight: 600;
-    font-size: 17px;
-`
-
-export const ButtonShow = styled.TouchableOpacity`
-    border: none;
-    background: transparent;
-`

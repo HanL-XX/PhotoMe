@@ -107,6 +107,7 @@ export default function SearchScreen({ navigation }) {
         <TextInput
           style={{ marginLeft: 5, padding: 10, color: '#333', fontSize: 18 }}
           placeholder="Search here..."
+          placeholderTextColor="#ccc"
           value={search.querry}
           onChangeText={searchinput}
         />

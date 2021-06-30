@@ -35,14 +35,14 @@ const MainStackScreen = () => {
                 showLabel: false,
                 style: {
                     position: 'absolute',
-                    bottom: 25,
+                    bottom: 15,
                     left: 10,
                     right: 10,
                     // elevation: 0,
                     backgroundColor: '#fff',
                     borderRadius: 20,
                     elevation: 0,
-                    height: 75,
+                    height: 70,
                     paddingTop: 15,
                     paddingBottom: 0,
                 },
@@ -67,7 +67,7 @@ const MainStackScreen = () => {
                     // tabBarIcon: ({ color }) => (
                     //     <MaterialCommunityIcons name="compass" color={color} size={32} />
                     // ),
-                    tabBarButton: (props) => <TabComponents label="compass" {...props} />,
+                    tabBarButton: (props) => <TabComponents label="discover" {...props} />,
                 }}
             />
             <Tab.Screen

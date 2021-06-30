@@ -6,8 +6,8 @@ const Images = {
     icons: {
         home: require('../assets/images/home.png'),
         homeFocused: require('../assets/images/homeFocused.png'),
-        compass: require('../assets/images/compass.png'),
-        compassFocused: require('../assets/images/compassFocused.png'),
+        discover: require('../assets/images/discover.png'),
+        discoverFocused: require('../assets/images/discoverFocused.png'),
         notification: require('../assets/images/notification.png'),
         notificationFocused: require('../assets/images/notificationFocused.png'),
         search: require('../assets/images/search.png'),

@@ -8,9 +8,19 @@ Add:
 DiscoverScreen
 DiscoverStyle
 
+PeopleDiscoverScreen
+PhotoDiscoverScreen
+
+PeoplePostCardScreen
+PhotoPostCardScreen
+
+
 //styles
-NewPostCard
-NewPostCardStyle
+PeopleDiscoverStyle
+PeoplePostCardStyle
+
+PhotoDiscoverStyle
+PhotoPostCardStyle
 
 
 use command 

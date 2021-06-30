@@ -179,9 +179,10 @@ export default function EditPersonalProfile({ navigation, route }) {
             compressImageQuality: 0.7
         }).then(async image => {
             console.log(image);
-            let a = await uploadPic(image.path, image.mime)
-            console.log('uri::', a)
-            setUploadUProfile({ avatar: image.path })
+            // let a = await uploadPic(image.path, image.mime)
+            // console.log('uri::', a)
+            setPathImg({ path: image.path, mime: image.mime })
+            setUploadUProfile({ ...uploadProfile, avatar: image.path })
         }).catch(e => {// Fix err user cancel
             if (e.code !== 'E_PICKER_CANCELLED') {
                 console.log(e);

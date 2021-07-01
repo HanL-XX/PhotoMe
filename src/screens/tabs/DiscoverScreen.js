@@ -21,10 +21,6 @@ const dataImg = {
 
 
 export default function DiscoverScreen() {
-    const [isSelected, setIsSelected] = useState(0)
-    const selectedTab = (tabIndex) => {
-        setIsSelected(tabIndex)
-    }
     return (
         <SafeAreaView>
             <Container>
@@ -42,8 +38,15 @@ export default function DiscoverScreen() {
                             placeholder="Search PhotoMe" />
                     </FormInput>
                 </HeaderBar>
-                <View style={{ flex: 1, backgroundColor: 'red' }}>
+                <View style={{ flex: 1 }}>
                     <Tab.Navigator
+
+                        tabBarOptions={{
+                            activeTintColor: "#1984e7",
+                            inactiveTintColor: '#777',
+                            labelStyle: { fontSize: 18, fontWeight: '700', textTransform: 'none', letterSpacing: 0.4 },
+                            tabStyle: { width: 100 },
+                        }}
                         initialRouteName="Photos">
                         <Tab.Screen
                             name="Photos"

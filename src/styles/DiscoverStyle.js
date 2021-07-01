@@ -21,15 +21,15 @@ export const HeaderBar = styled.View`
 `
 
 export const UserInfo = styled.TouchableOpacity`
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 20px;
     margin-right: 10px;
     
 `
 export const UserImg = styled.Image`
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 20px;
 `
 

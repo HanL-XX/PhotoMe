@@ -31,7 +31,7 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
     const [liked, setLiked] = useState(null) //false: none-color <--> true: red color
     const [react, setReact] = useState({
         liked: null,
-        likeCount: null
+        likeCount: 0
     })
     const [followed, setFollowed] = useState('Following')
 

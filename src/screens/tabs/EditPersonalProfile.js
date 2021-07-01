@@ -179,8 +179,6 @@ export default function EditPersonalProfile({ navigation, route }) {
             compressImageQuality: 0.7
         }).then(async image => {
             console.log(image);
-            // let a = await uploadPic(image.path, image.mime)
-            // console.log('uri::', a)
             setPathImg({ path: image.path, mime: image.mime })
             setUploadUProfile({ ...uploadProfile, avatar: image.path })
         }).catch(e => {// Fix err user cancel
@@ -190,20 +188,14 @@ export default function EditPersonalProfile({ navigation, route }) {
             }
         })
     }
-    //handle delete picture
-    const DeletePic = () => {
-        logicImage.deletePic(uploadProfile.avatar)
-        // setPicInfo({
-        //     uri: null
-        // });
-    }
+
     const ChangeImageSheet = () => {
         return (
             <Modalize
                 ref={modalizeRef}
-                snapPoint={360}
+                snapPoint={310}
                 scrollViewProps={{ showsVerticalScrollIndicator: false }}
-                modalHeight={360}
+                modalHeight={310}
                 closeAnimationConfig={{ timing: { duration: 400 }, spring: { speed: 10, bounciness: 5 } }}
                 handlePosition="inside"
                 HeaderComponent={
@@ -219,9 +211,6 @@ export default function EditPersonalProfile({ navigation, route }) {
                         </ButtonForm>
                         <ButtonForm>
                             <ButtonText onPress={OpenLibrary}>Choose From Library</ButtonText>
-                        </ButtonForm>
-                        <ButtonForm onPress={DeletePic}>
-                            <ButtonText>Remove Photo</ButtonText>
                         </ButtonForm>
                         <ButtonForm
                             style={{ backgroundColor: '#ff4f4f' }}

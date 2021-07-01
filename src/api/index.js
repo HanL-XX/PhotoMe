@@ -13,8 +13,7 @@ export const fetchDataProfile = async (id) => {
                 resolve(response.data.profile)
             })
             .catch(err => {
-                console.log(err)
-                return err;
+                return;
             })
     })
 }
@@ -31,8 +30,7 @@ export const fetchMyAvatar = async () => {
                 resolve(response.data.profile.avatar)
             })
             .catch(err => {
-                console.log(err)
-                return err;
+                return;
             })
     })
 }
@@ -47,7 +45,7 @@ export const getAllPosts = async () => {
                 resolve(response.data.newfeed)
             })
             .catch(err => {
-                return err;
+                return;
             })
     })
 }
@@ -65,7 +63,7 @@ export const checkUserReactPost = (id_User) => {
                 resolve(response.data.profile)
             })
             .catch(err => {
-                return err;
+                return;
             })
     })
 }
@@ -81,6 +79,9 @@ export const getAllMindPost = async (id_User) => {
         })
             .then((response) => {
                 resolve(response.data.newfeed)
+            })
+            .catch(err => {
+                return;
             })
     })
 }
@@ -99,7 +100,7 @@ export const getThisPost = async (idNewFeed) => {
                 resolve(response.data.newfeed)
             })
             .catch(err => {
-                return err;
+                return;
             })
     })
 }
@@ -119,8 +120,7 @@ export const UpdateLikePost = async (idUser, idNewFeed) => {
                 resolve(response.data)
             })
             .catch(err => {
-                // console.log(err)
-                return err;
+                return;
             })
     })
 }
@@ -141,7 +141,9 @@ export const createNewPost = async (data) => {
             .then(response => {
                 resolve(response.data)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }
 
@@ -157,7 +159,9 @@ export const deletePost = async (id_Newfeed) => {
             .then(response => {
                 resolve(response.data)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }
 
@@ -173,7 +177,9 @@ export const fetchComment = async (id_Newfeed) => {
             .then(response => {
                 resolve(response.data.comment)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }
 
@@ -190,7 +196,9 @@ export const fetchLiked = async (id_User, id_Newfeed) => {
             .then(response => {
                 resolve(response.data.liked.liked)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }
 
@@ -209,7 +217,9 @@ export const uploadComment = async (id_Newfeed, comment) => {
             .then(response => {
                 resolve(response.data.cmt)
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }
 
@@ -228,6 +238,8 @@ export const deleteComment = async (id_Newfeed, id_Comment) => {
             .then(response => {
                 resolve(response.data);
             })
-            .catch(err => reject(err))
+            .catch(err => {
+                return;
+            })
     })
 }

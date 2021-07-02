@@ -23,7 +23,7 @@ import {
     Divide,
     IconJob
 } from '../styles/FeedStyle'
-import { iconJob } from '../styles/globalIcon'
+import { iconJob } from '../config/globalIcon'
 
 export default function PostCard({ item, onOpenBottomSheet, modalizeRef, onPress, avatar, name, iconjob }) {
     const [id, setId] = useState(null)

@@ -19,6 +19,7 @@ import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 import PostMind from '../screens/tabs/PostMind'
 import PostCard from '../components/PostCard'
 import PostScreen from '../screens/tabs/PostScreen'
+import NewPostCard from '../components/NewPostCard'
 //
 const Tab = createBottomTabNavigator();
 
@@ -106,7 +107,6 @@ const MainStackScreen = () => {
 
         </Tab.Navigator>
     )
-
 }
 
 export default function MainScreen() {
@@ -173,7 +173,16 @@ export default function MainScreen() {
 
                     headerShown: false
                 })} />
-
+            <Stack.Screen
+                name='NewPostCard'
+                component={NewPostCard}
+                options={({ route }) => ({
+                    headerShown: true,
+                    headerTransparent: true,
+                    headerTintColor: '#fff',
+                    headerTitle: false,
+                    headerBackTitleVisible: false
+                })} />
         </Stack.Navigator>
     )
 }

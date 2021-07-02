@@ -9,7 +9,7 @@ import {
 } from '../styles/PeoplePostCardStyle'
 
 
-export default function PeoplePostCard({ item }) {
+export default function PeoplePostCard({ item, navigation }) {
     return (
         <View>
             <HeaderBar>
@@ -41,7 +41,9 @@ export default function PeoplePostCard({ item }) {
                             key={item.id}
                             activeOpacity={0.8}
                             style={{ flex: 1, margin: 1 }}
-                            onPress={() => console.log(item.id)}>
+                            onPress={() => {
+                                navigation.navigate("NewPostCard")
+                            }}>
 
                             <ImgView
                                 source={{ uri: item.source }} />

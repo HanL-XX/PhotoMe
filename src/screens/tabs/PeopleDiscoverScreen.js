@@ -13,6 +13,7 @@ const Posts = [
             {
                 id: 1,
                 source: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2Fwallpaper%2Ffashion-2539879_1280.jpg?alt=media&token=82e98bb8-c201-466a-bf06-e627616c5508',
+                // like, comment, // date
             },
             {
                 id: 2,
@@ -47,7 +48,7 @@ const Posts = [
 ]
 
 
-export default function PeopleDiscoverScreen() {
+export default function PeopleDiscoverScreen({ navigation }) {
     useEffect(() => {
         console.log('PeoplePostCard')
     }, [])
@@ -59,6 +60,7 @@ export default function PeopleDiscoverScreen() {
 
                         <View style={{ marginTop: 10 }} key={item.id} >
                             <PeoplePostCard
+                                navigation={navigation}
                                 item={item} />
                         </View>
                     ))

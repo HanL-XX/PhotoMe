@@ -20,12 +20,14 @@ const dataImg = {
 }
 
 
-export default function DiscoverScreen() {
+export default function DiscoverScreen({ navigation }) {
     return (
         <SafeAreaView>
             <Container>
                 <HeaderBar>
-                    <UserInfo activeOpacity={1}>
+                    <UserInfo activeOpacity={1} onPress={() => {
+                        navigation.navigate('NewPostCard')
+                    }}>
                         <UserImg source={{ uri: dataImg.source.avatar }} />
                     </UserInfo>
                     <FormInput>
@@ -53,6 +55,7 @@ export default function DiscoverScreen() {
                             component={PhotoPostCard} />
                         <Tab.Screen
                             name="People"
+                            navigation={navigation}
                             component={PeoplePostCard} />
 
                     </Tab.Navigator>

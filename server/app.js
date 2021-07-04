@@ -30,6 +30,7 @@ app.use('/api/profile', require("./router/profile"))
 app.use('/api/newfeed', require("./router/newfeed"))
 app.use('/api/liked', require("./router/liked"))
 app.use('/api/comment', require("./router/comment"))
+app.use('/api/follow', require("./router/follow"))
 
 app.get('/', (req, res) => {
     res.send("Welcome to PhotoMe App")

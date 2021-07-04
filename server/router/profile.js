@@ -1,6 +1,7 @@
 const express = require('express');
 const Profile = require('../schema/Profile');
 const User = require('../schema/User');
+const Follow = require('../schema/Follow');
 
 const bcryptjs = require("bcryptjs")
 const jwt = require("jsonwebtoken")
@@ -33,7 +34,14 @@ router.post("/", (req, res) => {
                 id_User, avatar, name, intro, job, iconjob, post, follow, following, sex
             })
             newProfile.save().then(profile => {
-                return res.status(200).json({ msg: 'Success', profile })
+                const follow = new Follow({
+                    id_User: id_User,
+                    id_follow: [],
+                    id_following: [],
+                })
+                follow.save().then(follow=>{
+                    return res.status(200).json({ msg: 'Success', profile })
+                })
             }).catch(err => { return res.status(400).json({ msg: 'Fail profile' }) })
         })
     }).catch(err => { return res.status(400).json({ msg: 'User not found' }) })
@@ -89,16 +97,91 @@ router.post("/updateprofile", async (req, res) => {
 // vấn đề like tăng follow đồng bộ
 router.post("/updatefollow/follow", async (req, res) => {
     const id_User = req.body.id_User
+    const id_Follower = req.body.id_Follower
     if (!id_User) {
         return res.status(400).json({ msg: 'Dont have id user' })
     }
+    if (!id_Follower) {
+        return res.status(400).json({ msg: 'Dont have id follower' })
+    }
     await Profile.findOne({ id_User: id_User }).then(async (profile) => {
-        await Profile.updateOne({ id_User: id_User }, {
-            $set: {
-                "follow": profile.follow + 1
-            }
-        }).then(() => {
-            return res.status(200).json({ msg: 'Success' })
+        if(!profile) return res.status(400).json({ msg: 'Dont follow, don find user' })
+        let arrayfollow, arrayfollowing
+        await Profile.findOne({ id_User: id_Follower }).then(async (profilefollow) => {
+            if(!profilefollow) return res.status(400).json({ msg: 'Dont follow, dont find profile follower' })
+            await Follow.findOne({ id_User: id_User}).then( async (follow)=>{
+                if(!follow) return res.status(400).json({ msg: 'Dont follow, dont find follower' })
+                arrayfollowing=follow.id_following
+                let checkfollow = false
+                for(let i of arrayfollowing)
+                {
+                    if(i==id_Follower)
+                    {
+                        checkfollow=true
+                    }
+                }
+                if(checkfollow==false)
+                {
+                    arrayfollowing.push(id_Follower)
+                    await Follow.updateOne({ id_User: id_User }, {
+                        $set: {
+                            "id_following": arrayfollowing
+                        }
+                    }).catch(error => {
+                        return res.status(400).json({ msg: 'Dont follow' })
+                    })
+                    await Profile.updateOne({ id_User: id_User }, {
+                        $set: {
+                            "following": profile.following + 1
+                        }
+                    })
+                }
+                else{
+                    return res.status(400).json({ msg: 'Cant follow' })
+                }
+            })
+            .catch(error => {
+                return res.status(400).json({ msg: 'Dont follow' })
+            })
+
+            await Follow.findOne({ id_User: id_Follower}).then( async (follow)=>{
+                if(!follow) return res.status(400).json({ msg: 'Dont follow, dont find follower' })
+                arrayfollow=follow.id_follow
+                let checkfollow = false
+                for(let i of arrayfollow)
+                {
+                    if(i==id_User)
+                    {
+                        checkfollow=true
+                    }
+                }
+                if(checkfollow==false)
+                {
+                    arrayfollow.push(id_User)
+                    await Follow.updateOne({ id_User: id_Follower }, {
+                        $set: {
+                            "id_follow": arrayfollow
+                        }
+                    }).catch(error => {
+                        return res.status(400).json({ msg: 'Dont follow' })
+                    })
+                    await Profile.updateOne({ id_User: id_Follower }, {
+                        $set: {
+                            "follow": profilefollow.follow + 1
+                        }
+                    })
+                    return res.status(200).json({ msg: 'Success' })
+                }
+                else{
+                    return res.status(400).json({ msg: 'Cant follow' })
+                }
+            })
+            .catch(error => {
+                return res.status(400).json({ msg: 'Dont follow' })
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({ msg: 'Dont follow' })
         })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont follow' })
@@ -106,21 +189,92 @@ router.post("/updatefollow/follow", async (req, res) => {
 })
 router.post("/updatefollow/unfollow", async (req, res) => {
     const id_User = req.body.id_User
+    const id_Follower = req.body.id_Follower
     if (!id_User) {
         return res.status(400).json({ msg: 'Dont have id user' })
     }
+    if (!id_Follower) {
+        return res.status(400).json({ msg: 'Dont have id follower' })
+    }
     await Profile.findOne({ id_User: id_User }).then(async (profile) => {
-        if (profile.follow <= 0) {
-            return res.status(400).json({ msg: 'Dont unfollow' })
-        }
-        await Profile.updateOne({ id_User: id_User }, {
-            $set: {
-                "follow": profile.follow - 1
-            }
-        })
-            .then(() => {
-                return res.status(200).json({ msg: 'Success' })
+        if(!profile) return res.status(400).json({ msg: 'Dont unfollow, don find user' })
+        let arrayfollow, arrayfollowing
+        await Profile.findOne({ id_User: id_Follower }).then(async (profilefollow) => {
+            if(!profilefollow) return res.status(400).json({ msg: 'Dont unfollow, dont find profile follower' })
+            await Follow.findOne({ id_User: id_User}).then( async (follow)=>{
+                if(!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower' })
+                arrayfollowing=follow.id_following
+                let checkfollow = false
+                for(let i of arrayfollowing)
+                {
+                    if(i==id_Follower)
+                    {
+                        checkfollow=true
+                    }
+                }
+                if(checkfollow==true)
+                {
+                    arrayfollowing.splice(arrayfollowing.indexOf(id_Follower),1)
+                    await Follow.updateOne({ id_User: id_User }, {
+                        $set: {
+                            "id_following": arrayfollowing
+                        }
+                    }).catch(error => {
+                        return res.status(400).json({ msg: 'Dont unfollow' })
+                    })
+                    await Profile.updateOne({ id_User: id_User }, {
+                        $set: {
+                            "following": profile.following - 1
+                        }
+                    })
+                }
+                else{
+                    return res.status(400).json({ msg: 'Cant unfollow' })
+                }
             })
+            .catch(error => {
+                return res.status(400).json({ msg: 'Dont unfollow' })
+            })
+
+            await Follow.findOne({ id_User: id_Follower}).then( async (follow)=>{
+                if(!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower' })
+                arrayfollow=follow.id_follow
+                let checkfollow = false
+                for(let i of arrayfollow)
+                {
+                    if(i==id_User)
+                    {
+                        checkfollow=true
+                    }
+                }
+                if(checkfollow==true)
+                {
+                    arrayfollow.splice(arrayfollow.indexOf(id_User),1)
+                    await Follow.updateOne({ id_User: id_Follower }, {
+                        $set: {
+                            "id_follow": arrayfollow
+                        }
+                    }).catch(error => {
+                        return res.status(400).json({ msg: 'Dont unfollow' })
+                    })
+                    await Profile.updateOne({ id_User: id_Follower }, {
+                        $set: {
+                            "follow": profilefollow.follow - 1
+                        }
+                    })
+                    return res.status(200).json({ msg: 'Success' })
+                }
+                else{
+                    return res.status(400).json({ msg: 'Cant unfollow' })
+                }
+            })
+            .catch(error => {
+                return res.status(400).json({ msg: 'Dont unfollow' })
+            })
+        })
+        .catch(error => {
+            return res.status(400).json({ msg: 'Dont unfollow' })
+        })
     }).catch(error => {
         return res.status(400).json({ msg: 'Dont unfollow' })
     })

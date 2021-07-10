@@ -33,7 +33,6 @@ const HomeStackScreen = ({ navigation }) => {
             setTimeout(resolve, timeout);
         })
     }
-
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
@@ -44,6 +43,11 @@ const HomeStackScreen = ({ navigation }) => {
             setRefreshing(false);
         })
     }, [refreshing])
+
+    const openBottom = (modalizeRef, id_Post, id_User) => {
+        setId(id_User)
+        onOpenBottomSheet(modalizeRef, id_Post, id_User)
+    }
 
     //get all Posts from db
     const getPosts = async () => {
@@ -74,8 +78,6 @@ const HomeStackScreen = ({ navigation }) => {
     }
 
     useEffect(async () => {
-        const id_User = await AsyncStorage.getItem('userId_Key')
-        setId(id_User)
         await fetchMyAvatar().then((avatar) => {
             setAvatar(avatar)
         })
@@ -83,7 +85,7 @@ const HomeStackScreen = ({ navigation }) => {
         setTimeout(() => {
             setShowReload(false)
         }, (3000))
-    }, [isFocused])
+    }, [])
 
     if (showReload == true) {
         return (
@@ -124,7 +126,7 @@ const HomeStackScreen = ({ navigation }) => {
                             <View key={item._id} style={styles.viewDeletePost}>
                                 <PostCard
                                     navigation={navigation}
-                                    onOpenBottomSheet={onOpenBottomSheet}
+                                    onOpenBottomSheet={openBottom}
                                     modalizeRef={modalizeRef}
                                     item={item.document[0]}
                                     iconjob={item.iconjob}
@@ -161,7 +163,7 @@ const HomeStackScreen = ({ navigation }) => {
             {/* //show bottom sheet */}
             <AnimatedBottomSheet
                 modalizeRef={modalizeRef}
-            // id={id}
+                id={id}
             >
 
             </AnimatedBottomSheet>

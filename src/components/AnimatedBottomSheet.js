@@ -9,7 +9,7 @@ import { handleDeletePost } from '../api/deletePost'
 import { NavigatorIOS } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
-export default function AnimatedBottomSheet({ modalizeRef, id, navigation }) {
+export default function AnimatedBottomSheet({ modalizeRef, id }) {
     const isFocused = useIsFocused(); //refresh when goBack here!!!
 
     const [idUser, setIdUser] = useState(null)
@@ -55,8 +55,8 @@ export default function AnimatedBottomSheet({ modalizeRef, id, navigation }) {
     }
 
     useEffect(async () => {
-        const id = await AsyncStorage.getItem('userId_Key')
-        setIdUser(id)
+        const id_User = await AsyncStorage.getItem('userId_Key')
+        setIdUser(id_User)
     }, [isFocused])
 
     if (showReload2 == true) {
@@ -75,15 +75,14 @@ export default function AnimatedBottomSheet({ modalizeRef, id, navigation }) {
             style={{ overflow: 'hidden' }} >
             <View style={styles.containerSheet}>
                 {
-                    (idUser === id) ?
-                        (
-                            <TouchableOpacity style={styles.buttonSheet} onPress={deleteThisPost}>
-                                <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
-                                <Ionicons
-                                    name='trash-bin'
-                                    size={23} />
-                            </TouchableOpacity>
-                        ) : (<></>)
+                    (idUser === id) ? (
+                        <TouchableOpacity style={styles.buttonSheet} onPress={deleteThisPost}>
+                            <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
+                            <Ionicons
+                                name='trash-bin'
+                                size={23} />
+                        </TouchableOpacity>
+                    ) : (<></>)
                 }
                 {/* <TouchableOpacity style={styles.buttonSheet} onPress={() => {
                     modalizeRef.current?.close()

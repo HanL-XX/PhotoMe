@@ -31,9 +31,8 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
     const [liked, setLiked] = useState(null) //false: none-color <--> true: red color
     const [react, setReact] = useState({
         liked: null,
-        likeCount: 0
+        likeCount: item.like
     })
-    const [followed, setFollowed] = useState('Following')
 
     //return liked in Object
     useEffect(async () => {
@@ -51,7 +50,6 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
         UpdateLikePost(id_User, item._id).
             then(async () => {
                 setLiked(!liked)
-                react.likeCount = item.like
                 await getThisPost(item._id).then(data => {
                     setReact({ ...react, likeCount: data.like })
                 })
@@ -92,7 +90,7 @@ export default function PostCard({ navigation, item, onOpenBottomSheet, modalize
                     </View>
                     <TouchableOpacity
                         onPress={() => {
-                            onOpenBottomSheet(modalizeRef, item._id)
+                            onOpenBottomSheet(modalizeRef, item._id, item.id_User)
                         }}>
                         <Feather
                             name="more-vertical"

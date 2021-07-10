@@ -1,8 +1,7 @@
 import { deletePost } from './'
 
 let id_Newfeed;
-export const onOpenBottomSheet = (modalizeRef, idPost) => {
-    console.log("alo: " + idPost)
+export const onOpenBottomSheet = (modalizeRef, idPost, id_User) => {
     id_Newfeed = idPost
     modalizeRef.current?.open();
 }

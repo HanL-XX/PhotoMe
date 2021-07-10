@@ -24,11 +24,13 @@ import PostCard from '../../components/PostCard'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import { fetchDataProfile, getAllMindPost } from '../../api'
 import { onOpenBottomSheet } from '../../api/deletePost'
+import { fetchFollow, activeFollow, activeUnfollow } from '../../api/followProfile'
 
 //change Profile in here!
 const ProfileUserStackScreen = ({ navigation, route }) => {
-    const isFocused = useIsFocused(); //refresh when goBack here!!!
     const id_User = route.params.id_User
+    const [checkedFollow, setCheckedFollow] = useState(false)
+    const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [user, setUser] = useState({
         id: null,
         name: null,
@@ -51,7 +53,6 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
             setTimeout(resolve, timeout);
         })
     }
-
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
@@ -69,6 +70,22 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
         await getAllMindPost(id_User).then(data => {
             setPosts(data)
         })
+    }
+
+    const handleFollow = async (checked) => {
+        switch (checked) {
+            case true:
+                setCheckedFollow(true)
+                activeFollow(id_User)
+                break;
+
+            case false:
+                setCheckedFollow(false)
+                activeUnfollow(id_User)
+                break;
+            default: break;
+
+        }
     }
 
     const getDataProfile = async () => {
@@ -89,9 +106,25 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
         })
     }
 
+    const getFollow = async () => {
+        await fetchFollow().then(data => {
+            data.map(item => {
+                console.log(item)
+                if (item === id_User) {
+                    setCheckedFollow(true)
+                }
+                else
+                    setCheckedFollow(false)
+            })
+        }).catch(err => { return })
+
+    }
+
     useEffect(async () => {
+        await getFollow()
         await getDataProfile()
         await fetchNewFeed()
+        console.log("ID user: " + id_User)
     }, [isFocused])
 
     return (
@@ -134,9 +167,22 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
                     <ProfileUser onPress={() => navigation.navigate('Chat', { name: user.name })}>
                         <ProfileUserText>Message</ProfileUserText>
                     </ProfileUser>
-                    <ProfileUser style={{ backgroundColor: "#3a96ff" }}>
-                        <ProfileUserText style={{ color: '#fff' }}>Follow</ProfileUserText>
-                    </ProfileUser>
+                    {
+                        (checkedFollow === false) ? (
+                            <ProfileUser
+                                activeOpacity={0.6}
+                                style={{ backgroundColor: "#3a96ff" }}
+                                onPress={() => handleFollow(true)}>
+                                <ProfileUserText style={{ color: '#fff' }}>Follow</ProfileUserText>
+                            </ProfileUser>
+                        ) : (<ProfileUser
+                            activeOpacity={0.6}
+                            style={{ borderColor: "#16af37" }}
+                            onPress={() => handleFollow(false)}>
+                            <ProfileUserText style={{ color: '#16af37' }}>Following</ProfileUserText>
+                        </ProfileUser>)
+                    }
+
                 </View>
 
                 {
@@ -173,7 +219,7 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
             <AnimatedBottomSheet modalizeRef={modalizeRef}>
 
             </AnimatedBottomSheet>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 

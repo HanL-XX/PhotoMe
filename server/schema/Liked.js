@@ -1,23 +1,23 @@
-const mongoose=require("mongoose")
-const Schema=mongoose.Schema
+const mongoose = require("mongoose")
+const Schema = mongoose.Schema
 
-const LikedSchema=new Schema({
-    id_User:{
+const LikedSchema = new Schema({
+    id_User: {
         type: String,
         required: true,
     },
-    id_Newfeed:{
+    id_Newfeed: {
         type: String,
         required: true,
     },
-    liked:{
-        type:Boolean,
+    liked: {
+        type: Boolean,
         required: true,
     },
-    registration_data:{
-        type:String,
-        default:Date.now,
+    registration_data: {
+        type: Date,
+        default: Date.now,
     }
 })
 
-module.exports=Liked=mongoose.model("liked",LikedSchema)
+module.exports = Liked = mongoose.model("liked", LikedSchema)

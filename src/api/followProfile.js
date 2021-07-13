@@ -38,8 +38,8 @@ export const activeFollow = async (id_Follower) => {
             }
         })
             .then(response => {
-                console.log(response)
-                // resolve(response.data.profile)
+                // console.log(response)
+                resolve(response.data.profile)
             })
             .catch(err => {
                 return;
@@ -62,11 +62,35 @@ export const activeUnfollow = async (id_Follower) => {
             }
         })
             .then(response => {
-                console.log(response)
-                // resolve(response.data.profile)
+                // console.log(response)
+                resolve(response.data.profile)
             })
             .catch(err => {
                 return;
             })
     })
+}
+
+export const getFollowingById = async () => {
+    const id_User = await AsyncStorage.getItem('userId_Key')
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/follow`,
+            params: {
+                id_User: id_User
+            }
+        })
+            .then(response => {
+                // console.log(response.data.follow.id_following)
+                resolve(response.data.follow.id_following)
+            })
+            .catch(err => {
+                return;
+            })
+    })
+}
+
+export const fetchAllProfileFollowing = () => {
+
 }

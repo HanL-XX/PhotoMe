@@ -194,9 +194,9 @@ router.post("/updatefollow/unfollow", async (req, res) => {
         if (!profile) return res.status(400).json({ msg: 'Dont unfollow, don find user' })
         let arrayfollow, arrayfollowing
         await Profile.findOne({ id_User: id_Follower }).then(async (profilefollow) => {
-            if (!profilefollow) return res.status(400).json({ msg: 'Dont unfollow, dont find profile follower' })
+            if (!profilefollow) return res.status(400).json({ msg: 'Dont unfollow, dont find profile follower1' })
             await Follow.findOne({ id_User: id_User }).then(async (follow) => {
-                if (!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower' })
+                if (!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower2' })
                 arrayfollowing = follow.id_following
                 let checkfollow = false
                 for (let i of arrayfollowing) {
@@ -228,7 +228,7 @@ router.post("/updatefollow/unfollow", async (req, res) => {
                 })
 
             await Follow.findOne({ id_User: id_Follower }).then(async (follow) => {
-                if (!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower' })
+                if (!follow) return res.status(400).json({ msg: 'Dont unfollow, dont find follower3' })
                 arrayfollow = follow.id_follow
                 let checkfollow = false
                 for (let i of arrayfollow) {

@@ -47,7 +47,7 @@ const ProfileSchema = new Schema({
         default: 0,
     },
     registration_data: {
-        type: String,
+        type: Date,
         default: Date.now,
     }
 })

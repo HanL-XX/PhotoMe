@@ -16,7 +16,11 @@ import EditPersonalProfile from '../screens/tabs/EditPersonalProfile'
 import PostMind from '../screens/tabs/PostMind'
 import PostCard from '../components/PostCard'
 import PostScreen from '../screens/tabs/PostScreen'
+import FollowingCard from '../components/FollowingCard';
+import FollowerCard from '../components/FollowerCard';
 import CommentScreen from '../screens/tabs/CommentScreen'
+import FollowerScreen from '../screens/tabs/FollowerScreen'
+import FollowingScreen from '../screens/tabs/FollowingScreen'
 //
 const Tab = createMaterialBottomTabNavigator();
 
@@ -149,14 +153,39 @@ export default function MainScreen() {
                 component={PostScreen}
                 options={({ route }) => ({
                     headerShown: false,
-                    // cardStyleInterpolator: CardStyleInterpolators.forScaleFromCenterAndroid
                 })} />
+            <Stack.Screen
+                name='FollowingCard'
+                component={FollowingCard}
+                options={({ route }) => ({
+                    headerShown: false,
+                })} />
+            {/* <Stack.Screen
+                name='FollowerCard'
+                component={FollowerCard}
+                options={({ route }) => ({
+                    headerShown: false,
+                })} /> */}
             <Stack.Screen
                 name='Comment'
                 component={CommentScreen}
                 options={({ route }) => ({
                     headerShown: false,
                     cardStyleInterpolator: CardStyleInterpolators.forRevealFromBottomAndroid
+                })} />
+            <Stack.Screen
+                name='Follower'
+                component={FollowerScreen}
+                options={({ route }) => ({
+                    headerShown: false,
+                    cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS
+                })} />
+            <Stack.Screen
+                name='Following'
+                component={FollowingScreen}
+                options={({ route }) => ({
+                    headerShown: false,
+                    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                 })} />
         </Stack.Navigator>
     )

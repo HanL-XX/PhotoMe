@@ -53,9 +53,9 @@ export const StatsContainer = styled.View`
     margin: 24px;
 `
 
-export const Stat = styled.View`
+export const Stat = styled.TouchableOpacity`
     align-items:center;
-    flex:1;
+    flex: 1; 
 `
 
 export const StatAmount = styled.Text`

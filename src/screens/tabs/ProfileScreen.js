@@ -127,15 +127,17 @@ const ProfileStackScreen = ({ navigation }) => {
                 </View>
 
                 <StatsContainer>
-                    <Stat>
+                    <Stat disabled={true}>
                         <StatAmount>{user.post}</StatAmount>
                         <StatTitle>Posts</StatTitle>
                     </Stat>
-                    <Stat>
+                    <Stat activeOpacity={0.6}>
                         <StatAmount>{user.follow}</StatAmount>
                         <StatTitle>Followers</StatTitle>
                     </Stat>
-                    <Stat>
+                    <Stat
+                        onPress={() => navigation.navigate('Following', { countFollowing: user.following })}
+                        activeOpacity={0.6}>
                         <StatAmount>{user.following}</StatAmount>
                         <StatTitle>Following</StatTitle>
                     </Stat>

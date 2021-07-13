@@ -18,6 +18,21 @@ export const fetchDataProfile = async (id) => {
     })
 }
 
+export const fetchAllDataProfile = async () => {
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/profile`,
+        })
+            .then(response => {
+                resolve(response.data.profile)
+            })
+            .catch(err => {
+                return;
+            })
+    })
+}
+
 export const fetchMyAvatar = async () => {
     const id = await AsyncStorage.getItem('userId_Key')
     return new Promise((resolve, reject) => {
@@ -243,3 +258,4 @@ export const deleteComment = async (id_Newfeed, id_Comment) => {
             })
     })
 }
+

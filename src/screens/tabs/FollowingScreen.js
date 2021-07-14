@@ -4,14 +4,15 @@ import { Header } from 'react-native-elements'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Feather from 'react-native-vector-icons/Feather'
 import _ from "lodash"
-import { View, TouchableOpacity, Text, ScrollView, Modal, StyleSheet, Image, Button } from 'react-native'
+import { View, TouchableOpacity, Text, ScrollView, Modal, StyleSheet, ImageBackground, ActivityIndicator } from 'react-native'
 import {
     SafeAreaView, Container,
     FormSearch, InputSearch,
     ModalBackground, ModalContainer,
     ModalButton, ModalImage,
     TextWarning, TextName,
-    TouchButton, TextUnfollow, TextCancel,
+    TouchButton, TextUnfollow,
+    TextCancel, TextReview
 } from '../../styles/FollowStyle'
 import FollowingCard from '../../components/FollowingCard'
 import { fetchDataProfile } from '../../api'
@@ -19,8 +20,8 @@ import { getFollowingById, activeUnfollow } from '../../api/followProfile'
 //change Following in here!
 const FollowingStackScreen = ({ navigation, route }) => {
     const isFocused = useIsFocused(); //refresh when goBack here!!!
+    const [display, setDisplay] = useState('flex')
     const [showModal, setShowModal] = useState(false)
-    const [reload, setReload] = useState(false)
     const [search, setSearch] = useState({
         data: [],
         refresh: true,
@@ -32,6 +33,12 @@ const FollowingStackScreen = ({ navigation, route }) => {
         avatar: '',
         name: null,
     })
+    //wait time
+    const wait = (timeout) => {
+        return new Promise(resolve => {
+            setTimeout(resolve, timeout);
+        })
+    }
 
     const fetchDataFollowing = async () => {
         await getFollowingById().then(listId => {
@@ -76,18 +83,25 @@ const FollowingStackScreen = ({ navigation, route }) => {
     }
 
     const decideUnfollow = async (id_User) => {
-        await activeUnfollow(id_User).then(res => {
-            setReload(true)
+        await activeUnfollow(id_User).then(async (res) => {
+            await fetchDataFollowing().then(i => {
+                if (search.data.length == 1) { //if exist only 1 in array => set empty
+                    wait(1200).then(async () => {
+                        setSearch({ ...search, data: [] })
+                    })
+                }
+            })
             setShowModal(false)
         })
-
     }
 
     useEffect(async () => {
         await fetchDataFollowing()
+        wait(1100).then(async () => {
+            setDisplay('none')
+        })
         // await handleRefresh()
-    }, [reload])
-
+    }, [])
     return (
         <SafeAreaView>
             <Container>
@@ -107,18 +121,35 @@ const FollowingStackScreen = ({ navigation, route }) => {
 
                     </FormSearch>
                 </View>
-                <View style={{ marginVertical: 15, height: 1.5, width: '100%', backgroundColor: '#eee' }}></View>
-                <ScrollView>
-                    {
-                        search.listSearch.map(item => (
-                            <FollowingCard
-                                key={item.id_User}
-                                item={item}
-                                handleUnfollow={handleUnfollow}
-                                onPress={() => navigation.navigate('ProfileUserScreen', { id_User: item.id_User })} />
-                        ))
-                    }
-                </ScrollView>
+                <View style={styles.line} />
+                <View style={{ position: 'relative', width: '100%', height: '100%', alignItems: 'center', display: display }}>
+                    <ActivityIndicator
+                        style={{ position: 'absolute', top: '40%' }}
+                        size="small" />
+                </View>
+                {
+                    (search.data.length == 0) ? (
+                        <View style={{ marginTop: 80, width: '100%', alignItems: 'center', textAlign: 'center' }}>
+                            <ImageBackground
+                                style={{ width: '105%', height: 300, resizeMode: 'cover', alignItems: 'center' }}
+                                source={require("../../assets/images/following.png")} />
+                            <TextReview>List is empty</TextReview>
+                        </View>
+                    ) : (
+                        <ScrollView>
+                            {
+                                search.listSearch.map(item => (
+                                    <FollowingCard
+                                        key={item.id_User}
+                                        item={item}
+                                        handleUnfollow={handleUnfollow}
+                                        onPress={() => navigation.navigate('ProfileUserScreen', { id_User: item.id_User })} />
+                                ))
+                            }
+                        </ScrollView>
+                    )
+                }
+
             </Container>
             <Modal transparent visible={showModal}>
                 <ModalBackground>
@@ -133,9 +164,7 @@ const FollowingStackScreen = ({ navigation, route }) => {
                             <TouchButton
                                 style={styles.borderTop}
                                 activeOpacity={0.5}
-                                onPress={() => decideUnfollow(followUser.id_User)}
-
-                            >
+                                onPress={() => decideUnfollow(followUser.id_User)}>
                                 <TextUnfollow>Unfollowing</TextUnfollow>
                             </TouchButton>
                             <TouchButton
@@ -204,6 +233,13 @@ export default function FollowingScreen({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
+    line: {
+        marginVertical: 15,
+        height: 1.5,
+        width: '100%',
+        backgroundColor: '#eee'
+    },
+
     borderTop: {
         borderTopWidth: 1,
         borderColor: '#ccc',

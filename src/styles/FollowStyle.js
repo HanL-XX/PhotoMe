@@ -80,7 +80,14 @@ export const TouchButton = styled.TouchableOpacity`
 export const TextUnfollow = styled.Text`
     font-size: 18px;
     font-weight: 700;
-    color: #3a96ff;
+    color: #00B0FF;
+    text-align: center;
+`
+
+export const TextDelete = styled.Text`
+    font-size: 18px;
+    font-weight: 700;
+    color: #e74c3c;
     text-align: center;
 `
 
@@ -89,4 +96,14 @@ export const TextCancel = styled.Text`
     font-weight: 400;
     color: #444;
     text-align: center;
+`
+
+export const TextReview = styled.Text`
+    font-style: normal;
+    font-weight: 600;
+    color: #333;
+    font-size: 20px;
+    letter-spacing: 0.7px;
+    line-height: 30px;
+    text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
 `

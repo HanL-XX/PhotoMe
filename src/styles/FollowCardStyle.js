@@ -65,3 +65,18 @@ export const Following = styled.Text`
     font-weight: 600;
     color: #25b644;
 `
+
+export const ButtonDelete = styled.TouchableOpacity`
+    border: 1.5px solid #ccc;
+    border-radius: 5px;
+    padding: 7px 18px;
+    background: transparent;
+`
+
+export const Delete = styled.Text`
+    font-size: 15px;
+    margin: 0 5px;
+    font-weight: 600;
+    color: #555;
+`
+

@@ -31,7 +31,7 @@ const MainStackScreen = () => {
     return (
         <Tab.Navigator
             initialRouteName="Home"
-            activeColor="#005aad"
+            activeColor="#0b62b3"
             barStyle={{ backgroundColor: '#fff' }}
             animation='fade'
         >
@@ -160,12 +160,12 @@ export default function MainScreen() {
                 options={({ route }) => ({
                     headerShown: false,
                 })} />
-            {/* <Stack.Screen
+            <Stack.Screen
                 name='FollowerCard'
                 component={FollowerCard}
                 options={({ route }) => ({
                     headerShown: false,
-                })} /> */}
+                })} />
             <Stack.Screen
                 name='Comment'
                 component={CommentScreen}
@@ -178,7 +178,7 @@ export default function MainScreen() {
                 component={FollowerScreen}
                 options={({ route }) => ({
                     headerShown: false,
-                    cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS
+                    cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                 })} />
             <Stack.Screen
                 name='Following'

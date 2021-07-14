@@ -14,7 +14,7 @@ import {
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import AsyncStorage from '@react-native-community/async-storage'
 import { fetchDataProfile, getAllPosts, fetchMyAvatar } from '../../api'
-import { onOpenBottomSheet } from '../../api/deletePost'
+import { onOpenBottomSheet, deleteThisPost } from '../../api/activePost'
 
 //change HomeScreen in here!
 const HomeStackScreen = ({ navigation }) => {
@@ -22,8 +22,6 @@ const HomeStackScreen = ({ navigation }) => {
     const [Posts, setPosts] = useState([])
     const isFocused = useIsFocused(); //refresh when goBack here!!!
     const [avatar, setAvatar] = useState(null) //set avatar from ProfileScreen
-    //Modal Sheet code here!
-    const modalizeRef = React.useRef(null);
     //wait time
     const wait = (timeout) => {
         return new Promise(resolve => {
@@ -62,6 +60,12 @@ const HomeStackScreen = ({ navigation }) => {
             }
             setPosts(data)
         })
+    }
+    //Modal Sheet code here!
+    const modalizeRef = React.useRef(null);
+    //delete Post
+    const handleDelete = async () => {
+        deleteThisPost(modalizeRef)
     }
 
     const handlePostCardUser = async (id) => {
@@ -149,6 +153,7 @@ const HomeStackScreen = ({ navigation }) => {
             {/* //show bottom sheet */}
             <AnimatedBottomSheet
                 modalizeRef={modalizeRef}
+                handleDelete={handleDelete}
                 id={id}
             >
 

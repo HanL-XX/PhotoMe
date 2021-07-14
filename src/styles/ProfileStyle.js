@@ -40,7 +40,7 @@ export const Description = styled.Text`
     color: #7e7e7e;
     font-size: 14px;
     font-weight: 400;
-    margin-top: 7px;
+    margin-top: 5px;
     font-style:italic;
     letter-spacing:1.04px;
     text-align:center;
@@ -73,10 +73,10 @@ export const StatTitle = styled.Text`
 
 export const EditProfile = styled.TouchableOpacity` 
     width:92%;
-    padding: 10px;
+    padding: 12px;
     border: 0.5px solid #c7c7c7;
-    border-radius: 6px;
-    margin-bottom:40px;
+    border-radius: 7px;
+    margin-bottom: 35px;
 `
 
 export const EditProfileText = styled.Text`
@@ -99,4 +99,29 @@ export const ProfileUserText = styled.Text`
     color: #202020;
     font-weight:700;
     text-align:center;
+`
+
+export const ViewCreate = styled.View`
+    flex-direction: column;
+    align-items: stretch;
+`
+
+export const TextReview = styled.Text`
+    font-style: normal;
+    font-weight: 600;
+    color: #222;
+    font-size: 20px;
+    letter-spacing: 0.7px;
+    text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    text-align: center;
+    margin-bottom: 6px;
+`
+
+export const TextCreate = styled.Text`
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: 0.7px;
+    text-align: center;
+    color: rgb(43, 110, 255);
 `

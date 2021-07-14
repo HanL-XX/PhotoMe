@@ -5,67 +5,19 @@ import { Modalize } from 'react-native-modalize'
 import { useIsFocused } from "@react-navigation/native";
 import { windowWidth } from '../utils/Dimensions.js'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { handleDeletePost } from '../api/deletePost'
+import { handleDeletePost } from '../api/activePost'
 import { NavigatorIOS } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 
-export default function AnimatedBottomSheet({ modalizeRef, id }) {
+export default function AnimatedBottomSheet({ modalizeRef, handleDelete, id }) {
     const isFocused = useIsFocused(); //refresh when goBack here!!!
 
     const [idUser, setIdUser] = useState(null)
-    const [showReload2, setShowReload2] = useState(false)
-    const deleteThisPost = () => {
-        Alert.alert(
-            //Title
-            '',
-            //Body
-            "Are you sure to delete this post?",
-            [
-                {
-                    text: 'Yes',
-                    onPress: async () => {
-                        const seconds = Math.floor(Math.random() * 1000) + 600
-                        setShowReload2(true)
-                        await handleDeletePost()
-                        setTimeout(() => {
-                            Alert.alert(
-                                //Title
-                                '',
-                                //Body
-                                "Delete successfully!",
-                                [
-                                    {
-                                        text: 'Yes',
-                                        onPress: () => {
-                                            setShowReload2(false)
-                                            modalizeRef.current?.close()
-                                        }
-                                    },
-                                ]
-                            )
-                        }, seconds);
-
-                    }
-                },
-                {
-                    text: 'No',
-                }
-            ]
-        )
-    }
 
     useEffect(async () => {
         const id_User = await AsyncStorage.getItem('userId_Key')
         setIdUser(id_User)
     }, [isFocused])
-
-    if (showReload2 == true) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" />
-            </View>
-        )
-    }
 
     return (
         <Modalize
@@ -76,7 +28,7 @@ export default function AnimatedBottomSheet({ modalizeRef, id }) {
             <View style={styles.containerSheet}>
                 {
                     (idUser === id) ? (
-                        <TouchableOpacity style={styles.buttonSheet} onPress={deleteThisPost}>
+                        <TouchableOpacity style={styles.buttonSheet} onPress={handleDelete}>
                             <Text style={{ fontSize: 18, color: '#c94646' }}>Delete</Text>
                             <Ionicons
                                 name='trash-bin'

@@ -23,7 +23,7 @@ import {
 import PostCard from '../../components/PostCard'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import { fetchDataProfile, getAllMindPost } from '../../api'
-import { onOpenBottomSheet } from '../../api/deletePost'
+import { onOpenBottomSheet } from '../../api/activePost'
 import { fetchFollow, activeFollow, activeUnfollow } from '../../api/followProfile'
 
 //change Profile in here!
@@ -171,7 +171,7 @@ const ProfileUserStackScreen = ({ navigation, route }) => {
                         (checkedFollow === false) ? (
                             <ProfileUser
                                 activeOpacity={0.6}
-                                style={{ backgroundColor: "#3a96ff" }}
+                                style={{ backgroundColor: "#00B0FF" }}
                                 onPress={() => handleFollow(true)}>
                                 <ProfileUserText style={{ color: '#fff' }}>Follow</ProfileUserText>
                             </ProfileUser>

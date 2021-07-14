@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, TouchableOpacity, RefreshControl } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, RefreshControl, ImageBackground, ActivityIndicator } from 'react-native'
 import { useIsFocused } from "@react-navigation/native";
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { Header } from 'react-native-elements'
@@ -18,19 +18,24 @@ import {
     StatTitle,
     EditProfile,
     EditProfileText,
+    ViewCreate,
+    TextReview,
+    TextCreate
 } from '../../styles/ProfileStyle'
 import PostCard from '../../components/PostCard'
 import DrawerProfileScreen from '../tabs/DrawerProfileScreen'
 import AnimatedBottomSheet from '../../components/AnimatedBottomSheet'
 import AsyncStorage from '@react-native-community/async-storage'
 import { fetchDataProfile, getAllMindPost } from '../../api'
-import { onOpenBottomSheet } from '../../api/deletePost'
+import { onOpenBottomSheet, deleteThisPost } from '../../api/activePost'
 
 const Drawer = createDrawerNavigator(); // create Drawer Navigator
 
 //change Profile in here!
 const ProfileStackScreen = ({ navigation }) => {
     const isFocused = useIsFocused(); //refresh when goBack here!!!
+    const [ref, setRef] = useState(null)
+    const [dataSourceCord, setDataSourceCord] = useState(0)
     const [user, setUser] = useState({
         id: null,
         name: null,
@@ -44,10 +49,13 @@ const ProfileStackScreen = ({ navigation }) => {
         iconjob: null,
         birthday: null,
     })
+    const [display, setDisplay] = useState({ //collapse reload
+        display: 'none',
+        animating: true,
+    })
 
     //Array Posts
     const [Posts, setPosts] = useState([])
-
 
     const fetchProfile = async () => {
         const id = await AsyncStorage.getItem('userId_Key')
@@ -66,7 +74,7 @@ const ProfileStackScreen = ({ navigation }) => {
                 birthday: data.birthday,
             })
         }).catch(err => {
-            console.log(err)
+            return err;
         })
     }
 
@@ -77,13 +85,25 @@ const ProfileStackScreen = ({ navigation }) => {
         })
     }
 
-    useEffect(async () => {
-        await fetchProfile()
-        await fetchNewFeed()
-    }, [isFocused])
-
     //Modal Sheet code here!
     const modalizeRef = React.useRef(null);
+    //delete Post
+    const handleDelete = async () => {
+        deleteThisPost(modalizeRef)
+    }
+
+    const scrollPost = () => {
+        ref.scrollTo({
+            x: 0,
+            y: dataSourceCord,
+            animated: true,
+        })
+    }
+
+    const onLayout = (e) => {
+        const layout = e.nativeEvent.layout
+        setDataSourceCord(layout.y)
+    }
 
     //wait time
     const wait = (timeout) => {
@@ -91,7 +111,6 @@ const ProfileStackScreen = ({ navigation }) => {
             setTimeout(resolve, timeout);
         })
     }
-
     //Refresh Screen
     const [refreshing, setRefreshing] = useState(false);
     const onRefresh = React.useCallback(async () => {
@@ -104,16 +123,28 @@ const ProfileStackScreen = ({ navigation }) => {
         })
     }, [refreshing])
 
+    useEffect(async () => {
+        await fetchProfile()
+        wait(2000).then(async () => {
+            await fetchNewFeed()
+            setDisplay({
+                display: 'flex',
+                animating: false
+            })
+        })
+    }, [isFocused])
+
     return (
         <SafeAreaView>
             <Container
+                ref={(ref) => setRef(ref)}
                 refreshControl={
                     <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
                 }
                 contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }} //must be code there!
                 showVerticalScrollIndicator={false}
                 showsHorizontalScrollIndicator={false} >
-                <View style={{ justifyContent: 'center', alignItems: 'center', padding: 15 }}>
+                <View style={{ justifyContent: 'center', alignItems: 'center', paddingHorizontal: 15, paddingTop: 15 }}>
                     <UserImgContainer>
                         <UserImg source={{ uri: user.avatar }} />
                     </UserImgContainer>
@@ -122,16 +153,25 @@ const ProfileStackScreen = ({ navigation }) => {
                         defaultValue={user.name}
                         editable={false}
                         selectTextOnFocus={false} />
-                    <Description numberOfLines={2}>{user.intro}
-                    </Description>
+                    {
+                        (user.intro !== null) ? (
+                            <Description numberOfLines={2}>{user.intro}
+                            </Description>
+                        ) : (<></>)
+                    }
+
                 </View>
 
                 <StatsContainer>
-                    <Stat disabled={true}>
+                    <Stat
+                        activeOpacity={0.6}
+                        onPress={scrollPost}>
                         <StatAmount>{user.post}</StatAmount>
                         <StatTitle>Posts</StatTitle>
                     </Stat>
-                    <Stat activeOpacity={0.6}>
+                    <Stat
+                        onPress={() => navigation.navigate('Follower', { countFollower: user.follow })}
+                        activeOpacity={0.6}>
                         <StatAmount>{user.follow}</StatAmount>
                         <StatTitle>Followers</StatTitle>
                     </Stat>
@@ -156,37 +196,68 @@ const ProfileStackScreen = ({ navigation }) => {
                         Edit Profile
                     </EditProfileText>
                 </EditProfile>
-                {
-                    Posts.map((item) => {
-                        if (item.id_User === user.id) {
-                            return (
-                                <View key={item._id} style={styles.viewDeletePost}>
-                                    <PostCard
-                                        navigation={navigation}
-                                        onOpenBottomSheet={onOpenBottomSheet}
-                                        modalizeRef={modalizeRef}
-                                        item={item}
-                                        iconjob={user.iconjob}
-                                        avatar={user.avatar}
-                                        name={user.name} />
-                                </View>
-                            )
-                        }
-                    })
-                }
+                <View style={{ position: 'relative', width: '100%', alignItems: 'center' }}>
+                    <ActivityIndicator
+                        animating={display.animating}
+                        style={{ position: 'absolute', top: '40%' }}
+                        size="small" />
+                </View>
+                <View
+                    onLayout={onLayout}
+                    style={{ width: '100%', display: display.display, backgroundColor: '#fff' }}>
+                    {
+                        (Posts.length == 0) ? (
+                            <View style={{ width: '100%', alignItems: 'center', textAlign: 'center' }}>
+                                <ImageBackground
+                                    style={{ width: '105%', height: 250, alignItems: 'center' }}
+                                    source={require("../../assets/images/post.png")}
+                                />
+                                <ViewCreate>
+                                    <TextReview>Haven't posted yet</TextReview>
+                                    <TouchableOpacity
+                                        activeOpacity={0.7}
+                                        onPress={() => navigation.navigate("PostMind")}
+                                    >
+                                    </TouchableOpacity>
+                                </ViewCreate>
+                            </View>
+                        ) : (<>{
+                            Posts.map((item) => {
+                                if (item.id_User === user.id) {
+                                    return (
+                                        <View
+                                            key={item._id}
+                                            style={styles.viewDeletePost}>
+                                            <PostCard
+                                                navigation={navigation}
+                                                onOpenBottomSheet={onOpenBottomSheet}
+                                                modalizeRef={modalizeRef}
+                                                item={item}
+                                                iconjob={user.iconjob}
+                                                avatar={user.avatar}
+                                                name={user.name} />
+                                        </View>
+                                    )
+                                }
+                            })
+                        }</>)
+                    }
+                </View>
+
             </Container>
 
             <AnimatedBottomSheet
                 modalizeRef={modalizeRef}
+                handleDelete={handleDelete}
                 id={user.id} />
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
 const MainProfileStackScreen = ({ navigation }) => {
     return (
         <View style={{
-            flex: 1, flexDirection: 'column', backgroundColor: 'red'
+            flex: 1, flexDirection: 'column'
         }}>
             <Header
                 leftComponent={

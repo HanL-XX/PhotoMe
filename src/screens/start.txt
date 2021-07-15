@@ -1,2 +1,0 @@
-Khi bắt đầu hảy xóa file txt này (thêm vào để có thể đưa lên git được)
-https://cheesecakelabs.com/blog/efficient-way-structure-react-native-projects/

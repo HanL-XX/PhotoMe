@@ -1,8 +1,12 @@
-import React, {PureComponent} from 'react';
-import {SocialIcon} from 'react-native-elements/dist/social/SocialIcon';
+import React from 'react'
+import Providers from './navigations'
+import { Provider } from 'react-redux'
+import { store } from './store'
 
-export default class App extends PureComponent {
-  render() {
-    return <SocialIcon type="facebook" />;
-  }
+export default function App() {
+  return (
+    <Provider store={store}>
+      <Providers />
+    </Provider>
+  )
 }

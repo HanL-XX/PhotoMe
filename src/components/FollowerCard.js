@@ -10,12 +10,6 @@ import {
 } from '../styles/FollowCardStyle'
 
 export default function FollowingCard({ item, onPress, handleDelete, }) {
-    item = {
-        avatar: 'https://firebasestorage.googleapis.com/v0/b/photome-test1.appspot.com/o/images%2F1625128696004.jpg?alt=media&token=c84e6000-205e-4729-9bd8-7361c55981f7',
-        name: 'Lê Minh',
-        iconjob: 'undefined',
-    }
-
     return (
         <Card
             activeOpacity={0.8}
@@ -27,7 +21,7 @@ export default function FollowingCard({ item, onPress, handleDelete, }) {
                 <UserInfo>
                     <UserName>{item.name}</UserName>
                     {
-                        (item.iconjob === "undefined") ? (
+                        (item.iconjob === null) ? (
                             <WorkName>None</WorkName>
 
                         ) : (

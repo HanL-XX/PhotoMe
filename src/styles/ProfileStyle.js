@@ -19,7 +19,7 @@ export const IconContainer = styled.View`
 
 export const UserImgContainer = styled.View`
     border-radius:65px;
-    box-shadow:rgba(0,0,0,0.5) 0px 0 10px;
+    box-shadow: 1px 1px 8px rgba(0,0,0,0.5) ;
 `
 
 export const UserImg = styled.Image`
@@ -30,10 +30,10 @@ export const UserImg = styled.Image`
 `
 
 export const UserName = styled.TextInput`
-    color: #222222;
+    color: #222;
     margin-top: 24px;
     font-size: 17px;
-    font-weight: 600;
+    font-weight: 700;
 `
 
 export const Description = styled.Text`
@@ -80,8 +80,8 @@ export const EditProfile = styled.TouchableOpacity`
 `
 
 export const EditProfileText = styled.Text`
-    color: #202020;
-    font-weight:700;
+    color: #333;
+    font-weight: 700;
     text-align:center;
 `
 export const ProfileUser = styled.TouchableOpacity` 

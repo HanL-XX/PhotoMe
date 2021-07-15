@@ -23,7 +23,7 @@ export default function FollowingCard({ item, onPress, handleUnfollow, }) {
                 <UserInfo>
                     <UserName>{item.name}</UserName>
                     {
-                        (item.iconjob === "undefined") ? (
+                        (item.iconjob === null) ? (
                             <WorkName>None</WorkName>
 
                         ) : (

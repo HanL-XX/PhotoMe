@@ -198,6 +198,7 @@ const ProfileStackScreen = ({ navigation }) => {
                 </EditProfile>
                 <View style={{ position: 'relative', width: '100%', alignItems: 'center' }}>
                     <ActivityIndicator
+                        color="#999"
                         animating={display.animating}
                         style={{ position: 'absolute', top: '40%' }}
                         size="small" />
@@ -209,7 +210,7 @@ const ProfileStackScreen = ({ navigation }) => {
                         (Posts.length == 0) ? (
                             <View style={{ width: '100%', alignItems: 'center', textAlign: 'center' }}>
                                 <ImageBackground
-                                    style={{ width: '105%', height: 250, alignItems: 'center' }}
+                                    style={{ width: '105%', height: 280, alignItems: 'center' }}
                                     source={require("../../assets/images/post.png")}
                                 />
                                 <ViewCreate>

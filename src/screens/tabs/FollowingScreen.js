@@ -124,6 +124,7 @@ const FollowingStackScreen = ({ navigation, route }) => {
                 <View style={styles.line} />
                 <View style={{ position: 'relative', width: '100%', height: '100%', alignItems: 'center', display: display }}>
                     <ActivityIndicator
+                        color="#999"
                         style={{ position: 'absolute', top: '40%' }}
                         size="small" />
                 </View>
@@ -208,8 +209,8 @@ export default function FollowingScreen({ navigation, route }) {
                             color: '#333',
                         }}>
                             <Text style={{
-                                fontWeight: '600',
-                                color: '#222',
+                                fontWeight: 'bold',
+                                color: '#222'
                             }}>
                                 {countFollowing}
                             </Text> Following

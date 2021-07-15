@@ -36,7 +36,7 @@ export const UserInfo = styled.View`
 
 export const UserName = styled.Text`
     font-size: 17.5px;
-    font-weight: 600;
+    font-weight: bold;
     margin-bottom: 3px;
 `
 

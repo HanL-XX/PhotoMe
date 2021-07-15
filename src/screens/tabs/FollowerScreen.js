@@ -16,7 +16,8 @@ import {
 } from '../../styles/FollowStyle'
 import FollowerCard from '../../components/FollowerCard'
 import { fetchDataProfile } from '../../api'
-import { getFollowingById, activeUnfollow } from '../../api/followProfile'
+import { getFollowerById } from '../../api/followProfile'
+
 //change Following in here!
 const FollowerStackScreen = ({ navigation, route }) => {
     const [display, setDisplay] = useState('flex')
@@ -27,6 +28,7 @@ const FollowerStackScreen = ({ navigation, route }) => {
         query: '',
         listSearch: []
     })
+
     const [followUser, setFollowUser] = useState({
         id_User: null,
         avatar: '',
@@ -37,6 +39,19 @@ const FollowerStackScreen = ({ navigation, route }) => {
     const wait = (timeout) => {
         return new Promise(resolve => {
             setTimeout(resolve, timeout);
+        })
+    }
+
+    const fetchDataFollower = async () => {
+        await getFollowerById().then(listId => {
+            let listDataFollower = []
+            listId.map(async id => {
+                await fetchDataProfile(id).then(data => {
+                    listDataFollower.push(data)
+                })
+                setSearch({ ...search, data: listDataFollower, listSearch: listDataFollower })
+
+            })
         })
     }
 
@@ -70,6 +85,7 @@ const FollowerStackScreen = ({ navigation, route }) => {
     }
 
     useEffect(async () => {
+        await fetchDataFollower()
         wait(1100).then(async () => {
             setDisplay('none')
         })
@@ -98,6 +114,7 @@ const FollowerStackScreen = ({ navigation, route }) => {
                 <View style={styles.line} />
                 <View style={{ position: 'relative', width: '100%', height: '100%', alignItems: 'center', display: display }}>
                     <ActivityIndicator
+                        color="#999"
                         style={{ position: 'absolute', top: '40%' }}
                         size="small" />
                 </View>
@@ -111,10 +128,17 @@ const FollowerStackScreen = ({ navigation, route }) => {
                         </View>
                     ) : (
                         <ScrollView>
-                            <FollowerCard
-                                handleDelete={handleDelete}
-                                onPress={() => navigation.navigate('ProfileUserScreen', { id_User: item.id_User })}
-                            />
+                            {
+                                search.listSearch.map(item => (
+                                    <FollowerCard
+                                        key={item.id_User}
+                                        item={item}
+                                        handleDelete={handleDelete}
+                                        onPress={() => navigation.navigate('ProfileUserScreen', { id_User: item.id_User })}
+                                    />
+                                ))
+                            }
+
                         </ScrollView>
                     )
                 }
@@ -124,10 +148,10 @@ const FollowerStackScreen = ({ navigation, route }) => {
                 <ModalBackground>
                     <ModalContainer>
                         <ModalImage
-                            source={require('../../assets/images/user2.png')}
+                            source={{ uri: followUser.avatar }}
                         />
                         <TextWarning>
-                            PhotoMe won't let <TextName>Minh</TextName> know you've removed them from your follower list
+                            PhotoMe won't let <TextName>{followUser.name}</TextName> know you've removed them from your follower list
                         </TextWarning>
                         <ModalButton>
                             <TouchButton

@@ -64,7 +64,7 @@ export const TextWarning = styled.Text`
 export const TextName = styled.Text`
     font-size: 17px;
     color: #333;
-    font-weight: 600;
+    font-weight: bold;
 `
 
 export const ModalButton = styled.View`

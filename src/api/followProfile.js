@@ -91,6 +91,25 @@ export const getFollowingById = async () => {
     })
 }
 
+export const getFollowerById = async () => {
+    const id_User = await AsyncStorage.getItem('userId_Key')
+    return new Promise((resolve, reject) => {
+        axios({
+            method: 'GET',
+            url: `${MAIN_URL}/api/follow`,
+            params: {
+                id_User: id_User
+            }
+        })
+            .then(response => {
+                resolve(response.data.follow.id_follow)
+            })
+            .catch(err => {
+                return;
+            })
+    })
+}
+
 export const fetchAllProfileFollowing = () => {
 
 }

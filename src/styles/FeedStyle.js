@@ -77,7 +77,8 @@ export const UserInfoText = styled.View`
 
 export const UserName = styled.Text`
     font-size: 15px;
-    font-weight: 600;
+    font-weight: 700;
+    color: #333;
     /* font-family:'Lato-Regular'; */
 `
 
